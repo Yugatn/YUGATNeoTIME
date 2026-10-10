@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "timeline-structure-demo",
+  "datasetStatus": "synthetic-example",
+  "title": "Пример структуры исторической временной шкалы",
+  "description": "Вымышленные записи только для проверки модели; не описывают реальные события.",
+  "events": [
+    {
+      "id": "event-alpha",
+      "title": "Условное событие в культурной среде A",
+      "date": {
+        "start": "T1",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "relative-demo-scale",
+        "originalDateText": null
+      },
+      "dateBasis": "model-assumption",
+      "region": "Условный регион A",
+      "place": null,
+      "peopleIds": [],
+      "cultureTags": [
+        "demo"
+      ],
+      "eventType": "demonstration",
+      "description": "Синтетический узел, показывающий дату с явно указанной системой отсчёта.",
+      "evidenceStatus": "not-tested",
+      "sources": []
+    },
+    {
+      "id": "event-beta",
+      "title": "Условное событие в культурной среде B",
+      "date": {
+        "start": "T2",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "relative-demo-scale",
+        "originalDateText": null
+      },
+      "dateBasis": "model-assumption",
+      "region": "Условный регион B",
+      "place": null,
+      "peopleIds": [],
+      "cultureTags": [
+        "demo"
+      ],
+      "eventType": "demonstration",
+      "description": "T2 не является календарной датой и не устанавливает причинность.",
+      "evidenceStatus": "not-tested",
+      "sources": []
+    }
+  ],
+  "relations": [
+    {
+      "id": "relation-alpha-beta",
+      "from": "event-alpha",
+      "to": "event-beta",
+      "relationType": "possible-connection",
+      "status": "not-tested",
+      "description": "Гипотетическая связь только для демонстрации формата.",
+      "sources": []
+    }
+  ],
+  "limitations": [
+    "Все события и связи синтетические.",
+    "T1 и T2 не конвертируются в реальные календарные даты.",
+    "Хронологическая последовательность не доказывает причинность.",
+    "Реальные наборы должны указывать календарную систему, точность даты и проверяемые источники.",
+    "Отсутствие источника не следует интерпретировать как подтверждение или опровержение события."
+  ]
+}
