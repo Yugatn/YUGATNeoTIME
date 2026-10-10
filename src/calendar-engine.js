@@ -67,5 +67,25 @@ function fromGregorian(isoDate,correlation=DEFAULT_CORRELATION,egyptianEpochDate
  const jdn=gregorianToJdn(isoDate);const days=jdn-correlation;const tzolkinNumber=mod(days+3,13)+1;const tzolkinName=TZOLKIN_NAMES[mod(days+19,20)];const haabIndex=mod(days+348,365);const haabMonth=haabIndex<360?Math.floor(haabIndex/20):18;const haabDay=haabIndex<360?haabIndex%20:haabIndex-360;const egyptianEpochJdn=gregorianToJdn(egyptianEpochDate);
  const russianEra=russianEraFromJdn(jdn);return {gregorian:isoDate,jdn,absoluteDay:days,julianDate:jdnToJulian(jdn),russianEra,longCount:longCountFromDays(days),tzolkin:tzolkinNumber+' '+tzolkinName,haab:haabDay+' '+HAAB_MONTHS[haabMonth],correlation,egyptian:egyptianFromJdn(jdn,egyptianEpochJdn),egyptianEpochDate,egyptianEpochJdn};
 }
-root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),EGYPTIAN_MONTHS:EGYPTIAN_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,julianToJdn,julianFromJdn:jdnToJulian,russianEraFromJdn,parseLongCount,egyptianFromJdn,fromGregorian});
+function atlasFromGregorian(isoDate,correlation=DEFAULT_CORRELATION,egyptianEpochDate='2026-01-01'){
+ const r=fromGregorian(isoDate,correlation,egyptianEpochDate);
+ const layer=(id,system,value,method,source,uncertainty,status='DERIVED')=>({id,system,value,method,source,uncertainty,status});
+ return {
+  schema:'YUGATNeoTIME.AtlasLayer/1.0',
+  input:{value:isoDate,calendar:'proleptic-gregorian',status:'OBSERVED'},
+  anchor:{type:'JDN',value:r.jdn,method:'Gregorian-to-JDN integer algorithm',status:'DERIVED'},
+  parameters:{mayaCorrelation:correlation,egyptianEpochDate,egyptianEpochJdn:r.egyptianEpochJdn},
+  layers:[
+   layer('civil.gregorian','Gregorian',r.gregorian,'Input date; interpreted proleptically','User input','Depends on whether the source date is actually Gregorian','OBSERVED'),
+   layer('anchor.jdn','Julian Day Number',String(r.jdn),'Gregorian-to-JDN integer algorithm','Calendar engine','Convention uses integer JDN at civil-day granularity'),
+   layer('europe.julian','Julian',r.julianDate,'JDN-to-Julian conversion','Calendar engine','Proleptic Julian result; historical local day-boundary conventions are not modeled'),
+   layer('russia.anno-mundi','Pre-Petrine Russian era',r.russianEra.label,'September-style rule applied to proleptic Julian date','docs/RUSSIAN_ERA.md','Historical applicability is uncertain without document, region, period and year-style evidence','NOT_TESTED'),
+   layer('maya.long-count','Maya Long Count',r.longCount,'JDN minus selected GMT correlation','Selected correlation: '+correlation,'Result depends on chosen correlation and Long Count convention'),
+   layer('maya.tzolkin','Maya Tzolk’in',r.tzolkin,'260-day cyclic arithmetic','Calendar engine','Correlation and naming conventions should be verified against reference dates'),
+   layer('maya.haab','Maya Haab’',r.haab,'365-day cyclic arithmetic','Calendar engine','Correlation and naming conventions should be verified against reference dates'),
+   layer('egyptian.civil','Ancient Egyptian civil model',r.egyptian.label,'365-day sequence from user-selected model epoch','docs/EGYPTIAN_CALENDAR.md','Epoch is configurable and demonstrational; not a historical conversion','NOT_TESTED')
+  ]
+ };
+}
+root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),EGYPTIAN_MONTHS:EGYPTIAN_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,julianToJdn,julianFromJdn:jdnToJulian,russianEraFromJdn,parseLongCount,egyptianFromJdn,fromGregorian,atlasFromGregorian});
 })(typeof globalThis!=='undefined'?globalThis:this);
