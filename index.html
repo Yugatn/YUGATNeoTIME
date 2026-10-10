@@ -41,9 +41,9 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <div class="rule"></div><h2>История по дате · карта взаимосвязей</h2>
 <p class="small muted">Демонстрационная подборка событий мировой истории. Фильтруйте по году или теме. Линии показывают общие теги/участников в наборе данных, а не автоматически доказанную причинность.</p>
 <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:12px 0">
- <label style="flex:1;min-width:130px">Год<input id="history-year" type="number" min="1" max="9999" placeholder="Например, 1945" style="display:block;width:100%;margin-top:5px"></label>
+ <label style="flex:1;min-width:130px">Точная дата<input id="history-date" type="date" style="display:block;width:100%;margin-top:5px"></label><label style="flex:1;min-width:130px">Или год<input id="history-year" type="number" min="1" max="9999" placeholder="Например, 1945" style="display:block;width:100%;margin-top:5px"></label>
  <label style="flex:2;min-width:180px">Поиск события, страны, народа или темы<input id="history-query" type="search" placeholder="революция, ООН, Египет…" style="display:block;width:100%;margin-top:5px"></label>
- <button id="history-reset" type="button">Сбросить</button>
+ <button id="history-use-date" type="button">Дата календаря</button><button id="history-reset" type="button">Сбросить</button>
 </div>
 <div id="history-status" class="small muted" aria-live="polite">Загрузка исторических данных…</div>
 <div style="overflow-x:auto;margin:12px 0"><canvas id="history-map" width="1000" height="300" style="width:100%;min-width:600px;border:1px solid var(--line);border-radius:12px" aria-label="Схематическая карта взаимосвязей между событиями"></canvas></div>
@@ -81,8 +81,10 @@ async function loadHistory(){
 function renderHistory(){
  const query=$('history-query').value.trim().toLocaleLowerCase();
  const year=$('history-year').value.trim();
+ const exactDate=$('history-date').value.trim();
  const visible=historyEvents.filter(ev=>{
-  if(year&&String(ev.date).slice(0,4)!==year)return false;
+  if(exactDate&&ev.date!==exactDate)return false;
+  if(!exactDate&&year&&String(ev.date).slice(0,4)!==year)return false;
   const text=[ev.title,ev.region,ev.summary,...(ev.actors||[]),...(ev.places||[]),...(ev.tags||[])].join(' ').toLocaleLowerCase();
   return !query||text.includes(query);
  }).sort((a,b)=>a.date.localeCompare(b.date));
@@ -140,7 +142,7 @@ function drawProjection(r){
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
-$('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',renderHistory);$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';renderHistory();});loadHistory();
+$('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
 </script></body></html>
