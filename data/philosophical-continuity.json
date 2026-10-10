@@ -1,0 +1,173 @@
+{
+  "schema": "YUGATNeoTIME.PhilosophicalContinuity/1.0",
+  "title": "От Сократа к современным дискуссиям",
+  "startPoint": "socrates",
+  "notice": "Начало отсчёта означает выбранную исследовательскую точку входа, а не начало всей мировой истории. Возможное чтение Лениным античных философов отмечено как неподтверждённая гипотеза.",
+  "nodes": [
+    {
+      "id": "socrates",
+      "order": 0,
+      "yearStart": -470,
+      "yearEnd": -399,
+      "era": "ок. 470–399 до н. э.",
+      "title": "Сократ: философский диалог",
+      "kind": "historical-context",
+      "description": "Сократ известен прежде всего через тексты других авторов, особенно диалоги Платона. Он не оставил собственного корпуса сочинений; образ Сократа зависит от источников и их литературной формы.",
+      "question": "Как отличать исторического Сократа от персонажа платоновских диалогов?",
+      "sourceTitle": "Internet Encyclopedia of Philosophy — Socrates",
+      "sourceUrl": "https://iep.utm.edu/socrates/"
+    },
+    {
+      "id": "plato",
+      "order": 1,
+      "yearStart": -428,
+      "yearEnd": -347,
+      "era": "ок. 428/427–348/347 до н. э.",
+      "title": "Платон: сохранение и переосмысление беседы",
+      "kind": "historical-context",
+      "description": "Платон создавал философские диалоги, в которых Сократ часто выступает собеседником. Эти тексты передали последующим эпохам вопросы об этике, знании, политике и устройстве мира.",
+      "question": "Как форма диалога меняет смысл идеи и её передачу?",
+      "sourceTitle": "Stanford Encyclopedia of Philosophy — Plato",
+      "sourceUrl": "https://plato.stanford.edu/entries/plato/"
+    },
+    {
+      "id": "atlantis-dialogue",
+      "order": 2,
+      "yearStart": -360,
+      "yearEnd": -350,
+      "era": "IV век до н. э.; точная дата не установлена",
+      "title": "Атлантида в «Тимее» и «Критии»",
+      "kind": "literary-narrative",
+      "description": "В платоновском «Тимее» Критий рассказывает Сократу предание об Атлантиде, которое, по сюжету, передавалось через Солона и египетских жрецов. Это история идеи, а не доказательство существования Атлантиды.",
+      "question": "Как миф, политический идеал и память о прошлом переплетаются в диалоге?",
+      "sourceTitle": "Internet Encyclopedia of Philosophy — Plato’s Timaeus",
+      "sourceUrl": "https://iep.utm.edu/timaeus/"
+    },
+    {
+      "id": "classical-reception",
+      "order": 3,
+      "yearStart": 0,
+      "yearEnd": 1900,
+      "era": "От античности до Нового времени",
+      "title": "Передача античной философии через рукописи, школы и издания",
+      "kind": "transmission-process",
+      "description": "Тексты Платона и рассказы о Сократе сохранялись и переосмысливались через рукописные традиции, переводы, преподавание и печатные издания. Конкретный маршрут зависит от языка, периода и издания.",
+      "question": "Какие переводчики, учителя и институты связывают античный текст с конкретной эпохой?",
+      "sourceTitle": "Stanford Encyclopedia of Philosophy — Plato",
+      "sourceUrl": "https://plato.stanford.edu/entries/plato/"
+    },
+    {
+      "id": "lenin-kazan",
+      "order": 4,
+      "yearStart": 1887,
+      "yearEnd": 1887,
+      "era": "1887 год",
+      "title": "Ленин и Казанский университет",
+      "kind": "documented-context",
+      "description": "Владимир Ульянов поступил на юридический факультет Казанского университета в 1887 году и был исключён после студенческих волнений через несколько месяцев. Использованные здесь биографические сведения не устанавливают, что он читал конкретные диалоги Платона или труды Сократа в университете.",
+      "question": "Какие источники могли бы подтвердить чтение конкретного текста конкретным человеком?",
+      "sourceTitle": "Президентская библиотека — биографический очерк о Ленине",
+      "sourceUrl": "https://www.prlib.ru/"
+    },
+    {
+      "id": "lenin-reading-hypothesis",
+      "order": 5,
+      "yearStart": 1887,
+      "yearEnd": 1890,
+      "era": "Конец 1880-х годов; гипотеза для проверки",
+      "title": "Мог ли Ленин читать античных философов?",
+      "kind": "unverified-hypothesis",
+      "description": "Это исследовательский вопрос, а не установленный факт. Для связи именно с Сократом и Платоном нужны конкретные свидетельства: каталоги чтения, письма, конспекты или надёжная биография с ссылкой.",
+      "question": "Можно ли найти подтверждение в письмах, библиографиях, воспоминаниях или академических исследованиях?",
+      "sourceTitle": "Lenin Internet Archive — chronology",
+      "sourceUrl": "https://www.marxists.org/archive/lenin/bio/timeline.htm"
+    },
+    {
+      "id": "modern-seminar",
+      "order": 6,
+      "yearStart": 2020,
+      "yearEnd": 2100,
+      "era": "Современность и будущее",
+      "title": "Студенты обсуждают Сократа сегодня",
+      "kind": "present-day-practice",
+      "description": "Современные студенты могут читать платоновские диалоги и спорить о справедливости, знании, власти, памяти и Атлантиде. Это новое обращение к тексту: участники формируют собственные интерпретации в контексте своего времени.",
+      "question": "Как сегодняшняя дискуссия продолжает древний вопрос, не превращая разные эпохи в одну?",
+      "sourceTitle": "Stanford Encyclopedia of Philosophy — Plato",
+      "sourceUrl": "https://plato.stanford.edu/entries/plato/"
+    }
+  ],
+  "edges": [
+    {
+      "id": "socrates-plato",
+      "from": "socrates",
+      "to": "plato",
+      "type": "dialogue_and_representation",
+      "status": "DOCUMENTED_CONTEXT",
+      "label": "Сократ как собеседник в диалогах Платона",
+      "description": "Платон представляет Сократа в философских диалогах; это важный, но не нейтральный литературный источник о Сократе.",
+      "evidence": "Корпус платоновских диалогов и исследования источников о Сократе.",
+      "sourceTitle": "Stanford Encyclopedia of Philosophy — Plato",
+      "sourceUrl": "https://plato.stanford.edu/entries/plato/"
+    },
+    {
+      "id": "plato-atlantis",
+      "from": "plato",
+      "to": "atlantis-dialogue",
+      "type": "authored_dialogue",
+      "status": "DOCUMENTED_TEXT",
+      "label": "Платоновские диалоги сохраняют рассказ об Атлантиде",
+      "description": "Атлантида обсуждается в «Тимее» и незавершённом «Критии». Внутри повествования Сократ слушает, как Критий пересказывает предание.",
+      "evidence": "Тексты «Тимея» и «Крития»; рассказ об Атлантиде является частью философского повествования.",
+      "sourceTitle": "Internet Encyclopedia of Philosophy — Plato’s Timaeus",
+      "sourceUrl": "https://iep.utm.edu/timaeus/"
+    },
+    {
+      "id": "plato-transmission",
+      "from": "plato",
+      "to": "classical-reception",
+      "type": "textual_transmission",
+      "status": "GENERAL_PROCESS",
+      "label": "Тексты переходят между эпохами",
+      "description": "Рукописное копирование, перевод, преподавание и печать создают маршруты сохранения и переосмысления философии.",
+      "evidence": "Общий механизм истории текстов; отдельные маршруты требуют библиографического исследования.",
+      "sourceTitle": "Stanford Encyclopedia of Philosophy — Plato",
+      "sourceUrl": "https://plato.stanford.edu/entries/plato/"
+    },
+    {
+      "id": "reception-lenin-question",
+      "from": "classical-reception",
+      "to": "lenin-reading-hypothesis",
+      "type": "possible_access_not_proven",
+      "status": "UNVERIFIED",
+      "label": "Возможный доступ к классическим текстам",
+      "description": "Это открытый вопрос о доступности и возможном чтении, а не утверждение, что Ленин читал Сократа или Платона.",
+      "evidence": "Биографический контекст не подтверждает конкретное чтение; требуются прямые источники.",
+      "sourceTitle": "Lenin Internet Archive — chronology",
+      "sourceUrl": "https://www.marxists.org/archive/lenin/bio/timeline.htm"
+    },
+    {
+      "id": "lenin-university-context",
+      "from": "lenin-kazan",
+      "to": "lenin-reading-hypothesis",
+      "type": "biographical_question",
+      "status": "UNVERIFIED",
+      "label": "Биография задаёт вопрос, но не доказывает чтение",
+      "description": "Поступление в университет не является доказательством знакомства с конкретным произведением. Узел фиксирует исследовательский вопрос и предотвращает ложный вывод.",
+      "evidence": "Для подтверждения нужны письма, конспекты, библиографические свидетельства или надёжное исследование.",
+      "sourceTitle": "Президентская библиотека — биографический очерк о Ленине",
+      "sourceUrl": "https://www.prlib.ru/"
+    },
+    {
+      "id": "plato-modern-seminar",
+      "from": "plato",
+      "to": "modern-seminar",
+      "type": "ongoing_reception",
+      "status": "DOCUMENTED_GENERAL_PRACTICE",
+      "label": "Платона читают и обсуждают в современности",
+      "description": "Современные занятия философией возвращаются к античным текстам; интерпретации зависят от вопросов и исторического контекста читателей.",
+      "evidence": "Современная академическая литература и образовательное изучение Платона.",
+      "sourceTitle": "Stanford Encyclopedia of Philosophy — Plato",
+      "sourceUrl": "https://plato.stanford.edu/entries/plato/"
+    }
+  ]
+}
