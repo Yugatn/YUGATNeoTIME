@@ -1,0 +1,41 @@
+/* YUGATNeoTIME calendar engine — dependency-free, integer-day arithmetic. */
+(function(root){
+'use strict';
+const TZOLKIN_NAMES=["Imix","Ik'","Ak'b'al","K'an","Chikchan","Kimi","Manik'","Lamat","Muluk","Ok","Chuwen","Eb'","B'en","Ix","Men","Kib'","Kab'an","Etz'nab'","Kawak","Ajaw"];
+const HAAB_MONTHS=["Pop","Wo","Sip","Sotz'","Sek","Xul","Yaxk'in","Mol","Ch'en","Yax","Sak","Keh","Mak","K'ank'in","Muwan","Pax","K'ayab","Kumk'u","Wayeb'"];
+const DEFAULT_CORRELATION=584283;
+const mod=(n,m)=>((n%m)+m)%m;
+function gregorianToJdn(isoDate){
+ const match=/^(\d{4,})-(\d{2})-(\d{2})$/.exec(String(isoDate));
+ if(!match)throw new Error('Дата должна быть в формате YYYY-MM-DD.');
+ let y=Number(match[1]),m=Number(match[2]),d=Number(match[3]);
+ const check=new Date(Date.UTC(y,m-1,d));
+ if(check.getUTCFullYear()!==y||check.getUTCMonth()!==m-1||check.getUTCDate()!==d)throw new Error('Некорректная календарная дата.');
+ const a=Math.floor((14-m)/12);y+=4800-a;m+=12*a-3;
+ return d+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
+}
+function jdnToGregorian(jdn){
+ if(!Number.isSafeInteger(jdn))throw new Error('Номер дня должен быть целым безопасным числом.');
+ let a=jdn+32044;const b=Math.floor((4*a+3)/146097);const c=a-Math.floor(146097*b/4);const d=Math.floor((4*c+3)/1461);const e=c-Math.floor(1461*d/4);const m=Math.floor((5*e+2)/153);
+ const day=e-Math.floor((153*m+2)/5)+1;const month=m+3-12*Math.floor(m/10);const year=100*b+d-4800+Math.floor(m/10);
+ return String(year).padStart(4,'0')+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+}
+function longCountFromDays(days){
+ if(!Number.isSafeInteger(days))throw new Error('Число дней должно быть целым.');
+ if(days<0)return 'До эпохи 0.0.0.0.0 (отрицательный Long Count не отображается в MVP)';
+ let n=days;const baktun=Math.floor(n/144000);n%=144000;const katun=Math.floor(n/7200);n%=7200;const tun=Math.floor(n/360);n%=360;const uinal=Math.floor(n/20);const kin=n%20;
+ return [baktun,katun,tun,uinal,kin].join('.');
+}
+function parseLongCount(value){
+ const match=/^\s*(\d+)\.(\d{1,2})\.(\d{1,2})\.(\d{1,2})\.(\d{1,2})\s*$/.exec(String(value));
+ if(!match)throw new Error('Формат Long Count: бактун.к’атун.тун.виналь.кин, например 13.0.0.0.0.');
+ const p=match.slice(1).map(Number);if(p[1]>=20||p[2]>=20||p[3]>=18||p[4]>=20)throw new Error('Недопустимое значение разряда Long Count.');
+ const total=p[0]*144000+p[1]*7200+p[2]*360+p[3]*20+p[4];if(!Number.isSafeInteger(total))throw new Error('Значение Long Count слишком велико для точного вычисления.');return total;
+}
+function fromGregorian(isoDate,correlation=DEFAULT_CORRELATION){
+ correlation=Number(correlation);if(!Number.isSafeInteger(correlation))throw new Error('Корреляция должна быть целым числом JDN.');
+ const jdn=gregorianToJdn(isoDate);const days=jdn-correlation;const tzolkinNumber=mod(days+3,13)+1;const tzolkinName=TZOLKIN_NAMES[mod(days+19,20)];const haabIndex=mod(days+348,365);const haabMonth=haabIndex<360?Math.floor(haabIndex/20):18;const haabDay=haabIndex<360?haabIndex%20:haabIndex-360;
+ return {gregorian:isoDate,jdn,absoluteDay:days,longCount:longCountFromDays(days),tzolkin:tzolkinNumber+' '+tzolkinName,haab:haabDay+' '+HAAB_MONTHS[haabMonth],correlation};
+}
+root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,parseLongCount,fromGregorian});
+})(typeof globalThis!=='undefined'?globalThis:this);
