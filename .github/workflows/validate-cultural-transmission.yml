@@ -9,6 +9,9 @@ on:
       - 'scripts/validate_cultural_transmission.py'
       - 'scripts/validate_scenario_template.py'
       - 'docs/SCENARIO_FORECASTING_PROTOCOL.md'
+      - 'schemas/historical-timeline.schema.json'
+      - 'data/historical-timeline-example.json'
+      - 'scripts/validate_historical_timeline.py'
       - '.github/workflows/validate-cultural-transmission.yml'
   pull_request:
     paths:
@@ -36,3 +39,5 @@ jobs:
         run: python scripts/validate_cultural_transmission.py
       - name: Validate scenario forecast template
         run: python scripts/validate_scenario_template.py
+      - name: Validate historical timeline dataset
+        run: python scripts/validate_historical_timeline.py
