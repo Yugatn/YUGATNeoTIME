@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "scenario-forecast",
+  "id": "replace-with-stable-id",
+  "title": "Заполните название исследовательского сценария",
+  "datasetStatus": "template-not-evidence",
+  "researchQuestion": "Какой конкретный культурный эффект исследуется?",
+  "idea": {
+    "description": "Опишите идею или мировоззренческий тезис без оценочных обобщений.",
+    "originRecords": [],
+    "evidenceStatus": "not-tested",
+    "sources": []
+  },
+  "context": {
+    "regions": [],
+    "languages": [],
+    "startPeriod": null,
+    "endPeriod": null,
+    "historicalConditions": [],
+    "knownDataGaps": []
+  },
+  "mechanism": [
+    {
+      "step": 1,
+      "description": "Предполагаемое первое звено передачи",
+      "evidenceStatus": "not-tested",
+      "sourceIds": []
+    },
+    {
+      "step": 2,
+      "description": "Предполагаемое промежуточное звено",
+      "evidenceStatus": "not-tested",
+      "sourceIds": []
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "outcome-a",
+      "description": "Определите наблюдаемый результат",
+      "indicator": "Определите измеримый показатель",
+      "baseline": null,
+      "expectedRange": null,
+      "evidenceStatus": "not-tested",
+      "sources": []
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "alternative-no-effect",
+      "description": "Идея не вызывает измеримого эффекта в выбранном контексте.",
+      "predictions": [],
+      "status": "not-tested",
+      "sources": []
+    },
+    {
+      "id": "alternative-common-cause",
+      "description": "Наблюдаемое изменение объясняется третьим фактором или общим источником.",
+      "predictions": [],
+      "status": "not-tested",
+      "sources": []
+    }
+  ],
+  "confounders": [
+    "доступность образования",
+    "цензура и ограничения публикаций",
+    "миграция и культурный обмен",
+    "экономические условия",
+    "технологии распространения",
+    "неравномерная сохранность источников"
+  ],
+  "forecast": {
+    "horizon": "Укажите временной горизонт и основание его выбора",
+    "method": "Опишите воспроизводимое правило или модель",
+    "assumptions": [],
+    "uncertainty": "Укажите источники неопределённости и способ их представления",
+    "validationPlan": "Опишите отложенный период/выборку, не использованные при построении сценария"
+  },
+  "falsificationCriteria": [
+    "Укажите наблюдение, которое ослабит гипотезу.",
+    "Укажите альтернативный результат, который модель должна уметь объяснить."
+  ],
+  "limitations": [
+    "Шаблон не содержит эмпирического прогноза.",
+    "Корреляция, последовательность во времени и сходство мотивов сами по себе не устанавливают причинность.",
+    "Показатели распространения не равны прямому измерению изменения мировоззрения."
+  ],
+  "sources": [],
+  "overallStatus": "not-tested"
+}
