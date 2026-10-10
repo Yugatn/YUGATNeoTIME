@@ -1,0 +1,30 @@
+name: Validate art-idea scenario data
+
+on:
+  push:
+    paths:
+      - 'data/art-idea-scenarios.json'
+      - 'scripts/validate_art_idea_scenarios.py'
+      - '.github/workflows/validate-art-idea-scenarios.yml'
+  pull_request:
+    paths:
+      - 'data/art-idea-scenarios.json'
+      - 'scripts/validate_art_idea_scenarios.py'
+      - '.github/workflows/validate-art-idea-scenarios.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate scenario data
+        run: python scripts/validate_art_idea_scenarios.py
