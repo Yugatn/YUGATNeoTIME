@@ -60,6 +60,16 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <p class="small muted" id="cosmic-status" aria-live="polite">Загрузка узлов карты… Выберите узел, чтобы прочитать описание и открыть источник.</p>
 <div id="cosmic-detail" style="border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:10px"><strong>Выберите узел карты</strong><p class="small muted">Каждый узел содержит временную оценку, тип утверждения, исследовательский вопрос и источник.</p></div>
 <p class="small muted">Важно: гипотеза о слиянии двух систем с последующим делением показана как отдельная исследовательская идея о происхождении жизни. Она не означает, что Вселенная возникла из клетки или что клеточное деление породило космос. Современная космология и биология описывают разные процессы.</p>
+<div class="rule"></div><h2>Культурные следы · путешествия идей между народами</h2>
+<p class="small muted">Исторические связи возникают не только через войны и торговлю, но и через тексты, переводы, путешествия, произведения искусства и их читателей. Ищите культурные следы и изучайте, как один автор мог открыть аудитории другой регион или традицию.</p>
+<div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:12px 0">
+ <label style="flex:2;min-width:190px">Поиск по автору, региону, идее или способу передачи<input id="culture-query" type="search" placeholder="Хафиз, Азия, перевод, путешествие…" style="display:block;width:100%;margin-top:5px"></label>
+ <label style="flex:1;min-width:160px">Тип культурного следа<select id="culture-kind" style="display:block;width:100%;margin-top:5px"><option value="">Все типы</option><option value="documented-influence">Зафиксированное влияние</option><option value="documented-context">Исторический контекст</option><option value="interpretive-framework">Интерпретационная рамка</option></select></label>
+</div>
+<div style="overflow-x:auto"><canvas id="culture-map" width="1100" height="320" style="width:100%;min-width:620px;border:1px solid var(--line);border-radius:12px;display:block" aria-label="Карта литературных и культурных связей"></canvas></div>
+<p id="culture-status" class="small muted" aria-live="polite">Загрузка культурных следов…</p>
+<div id="culture-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
+<p class="small muted">Методологическая оговорка: факт публикации или перевода не доказывает, что весь этнос изменил мировоззрение. Для такого вывода нужны отдельные данные о читателях, распространении текста, критике, образовании и общественной рецепции.</p>
 <div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
 <div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
 <p id="reverse-result" class="small muted" aria-live="polite">Введите Long Count, чтобы получить григорианскую дату при выбранной корреляции.</p></section>
@@ -77,6 +87,69 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+let culturalTraces=[];
+let cultureNodes=[];
+async function loadCulturalTraces(){
+ try{
+  const response=await fetch('data/cultural-traces.json');
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  const data=await response.json();
+  if(!Array.isArray(data.traces))throw new Error('Некорректный формат культурных следов');
+  culturalTraces=data.traces;renderCulturalTraces();
+ }catch(error){$('culture-status').textContent='Культурный набор пока недоступен: '+error.message+'. Откройте через GitHub Pages или локальный веб-сервер.';}
+}
+function renderCulturalTraces(){
+ const query=$('culture-query').value.trim().toLocaleLowerCase(),kind=$('culture-kind').value;
+ const visible=culturalTraces.filter(t=>(!kind||t.kind===kind)&&(!query||[t.title,t.period,t.origin,t.focus,t.medium,t.mechanism,...t.audiences,...t.tags].join(' ').toLocaleLowerCase().includes(query)));
+ $('culture-status').textContent='Показано '+visible.length+' из '+culturalTraces.length+' демонстрационных культурных следов. Связи требуют проверки по источникам и истории рецепции.';
+ const cards=$('culture-cards');cards.replaceChildren();
+ visible.forEach(t=>{
+  const card=document.createElement('article');card.style.cssText='border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0';
+  const meta=document.createElement('div');meta.className='small muted';meta.textContent=t.period+' · '+t.origin;card.appendChild(meta);
+  const title=document.createElement('h3');title.style.cssText='font-size:1rem;margin:7px 0';title.textContent=t.title;card.appendChild(title);
+  const focus=document.createElement('p');focus.className='small';focus.textContent='Тема / регион: '+t.focus;card.appendChild(focus);
+  const medium=document.createElement('p');medium.className='small muted';medium.textContent='Канал передачи: '+t.medium;card.appendChild(medium);
+  const mechanism=document.createElement('p');mechanism.textContent=t.mechanism;card.appendChild(mechanism);
+  const audience=document.createElement('p');audience.className='small';audience.textContent='Возможная аудитория: '+t.audiences.join(', ');card.appendChild(audience);
+  const tags=document.createElement('p');tags.className='small muted';tags.textContent='Метки: '+t.tags.join(' · ');card.appendChild(tags);
+  const link=document.createElement('a');link.href=t.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Источник: '+t.sourceTitle;card.appendChild(link);
+  const confidence=document.createElement('p');confidence.className='small muted';confidence.style.marginBottom='0';confidence.textContent='Статус: '+t.kind+' · '+t.confidence;card.appendChild(confidence);
+  cards.appendChild(card);
+ });
+ drawCultureMap(visible);
+}
+function drawCultureMap(items){
+ const canvas=$('culture-map');if(!canvas)return;
+ const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#090a10';ctx.fillRect(0,0,w,h);
+ cultureNodes=items.map((trace,i)=>({trace,x:55+i*(w-110)/Math.max(1,items.length-1),y:105+(i%2)*100}));
+ for(let i=0;i<cultureNodes.length;i++)for(let j=i+1;j<cultureNodes.length;j++){
+  const a=cultureNodes[i],b=cultureNodes[j];
+  const common=a.trace.tags.filter(tag=>b.trace.tags.includes(tag));
+  const sharedRegion=a.trace.focus.toLocaleLowerCase().split(/[ ,/]+/).some(word=>word.length>3&&b.trace.focus.toLocaleLowerCase().includes(word));
+  if(common.length||sharedRegion){
+   ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo((a.x+b.x)/2,Math.min(a.y,b.y)-35,b.x,b.y);
+   ctx.strokeStyle='rgba(170,190,220,.3)';ctx.lineWidth=1+Math.min(common.length,2);ctx.stroke();
+  }
+ }
+ cultureNodes.forEach(n=>{
+  const color=n.trace.kind==='documented-influence'?'#f0abfc':n.trace.kind==='interpretive-framework'?'#fbbf24':'#93c5fd';
+  ctx.beginPath();ctx.arc(n.x,n.y,9,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+  ctx.fillStyle='#f4f4f5';ctx.font='12px system-ui';ctx.textAlign=n.x<140?'left':n.x>w-140?'right':'center';
+  const title=n.trace.title;for(let i=0;i<Math.min(2,Math.ceil(title.length/20));i++)ctx.fillText(title.slice(i*20,(i+1)*20),n.x,n.y+(n.y<150?28:34)+i*14);
+ });
+ ctx.fillStyle='#a1a1aa';ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillText('Линии = общие тематические метки / пересечения описаний, не доказанная причинность',14,h-14);
+}
+function bindCulturalTraces(){
+ $('culture-query').addEventListener('input',renderCulturalTraces);
+ $('culture-kind').addEventListener('change',renderCulturalTraces);
+ $('culture-map').addEventListener('click',event=>{
+  const canvas=$('culture-map'),rect=canvas.getBoundingClientRect();
+  const x=(event.clientX-rect.left)*canvas.width/rect.width,y=(event.clientY-rect.top)*canvas.height/rect.height;
+  const node=cultureNodes.find(n=>Math.hypot(n.x-x,n.y-y)<22);
+  if(node){$('culture-query').value=node.trace.title;renderCulturalTraces();}
+ });
+}
 let cosmicStages=[];
 let cosmicNodes=[];
 async function loadCosmicAtlas(){
@@ -218,7 +291,7 @@ function drawProjection(r){
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
-bindCosmicAtlas();loadCosmicAtlas();
+bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
