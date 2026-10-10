@@ -1,0 +1,80 @@
+{
+  "schema": "YUGATNeoTIME.SourceRegistry/1.0",
+  "title": "Реестр источников философской линии",
+  "policy": "Ссылка на обзорную статью помогает ориентироваться, но не заменяет проверку конкретного первичного текста, издания, страницы и контекста цитирования.",
+  "sources": [
+    {
+      "id": "iep-socrates",
+      "title": "Socrates",
+      "publisher": "Internet Encyclopedia of Philosophy",
+      "url": "https://iep.utm.edu/socrates/",
+      "sourceType": "reference-article",
+      "supports": [
+        "Контекст исторического Сократа",
+        "Проблема источников о Сократе"
+      ],
+      "doesNotProve": [
+        "Что каждое высказывание персонажа Платона дословно принадлежит историческому Сократу"
+      ],
+      "recommendedUse": "Вводный ориентир; для конкретного тезиса проверять ссылки и первичные источники."
+    },
+    {
+      "id": "sep-plato",
+      "title": "Plato",
+      "publisher": "Stanford Encyclopedia of Philosophy",
+      "url": "https://plato.stanford.edu/entries/plato/",
+      "sourceType": "scholarly-reference",
+      "supports": [
+        "Философское творчество Платона",
+        "Рецепция и контекст платоновских диалогов"
+      ],
+      "doesNotProve": [
+        "Историчность всех событий, рассказанных персонажами диалогов"
+      ],
+      "recommendedUse": "Научный обзор; переходить по библиографии к специализированным исследованиям."
+    },
+    {
+      "id": "iep-timaeus",
+      "title": "Plato’s Timaeus",
+      "publisher": "Internet Encyclopedia of Philosophy",
+      "url": "https://iep.utm.edu/timaeus/",
+      "sourceType": "reference-article",
+      "supports": [
+        "Контекст диалога «Тимей»",
+        "Рассказ об Атлантиде как часть платоновского повествования"
+      ],
+      "doesNotProve": [
+        "Физическое существование Атлантиды в описанном виде"
+      ],
+      "recommendedUse": "Сопоставлять обзор с текстами «Тимея» и «Крития» в конкретном переводе."
+    },
+    {
+      "id": "prlib-lenin",
+      "title": "Материалы Президентской библиотеки о Владимире Ленине",
+      "publisher": "Президентская библиотека",
+      "url": "https://www.prlib.ru/",
+      "sourceType": "institutional-portal",
+      "supports": [
+        "Поиск биографических материалов о Ленине"
+      ],
+      "doesNotProve": [
+        "Что Ленин читал конкретный текст Сократа или Платона, если в источнике это прямо не подтверждено"
+      ],
+      "recommendedUse": "Найти конкретную публикацию и зафиксировать точное название, дату и страницы; главная страница портала сама по себе не является доказательством."
+    },
+    {
+      "id": "lenin-archive",
+      "title": "Lenin Internet Archive — chronology",
+      "publisher": "Marxists Internet Archive",
+      "url": "https://www.marxists.org/archive/lenin/bio/timeline.htm",
+      "sourceType": "secondary-chronology",
+      "supports": [
+        "Предварительная ориентация в хронологии биографии"
+      ],
+      "doesNotProve": [
+        "Конкретный список прочитанных Лениным античных философских текстов"
+      ],
+      "recommendedUse": "Использовать как отправную точку и сверять значимые биографические факты с академическими или архивными источниками."
+    }
+  ]
+}
