@@ -92,3 +92,11 @@ MVP не предполагает, что одна бесспорная эпох
 - Структурированный шаблон сценария: [scenario-forecast-template.json](./data/scenario-forecast-template.json). Это пустой шаблон исследования, а не эмпирический прогноз.
 - Валидатор шаблона: `python3 scripts/validate_scenario_template.py`.
 - GitHub Actions проверяет и граф культурной передачи, и шаблон сценария при изменении соответствующих файлов.
+
+## Историческая временная шкала
+
+- Модель данных: [HISTORICAL_TIMELINE_DATA_MODEL.md](./docs/HISTORICAL_TIMELINE_DATA_MODEL.md).
+- JSON Schema: [historical-timeline.schema.json](./schemas/historical-timeline.schema.json).
+- Синтетический пример: [historical-timeline-example.json](./data/historical-timeline-example.json). Он демонстрирует структуру, не описывая реальные события.
+- Валидатор: `python3 scripts/validate_historical_timeline.py`.
+- Проверки запускаются в GitHub Actions при изменении файлов временной шкалы.
