@@ -1,17 +1,23 @@
-name: Validate cultural transmission graph
+name: Validate cultural transmission and scenario template
 
 on:
   push:
     paths:
       - 'schemas/cultural-transmission.schema.json'
       - 'data/cultural-transmission-example.json'
+      - 'data/scenario-forecast-template.json'
       - 'scripts/validate_cultural_transmission.py'
+      - 'scripts/validate_scenario_template.py'
+      - 'docs/SCENARIO_FORECASTING_PROTOCOL.md'
       - '.github/workflows/validate-cultural-transmission.yml'
   pull_request:
     paths:
       - 'schemas/cultural-transmission.schema.json'
       - 'data/cultural-transmission-example.json'
+      - 'data/scenario-forecast-template.json'
       - 'scripts/validate_cultural_transmission.py'
+      - 'scripts/validate_scenario_template.py'
+      - 'docs/SCENARIO_FORECASTING_PROTOCOL.md'
       - '.github/workflows/validate-cultural-transmission.yml'
   workflow_dispatch:
 
@@ -28,3 +34,5 @@ jobs:
           python-version: '3.x'
       - name: Validate cultural transmission graph
         run: python scripts/validate_cultural_transmission.py
+      - name: Validate scenario forecast template
+        run: python scripts/validate_scenario_template.py
