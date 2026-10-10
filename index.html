@@ -71,6 +71,18 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <h3 style="font-size:1rem">Связи с указанием типа</h3><div id="culture-relations" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
 <h3 style="font-size:1rem">Записи культурных следов</h3><div id="culture-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
 <p class="small muted">Методологическая оговорка: факт публикации или перевода не доказывает, что весь этнос изменил мировоззрение. Для такого вывода нужны отдельные данные о читателях, распространении текста, критике, образовании и общественной рецепции.</p>
+<div class="rule"></div><h2>Философская непрерывность · от Сократа до сегодняшнего дня</h2>
+<p class="small muted">Исследовательская точка входа в историю идей. Здесь различаются исторические события, передача текстов, литературный рассказ и вопросы, на которые пока нет подтверждённых ответов.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+ <button type="button" id="philosophy-all">Вся линия</button>
+ <button type="button" id="philosophy-ancient">Античность</button>
+ <button type="button" id="philosophy-modern">Новое время и современность</button>
+</div>
+<div id="philosophy-timeline" style="display:grid;gap:10px"></div>
+<h3 style="font-size:1rem;margin-top:16px">Связи и свидетельства</h3>
+<div id="philosophy-edges" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
+<p id="philosophy-status" class="small muted" aria-live="polite">Загрузка философской линии…</p>
+<p class="small muted">Уточнение об Атлантиде: в платоновском «Тимее» рассказ пересказывает Критий, а Сократ выступает слушателем. Само наличие рассказа в диалоге не доказывает, что Атлантида существовала как описанное государство.</p>
 <div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
 <div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
 <p id="reverse-result" class="small muted" aria-live="polite">Введите Long Count, чтобы получить григорианскую дату при выбранной корреляции.</p></section>
@@ -88,6 +100,50 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+let philosophyData=null;
+let philosophyFilter='all';
+async function loadPhilosophicalContinuity(){
+ try{
+  const response=await fetch('data/philosophical-continuity.json');
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  philosophyData=await response.json();
+  if(!Array.isArray(philosophyData.nodes)||!Array.isArray(philosophyData.edges))throw new Error('Некорректный формат данных');
+  renderPhilosophicalContinuity();
+ }catch(error){$('philosophy-status').textContent='Не удалось загрузить философскую линию: '+error.message+'. Откройте через GitHub Pages или локальный веб-сервер.';}
+}
+function renderPhilosophicalContinuity(){
+ if(!philosophyData)return;
+ const nodes=philosophyData.nodes.filter(n=>philosophyFilter==='all'||(philosophyFilter==='ancient'?n.yearEnd<0:n.yearEnd>=0));
+ const ids=new Set(nodes.map(n=>n.id));
+ const timeline=$('philosophy-timeline');timeline.replaceChildren();
+ nodes.forEach(n=>{
+  const card=document.createElement('article');card.style.cssText='border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:minmax(110px, .65fr) minmax(0,3fr);gap:12px';
+  const date=document.createElement('div');date.className='small muted';date.textContent=n.era;card.appendChild(date);
+  const body=document.createElement('div');
+  const title=document.createElement('h3');title.style.cssText='margin:0 0 7px;font-size:1rem';title.textContent=n.title;body.appendChild(title);
+  const kind=document.createElement('p');kind.className='small muted';kind.textContent='Тип записи: '+n.kind;body.appendChild(kind);
+  const desc=document.createElement('p');desc.textContent=n.description;body.appendChild(desc);
+  const question=document.createElement('p');question.className='small';question.textContent='Вопрос для исследования: '+n.question;body.appendChild(question);
+  const link=document.createElement('a');link.href=n.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Источник: '+n.sourceTitle;body.appendChild(link);
+  card.appendChild(body);timeline.appendChild(card);
+ });
+ const edges=philosophyData.edges.filter(e=>ids.has(e.from)&&ids.has(e.to));
+ const box=$('philosophy-edges');box.replaceChildren();
+ edges.forEach(e=>{
+  const card=document.createElement('article');card.style.cssText='border:1px solid var(--line);border-radius:10px;padding:11px';
+  const status=document.createElement('div');status.className='small muted';status.textContent=e.type+' · '+e.status;card.appendChild(status);
+  const title=document.createElement('h4');title.style.cssText='margin:6px 0;font-size:.95rem';title.textContent=e.label;card.appendChild(title);
+  const desc=document.createElement('p');desc.className='small';desc.textContent=e.description;card.appendChild(desc);
+  const evidence=document.createElement('p');evidence.className='small muted';evidence.textContent='Основание: '+e.evidence;card.appendChild(evidence);
+  const link=document.createElement('a');link.href=e.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Источник: '+e.sourceTitle;card.appendChild(link);box.appendChild(card);
+ });
+ $('philosophy-status').textContent='Показано '+nodes.length+' узлов и '+edges.length+' отношений. Возможное чтение Лениным Платона оставлено неподтверждённым вопросом, а не историческим фактом.';
+}
+function bindPhilosophicalContinuity(){
+ $('philosophy-all').addEventListener('click',()=>{philosophyFilter='all';renderPhilosophicalContinuity();});
+ $('philosophy-ancient').addEventListener('click',()=>{philosophyFilter='ancient';renderPhilosophicalContinuity();});
+ $('philosophy-modern').addEventListener('click',()=>{philosophyFilter='modern';renderPhilosophicalContinuity();});
+}
 let culturalTraces=[];
 let culturalRelations=[];
 let cultureNodes=[];
@@ -309,7 +365,7 @@ function drawProjection(r){
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
-bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();
+bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();bindPhilosophicalContinuity();loadPhilosophicalContinuity();
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
