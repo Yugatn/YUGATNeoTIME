@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yugatn.github.io/YUGATNeoTIME/schemas/historical-timeline.schema.json",
+  "title": "YUGATNeoTIME Historical Timeline Dataset",
+  "type": "object",
+  "required": ["schemaVersion", "datasetId", "datasetStatus", "events", "relations", "limitations"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "datasetId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "datasetStatus": {"enum": ["synthetic-example", "research-draft", "source-reviewed"]},
+    "title": {"type": "string"},
+    "description": {"type": "string"},
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "date", "dateBasis", "region", "description", "evidenceStatus", "sources"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "title": {"type": "string", "minLength": 1},
+          "date": {
+            "type": "object",
+            "required": ["start", "precision", "calendar"],
+            "properties": {
+              "start": {"type": ["integer", "string"]},
+              "end": {"type": ["integer", "string", "null"]},
+              "precision": {"enum": ["day", "month", "year", "decade", "century", "approximate", "unknown"]},
+              "calendar": {"type": "string", "minLength": 1},
+              "originalDateText": {"type": ["string", "null"]}
+            },
+            "additionalProperties": false
+          },
+          "dateBasis": {"enum": ["documented-date", "scholarly-estimate", "traditional-date", "model-assumption", "unknown"]},
+          "region": {"type": "string"},
+          "place": {"type": ["string", "null"]},
+          "peopleIds": {"type": "array", "items": {"type": "string"}},
+          "cultureTags": {"type": "array", "items": {"type": "string"}},
+          "eventType": {"type": "string"},
+          "description": {"type": "string"},
+          "evidenceStatus": {"enum": ["observed", "derived", "claimed", "not-tested", "conflicted", "residual"]},
+          "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "relationType", "status", "description", "sources"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "relationType": {"enum": ["preceded", "followed", "participant-in", "influenced", "taught", "translated", "adapted", "conflict", "trade-contact", "migration", "parallel-development", "possible-connection", "unknown"]},
+          "status": {"enum": ["observed", "derived", "claimed", "not-tested", "conflicted", "residual"]},
+          "description": {"type": "string"},
+          "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "limitations": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["title", "url", "sourceType"],
+      "properties": {
+        "title": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "sourceType": {"enum": ["primary", "scholarly-reference", "archive", "dataset", "other"]},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
