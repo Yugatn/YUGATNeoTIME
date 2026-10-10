@@ -18,10 +18,12 @@
 - Интерактивный концептуальный атлас от ранней Вселенной до ИИ, с разделением научных моделей и гипотез: [COSMIC_TO_AI_HOLOGRAPHIC_ATLAS.md](./docs/COSMIC_TO_AI_HOLOGRAPHIC_ATLAS.md).
 - Культурные следы: путешествия, литературные образы, переводы и передача идей между обществами: [CULTURAL_TRACES_AND_IDEA_TRANSMISSION.md](./docs/CULTURAL_TRACES_AND_IDEA_TRANSMISSION.md).
 - Типизированный граф культурных связей с явными рёбрами и эпистемическими статусами: [CULTURAL_RELATION_GRAPH.md](./docs/CULTURAL_RELATION_GRAPH.md).
+- Философская линия от Сократа и Платона через историю передачи текстов к современным дискуссиям: [PHILOSOPHICAL_CONTINUITY_SOCRATES_TO_PRESENT.md](./docs/PHILOSOPHICAL_CONTINUITY_SOCRATES_TO_PRESENT.md).
 - Начальный демонстрационный набор событий с источниками: [historical-events.json](./data/historical-events.json).
 - 14 узлов карты «От ранней Вселенной до ИИ»: [cosmic-to-ai-atlas.json](./data/cosmic-to-ai-atlas.json).
 - Начальный набор культурных следов и литературных связей: [cultural-traces.json](./data/cultural-traces.json).
 - Отдельный граф сравнительных культурных отношений: [cultural-relations.json](./data/cultural-relations.json).
+- Узлы и типизированные связи философской линии: [philosophical-continuity.json](./data/philosophical-continuity.json).
 - Описание архитектуры проекции и ограничений: [HOLOGRAPHIC_TIME_PROJECTION.md](./docs/HOLOGRAPHIC_TIME_PROJECTION.md).
 - Вычисления выполняются в браузере без сторонних библиотек.
 
