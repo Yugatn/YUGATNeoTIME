@@ -1,8 +1,10 @@
-/* YUGATNeoTIME calendar engine — dependency-free, integer-day arithmetic. */
+/* YUGATNeoTIME calendar engine — integer-day arithmetic, no dependencies. */
 (function(root){
 'use strict';
 const TZOLKIN_NAMES=["Imix","Ik'","Ak'b'al","K'an","Chikchan","Kimi","Manik'","Lamat","Muluk","Ok","Chuwen","Eb'","B'en","Ix","Men","Kib'","Kab'an","Etz'nab'","Kawak","Ajaw"];
 const HAAB_MONTHS=["Pop","Wo","Sip","Sotz'","Sek","Xul","Yaxk'in","Mol","Ch'en","Yax","Sak","Keh","Mak","K'ank'in","Muwan","Pax","K'ayab","Kumk'u","Wayeb'"];
+const EGYPTIAN_MONTHS=["Thoth","Phaophi","Hathyr","Choiak","Tybi","Mechir","Phamenoth","Pharmouthi","Pachons","Payni","Epiphi","Mesore"];
+const EGYPTIAN_SEASONS=["Akhet","Peret","Shemu"];
 const DEFAULT_CORRELATION=584283;
 const mod=(n,m)=>((n%m)+m)%m;
 function gregorianToJdn(isoDate){
@@ -32,10 +34,16 @@ function parseLongCount(value){
  const p=match.slice(1).map(Number);if(p[1]>=20||p[2]>=20||p[3]>=18||p[4]>=20)throw new Error('Недопустимое значение разряда Long Count.');
  const total=p[0]*144000+p[1]*7200+p[2]*360+p[3]*20+p[4];if(!Number.isSafeInteger(total))throw new Error('Значение Long Count слишком велико для точного вычисления.');return total;
 }
-function fromGregorian(isoDate,correlation=DEFAULT_CORRELATION){
- correlation=Number(correlation);if(!Number.isSafeInteger(correlation))throw new Error('Корреляция должна быть целым числом JDN.');
- const jdn=gregorianToJdn(isoDate);const days=jdn-correlation;const tzolkinNumber=mod(days+3,13)+1;const tzolkinName=TZOLKIN_NAMES[mod(days+19,20)];const haabIndex=mod(days+348,365);const haabMonth=haabIndex<360?Math.floor(haabIndex/20):18;const haabDay=haabIndex<360?haabIndex%20:haabIndex-360;
- return {gregorian:isoDate,jdn,absoluteDay:days,longCount:longCountFromDays(days),tzolkin:tzolkinNumber+' '+tzolkinName,haab:haabDay+' '+HAAB_MONTHS[haabMonth],correlation};
+function egyptianFromJdn(jdn,epochJdn){
+ if(!Number.isSafeInteger(jdn)||!Number.isSafeInteger(epochJdn))throw new Error('Египетская эпоха и номер дня должны быть целыми числами.');
+ const delta=jdn-epochJdn;const year=Math.floor(delta/365)+1;const dayOfYear=mod(delta,365);
+ if(dayOfYear<360){const monthIndex=Math.floor(dayOfYear/30);const day=dayOfYear%30+1;const seasonIndex=Math.floor(monthIndex/4);return {year,dayOfYear:dayOfYear+1,month:EGYPTIAN_MONTHS[monthIndex],monthNumber:monthIndex+1,day,season:EGYPTIAN_SEASONS[seasonIndex],label:'Year '+year+' · '+EGYPTIAN_SEASONS[seasonIndex]+' '+(monthIndex%4+1)+' / '+day+' ('+EGYPTIAN_MONTHS[monthIndex]+')'};}
+ const epagomenal=dayOfYear-359;return {year,dayOfYear:dayOfYear+1,month:'Epagomenal days',monthNumber:13,day:epagomenal,season:'Year-end',label:'Year '+year+' · Epagomenal day '+epagomenal};
 }
-root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,parseLongCount,fromGregorian});
+function fromGregorian(isoDate,correlation=DEFAULT_CORRELATION,egyptianEpochDate='2026-01-01'){
+ correlation=Number(correlation);if(!Number.isSafeInteger(correlation))throw new Error('Корреляция должна быть целым числом JDN.');
+ const jdn=gregorianToJdn(isoDate);const days=jdn-correlation;const tzolkinNumber=mod(days+3,13)+1;const tzolkinName=TZOLKIN_NAMES[mod(days+19,20)];const haabIndex=mod(days+348,365);const haabMonth=haabIndex<360?Math.floor(haabIndex/20):18;const haabDay=haabIndex<360?haabIndex%20:haabIndex-360;const egyptianEpochJdn=gregorianToJdn(egyptianEpochDate);
+ return {gregorian:isoDate,jdn,absoluteDay:days,longCount:longCountFromDays(days),tzolkin:tzolkinNumber+' '+tzolkinName,haab:haabDay+' '+HAAB_MONTHS[haabMonth],correlation,egyptian:egyptianFromJdn(jdn,egyptianEpochJdn),egyptianEpochDate,egyptianEpochJdn};
+}
+root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),EGYPTIAN_MONTHS:EGYPTIAN_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,parseLongCount,egyptianFromJdn,fromGregorian});
 })(typeof globalThis!=='undefined'?globalThis:this);
