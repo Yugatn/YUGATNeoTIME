@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0",
+  "title": "Демонстрационный граф передачи идеи через литературу",
+  "datasetStatus": "synthetic-example",
+  "records": [
+    {
+      "id": "idea-eastward-wisdom",
+      "recordType": "idea",
+      "title": "Художественное представление о восточной мудрости",
+      "period": {
+        "start": "T0",
+        "end": null,
+        "precision": "approximate"
+      },
+      "region": "условная исходная культурная среда",
+      "language": null,
+      "description": "Абстрактная идея для демонстрации структуры данных; не описание конкретного исторического произведения.",
+      "evidenceStatus": "not-tested",
+      "sources": [],
+      "metrics": {}
+    },
+    {
+      "id": "novel-travel-asia",
+      "recordType": "artwork",
+      "title": "Условный роман о путешествии по Азии",
+      "period": {
+        "start": "T1",
+        "end": null,
+        "precision": "approximate"
+      },
+      "region": "условная исходная культурная среда",
+      "language": "условный язык A",
+      "description": "Вымышленный пример художественного произведения, которое акцентирует внимание читателей на восточной философии.",
+      "evidenceStatus": "not-tested",
+      "sources": [],
+      "metrics": {
+        "editions": null,
+        "documentedReviews": null
+      }
+    },
+    {
+      "id": "translation-language-b",
+      "recordType": "translation",
+      "title": "Условный перевод романа",
+      "period": {
+        "start": "T2",
+        "end": null,
+        "precision": "approximate"
+      },
+      "region": "условная принимающая культурная среда",
+      "language": "условный язык B",
+      "description": "Гипотетический перевод. В реальном исследовании необходимы библиографические данные об издании.",
+      "evidenceStatus": "not-tested",
+      "sources": [],
+      "metrics": {
+        "printRun": null,
+        "libraryHoldings": null
+      }
+    },
+    {
+      "id": "review-response",
+      "recordType": "review",
+      "title": "Условная рецензия",
+      "period": {
+        "start": "T3",
+        "end": null,
+        "precision": "approximate"
+      },
+      "region": "условная принимающая культурная среда",
+      "language": "условный язык B",
+      "description": "Вымышленная рецензия, используемая для демонстрации возможного следа рецепции.",
+      "evidenceStatus": "not-tested",
+      "sources": [],
+      "metrics": {}
+    },
+    {
+      "id": "later-artwork",
+      "recordType": "observed-outcome",
+      "title": "Условное последующее произведение с похожим мотивом",
+      "period": {
+        "start": "T4",
+        "end": null,
+        "precision": "approximate"
+      },
+      "region": "условная принимающая культурная среда",
+      "language": "условный язык B",
+      "description": "Сходство мотивов само по себе не подтверждает влияние исходного романа; требуется исследование источников и альтернатив.",
+      "evidenceStatus": "not-tested",
+      "sources": [],
+      "metrics": {}
+    }
+  ],
+  "relations": [
+    {
+      "id": "r-idea-novel",
+      "from": "idea-eastward-wisdom",
+      "to": "novel-travel-asia",
+      "relationType": "proposed-mechanism",
+      "status": "not-tested",
+      "description": "Гипотеза: идея выражена в художественном произведении.",
+      "sources": []
+    },
+    {
+      "id": "r-novel-translation",
+      "from": "novel-travel-asia",
+      "to": "translation-language-b",
+      "relationType": "translation",
+      "status": "not-tested",
+      "description": "В демонстрационном сценарии перевод предполагается, но реального издания нет.",
+      "sources": []
+    },
+    {
+      "id": "r-translation-review",
+      "from": "translation-language-b",
+      "to": "review-response",
+      "relationType": "review",
+      "status": "not-tested",
+      "description": "Гипотетическая связь перевода и рецензии.",
+      "sources": []
+    },
+    {
+      "id": "r-review-later-work",
+      "from": "review-response",
+      "to": "later-artwork",
+      "relationType": "proposed-mechanism",
+      "status": "not-tested",
+      "description": "Предполагаемый путь передачи мотива; нельзя утверждать причинность без прямых свидетельств.",
+      "sources": []
+    },
+    {
+      "id": "r-alternative",
+      "from": "idea-eastward-wisdom",
+      "to": "later-artwork",
+      "relationType": "alternative-explanation",
+      "status": "not-tested",
+      "description": "Альтернативой может быть независимое происхождение сходного мотива или общий источник.",
+      "sources": []
+    }
+  ],
+  "limitations": [
+    "Все записи вымышлены и предназначены только для проверки структуры; это не исторические утверждения.",
+    "Пустой список источников означает, что связь не подтверждена и не должна отображаться как установленное влияние.",
+    "Временные метки T0–T4 показывают последовательность демонстрации, а не календарные даты.",
+    "Нельзя выводить причинность из одной временной последовательности или сходства мотивов.",
+    "Пропуски данных и неравномерная сохранность культурных свидетельств должны учитываться при реальном анализе."
+  ]
+}
