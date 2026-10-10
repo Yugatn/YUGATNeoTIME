@@ -1,0 +1,178 @@
+{
+  "schema": "YUGATNeoTIME.HistoricalEvent/1.0",
+  "scope": "curated-demo",
+  "notice": "Это небольшой демонстрационный набор, не полная история человечества. Записи требуют дальнейшего расширения и независимой проверки источников.",
+  "events": [
+    {
+      "id": "evt-1453-constantinople",
+      "date": "1453-05-29",
+      "datePrecision": "day",
+      "title": "Завоевание Константинополя османами",
+      "region": "Европа / Восточное Средиземноморье",
+      "places": [
+        "Константинополь"
+      ],
+      "actors": [
+        "Византийская империя",
+        "Османская империя"
+      ],
+      "tags": [
+        "империи",
+        "война",
+        "торговые пути"
+      ],
+      "summary": "Падение Константинополя стало переломным событием в истории Восточного Средиземноморья.",
+      "sourceTitle": "Encyclopaedia Britannica: Fall of Constantinople",
+      "sourceUrl": "https://www.britannica.com/event/Fall-of-Constantinople-1453",
+      "status": "CLAIMED",
+      "confidence": "high"
+    },
+    {
+      "id": "evt-1492-granada",
+      "date": "1492-01-02",
+      "datePrecision": "day",
+      "title": "Капитуляция Гранады",
+      "region": "Европа / Иберийский полуостров",
+      "places": [
+        "Гранада"
+      ],
+      "actors": [
+        "Насридский эмират",
+        "Кастилия",
+        "Арагон"
+      ],
+      "tags": [
+        "государства",
+        "религия",
+        "экспансия"
+      ],
+      "summary": "Завершение существования эмирата Гранада как независимого мусульманского государства на Пиренейском полуострове.",
+      "sourceTitle": "Encyclopaedia Britannica: Granada",
+      "sourceUrl": "https://www.britannica.com/place/Granada-Spain",
+      "status": "CLAIMED",
+      "confidence": "high"
+    },
+    {
+      "id": "evt-1776-declaration",
+      "date": "1776-07-04",
+      "datePrecision": "day",
+      "title": "Принятие Декларации независимости США",
+      "region": "Северная Америка",
+      "places": [
+        "Филадельфия"
+      ],
+      "actors": [
+        "Тринадцать колоний",
+        "Великобритания"
+      ],
+      "tags": [
+        "независимость",
+        "политические институты",
+        "революция"
+      ],
+      "summary": "Документ закрепил политическое обоснование независимости тринадцати колоний.",
+      "sourceTitle": "U.S. National Archives: Declaration of Independence",
+      "sourceUrl": "https://www.archives.gov/founding-docs/declaration",
+      "status": "CLAIMED",
+      "confidence": "high"
+    },
+    {
+      "id": "evt-1789-bastille",
+      "date": "1789-07-14",
+      "datePrecision": "day",
+      "title": "Взятие Бастилии",
+      "region": "Европа / Франция",
+      "places": [
+        "Париж"
+      ],
+      "actors": [
+        "Парижане",
+        "Французская монархия"
+      ],
+      "tags": [
+        "революция",
+        "государство",
+        "общество"
+      ],
+      "summary": "Событие стало одним из символов Французской революции; его значение рассматривается в контексте более широкого кризиса монархии.",
+      "sourceTitle": "Encyclopaedia Britannica: Storming of the Bastille",
+      "sourceUrl": "https://www.britannica.com/event/Storming-of-the-Bastille",
+      "status": "CLAIMED",
+      "confidence": "high"
+    },
+    {
+      "id": "evt-1914-wwi",
+      "date": "1914-07-28",
+      "datePrecision": "day",
+      "title": "Начало Первой мировой войны: Австро-Венгрия объявляет войну Сербии",
+      "region": "Европа; глобальные последствия",
+      "places": [
+        "Вена",
+        "Белград"
+      ],
+      "actors": [
+        "Австро-Венгрия",
+        "Сербия"
+      ],
+      "tags": [
+        "война",
+        "дипломатия",
+        "глобальные связи"
+      ],
+      "summary": "Формальное объявление войны последовало за Июльским кризисом; глобальная война развивалась через систему союзов и последующих решений государств.",
+      "sourceTitle": "Encyclopaedia Britannica: World War I",
+      "sourceUrl": "https://www.britannica.com/event/World-War-I",
+      "status": "CLAIMED",
+      "confidence": "high"
+    },
+    {
+      "id": "evt-1945-un",
+      "date": "1945-10-24",
+      "datePrecision": "day",
+      "title": "Вступление в силу Устава ООН",
+      "region": "Глобальное",
+      "places": [
+        "Сан-Франциско",
+        "Нью-Йорк"
+      ],
+      "actors": [
+        "Организация Объединённых Наций",
+        "государства-учредители"
+      ],
+      "tags": [
+        "международные институты",
+        "дипломатия",
+        "послевоенный порядок"
+      ],
+      "summary": "Дата отмечает вступление Устава ООН в силу и учреждение организации в её правовом качестве.",
+      "sourceTitle": "United Nations: History of the UN",
+      "sourceUrl": "https://www.un.org/en/about-us/history-of-the-un",
+      "status": "CLAIMED",
+      "confidence": "high"
+    },
+    {
+      "id": "evt-1969-moon",
+      "date": "1969-07-20",
+      "datePrecision": "day",
+      "title": "Первая высадка людей на Луну",
+      "region": "Земля / Луна; глобальная научно-техническая история",
+      "places": [
+        "Море Спокойствия"
+      ],
+      "actors": [
+        "NASA",
+        "экипаж Apollo 11"
+      ],
+      "tags": [
+        "наука",
+        "технологии",
+        "холодная война"
+      ],
+      "summary": "Миссия Apollo 11 стала важной вехой космических исследований и частью технологического соперничества периода холодной войны.",
+      "sourceTitle": "NASA: Apollo 11",
+      "sourceUrl": "https://www.nasa.gov/mission/apollo-11/",
+      "status": "CLAIMED",
+      "confidence": "high"
+    }
+  ]
+}
