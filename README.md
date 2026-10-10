@@ -72,3 +72,10 @@ MVP не предполагает, что одна бесспорная эпох
 - Проверка набора сценариев: `python3 scripts/validate_art_idea_scenarios.py`.
 
 Модель пока не обучена на историческом корпусе и не выдаёт вероятностных прогнозов. Она помогает формулировать альтернативные сценарии и явно фиксировать предположения.
+
+## Граф культурной передачи
+
+- Модель записей, отношений и статусов доказательности: [CULTURAL_TRANSMISSION_DATA_MODEL.md](./docs/CULTURAL_TRANSMISSION_DATA_MODEL.md).
+- JSON Schema: [cultural-transmission.schema.json](./schemas/cultural-transmission.schema.json).
+- Синтетический пример: [cultural-transmission-example.json](./data/cultural-transmission-example.json). Пример полностью вымышлен и не является историческим утверждением.
+- Проверка целостности графа: `python3 scripts/validate_cultural_transmission.py`.
