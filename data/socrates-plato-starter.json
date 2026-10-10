@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "socrates-plato-starter",
+  "datasetStatus": "research-draft",
+  "title": "Сократ и Платон: начальный исторический маршрут",
+  "description": "Исследовательский набор с источниками для проверки модели исторической шкалы. Даты приблизительны там, где это отражено в поле precision; связи не следует понимать как полную реконструкцию интеллектуальной передачи.",
+  "events": [
+    {
+      "id": "socrates-trial-and-death",
+      "title": "Суд и смерть Сократа",
+      "date": {
+        "start": "399 BCE",
+        "end": null,
+        "precision": "year",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "399 до н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Афины, Древняя Греция",
+      "place": "Афины",
+      "peopleIds": [
+        "socrates"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy",
+        "athens"
+      ],
+      "eventType": "trial-and-death",
+      "description": "Сократ был осуждён афинским судом и казнён. Детали суда и образ Сократа известны в том числе через литературные произведения Платона и Ксенофонта, которые требуют критического прочтения как источники.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Socrates",
+          "url": "https://plato.stanford.edu/entries/socrates/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный философско-исторический обзор жизни Сократа и источников о нём."
+        },
+        {
+          "title": "Plato, Apology",
+          "url": "https://www.perseus.tufts.edu/hopper/text?doc=Plat.+Ap.",
+          "sourceType": "primary",
+          "note": "Первичный античный текст в литературной форме; не стенограмма суда."
+        }
+      ]
+    },
+    {
+      "id": "plato-birth",
+      "title": "Рождение Платона",
+      "date": {
+        "start": "428/427 BCE",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "около 428/427 до н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Афины, Древняя Греция",
+      "place": "Афины (традиционная локализация)",
+      "peopleIds": [
+        "plato"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy"
+      ],
+      "eventType": "birth",
+      "description": "Рождение Платона обычно датируют 428/427 годами до н. э.; точность этой датировки ограничена характером сохранившихся свидетельств.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Plato",
+          "url": "https://plato.stanford.edu/entries/plato/",
+          "sourceType": "scholarly-reference",
+          "note": "Справочный обзор биографии и философии Платона."
+        }
+      ]
+    },
+    {
+      "id": "plato-academy",
+      "title": "Основание Академии Платона (приблизительная датировка)",
+      "date": {
+        "start": "c. 387 BCE",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "около 387 до н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Афины, Древняя Греция",
+      "place": "Академия близ Афин",
+      "peopleIds": [
+        "plato"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy",
+        "education"
+      ],
+      "eventType": "institution",
+      "description": "Основание философской школы, известной как Академия, традиционно относят приблизительно к этому периоду. Точная дата и институциональная форма требуют оговорок.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Plato",
+          "url": "https://plato.stanford.edu/entries/plato/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор жизни Платона и Академии."
+        }
+      ]
+    },
+    {
+      "id": "plato-socratic-dialogues",
+      "title": "Диалоги Платона как свидетельства о Сократе",
+      "date": {
+        "start": "4th century BCE",
+        "end": null,
+        "precision": "century",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "IV век до н. э.; датировка отдельных диалогов различается"
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Афины и грекоязычный мир",
+      "place": null,
+      "peopleIds": [
+        "plato",
+        "socrates"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy",
+        "literature",
+        "education"
+      ],
+      "eventType": "literary-transmission",
+      "description": "Платон использовал Сократа как центрального собеседника во многих диалогах. Эти произведения сохранили влиятельное философское изображение Сократа, но литературный персонаж не должен автоматически приравниваться к дословно зафиксированным историческим высказываниям.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Socrates",
+          "url": "https://plato.stanford.edu/entries/socrates/",
+          "sourceType": "scholarly-reference",
+          "note": "Обсуждает проблему источников о Сократе и различие между литературными изображениями и исторической реконструкцией."
+        },
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Plato",
+          "url": "https://plato.stanford.edu/entries/plato/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор диалогической формы и философского наследия Платона."
+        },
+        {
+          "title": "Plato, Apology",
+          "url": "https://www.perseus.tufts.edu/hopper/text?doc=Plat.+Ap.",
+          "sourceType": "primary",
+          "note": "Первичный литературный источник, отражающий платоновское изображение защиты Сократа."
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "socrates-to-plato-dialogues",
+      "from": "socrates-trial-and-death",
+      "to": "plato-socratic-dialogues",
+      "relationType": "influenced",
+      "status": "claimed",
+      "description": "Платоновские диалоги являются важнейшим каналом, через который позднейшие читатели знакомятся с образом и философскими вопросами Сократа. Это не означает, что каждое высказывание персонажа Сократа исторически дословно.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Socrates",
+          "url": "https://plato.stanford.edu/entries/socrates/",
+          "sourceType": "scholarly-reference",
+          "note": "Обсуждение сократической проблемы и свидетельств о Сократе."
+        },
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Plato",
+          "url": "https://plato.stanford.edu/entries/plato/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор диалогов и философского наследия Платона."
+        }
+      ]
+    },
+    {
+      "id": "plato-to-academy",
+      "from": "plato-birth",
+      "to": "plato-academy",
+      "relationType": "participant-in",
+      "status": "claimed",
+      "description": "Связь биографического узла Платона с основанием его школы; дата основания приблизительна.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Plato",
+          "url": "https://plato.stanford.edu/entries/plato/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор биографии Платона и Академии."
+        }
+      ]
+    },
+    {
+      "id": "socratic-image-preserved",
+      "from": "socrates-trial-and-death",
+      "to": "plato-socratic-dialogues",
+      "relationType": "possible-connection",
+      "status": "claimed",
+      "description": "Литературные диалоги стали частью последующей передачи памяти о Сократе; степень исторической точности отдельных сцен обсуждается исследователями.",
+      "sources": [
+        {
+          "title": "Plato, Apology",
+          "url": "https://www.perseus.tufts.edu/hopper/text?doc=Plat.+Ap.",
+          "sourceType": "primary",
+          "note": "Текст платоновской «Апологии»."
+        },
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Socrates",
+          "url": "https://plato.stanford.edu/entries/socrates/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор ограничений источниковой базы."
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Это стартовый исследовательский набор, а не исчерпывающая биография Сократа или Платона.",
+    "Даты рождения Платона и основания Академии приблизительны; точность не повышается автоматически до точного дня.",
+    "Диалоги Платона — литературные и философские источники, а не дословные стенограммы бесед Сократа.",
+    "Связи со статусом claimed обозначают атрибутированное источниками утверждение, а не независимое причинное доказательство.",
+    "Для полноценной публикации необходимо проверить точные библиографические детали и расширить корпус первичных и современных научных источников.",
+    "Набор не делает утверждений о прямом чтении этих текстов Лениным или конкретными современными студентами."
+  ]
+}
