@@ -68,7 +68,8 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </div>
 <div style="overflow-x:auto"><canvas id="culture-map" width="1100" height="320" style="width:100%;min-width:620px;border:1px solid var(--line);border-radius:12px;display:block" aria-label="Карта литературных и культурных связей"></canvas></div>
 <p id="culture-status" class="small muted" aria-live="polite">Загрузка культурных следов…</p>
-<div id="culture-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
+<h3 style="font-size:1rem">Связи с указанием типа</h3><div id="culture-relations" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
+<h3 style="font-size:1rem">Записи культурных следов</h3><div id="culture-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
 <p class="small muted">Методологическая оговорка: факт публикации или перевода не доказывает, что весь этнос изменил мировоззрение. Для такого вывода нужны отдельные данные о читателях, распространении текста, критике, образовании и общественной рецепции.</p>
 <div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
 <div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
@@ -88,6 +89,7 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
 let culturalTraces=[];
+let culturalRelations=[];
 let cultureNodes=[];
 async function loadCulturalTraces(){
  try{
@@ -95,7 +97,10 @@ async function loadCulturalTraces(){
   if(!response.ok)throw new Error('HTTP '+response.status);
   const data=await response.json();
   if(!Array.isArray(data.traces))throw new Error('Некорректный формат культурных следов');
-  culturalTraces=data.traces;renderCulturalTraces();
+  culturalTraces=data.traces;
+  const relationsResponse=await fetch('data/cultural-relations.json');
+  if(relationsResponse.ok){const relationsData=await relationsResponse.json();culturalRelations=Array.isArray(relationsData.edges)?relationsData.edges:[];}
+  renderCulturalTraces();
  }catch(error){$('culture-status').textContent='Культурный набор пока недоступен: '+error.message+'. Откройте через GitHub Pages или локальный веб-сервер.';}
 }
 function renderCulturalTraces(){
@@ -116,29 +121,42 @@ function renderCulturalTraces(){
   const confidence=document.createElement('p');confidence.className='small muted';confidence.style.marginBottom='0';confidence.textContent='Статус: '+t.kind+' · '+t.confidence;card.appendChild(confidence);
   cards.appendChild(card);
  });
- drawCultureMap(visible);
+ drawCultureMap(visible);renderCulturalRelations(visible);
+}
+function renderCulturalRelations(items){
+ const box=$('culture-relations');if(!box)return;box.replaceChildren();
+ const ids=new Set(items.map(t=>t.id));
+ const edges=culturalRelations.filter(e=>ids.has(e.from)&&ids.has(e.to));
+ if(!edges.length){const empty=document.createElement('p');empty.className='small muted';empty.textContent='Для текущего фильтра нет описанных связей. Отсутствие ребра означает отсутствие записи в графе, а не доказательство отсутствия исторического контакта.';box.appendChild(empty);return;}
+ edges.forEach(e=>{
+  const card=document.createElement('article');card.style.cssText='border:1px solid var(--line);border-radius:10px;padding:11px';
+  const kind=document.createElement('div');kind.className='small muted';kind.textContent=e.type+' · '+e.status+' · уверенность: '+e.confidence;card.appendChild(kind);
+  const title=document.createElement('h4');title.style.cssText='margin:6px 0;font-size:.95rem';title.textContent=e.label;card.appendChild(title);
+  const desc=document.createElement('p');desc.className='small';desc.textContent=e.description;card.appendChild(desc);
+  const evidence=document.createElement('p');evidence.className='small muted';evidence.textContent='Основание: '+e.evidence;card.appendChild(evidence);
+  const link=document.createElement('a');link.href=e.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Проверить источник: '+e.sourceTitle;card.appendChild(link);box.appendChild(card);
+ });
 }
 function drawCultureMap(items){
  const canvas=$('culture-map');if(!canvas)return;
  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
  ctx.clearRect(0,0,w,h);ctx.fillStyle='#090a10';ctx.fillRect(0,0,w,h);
- cultureNodes=items.map((trace,i)=>({trace,x:55+i*(w-110)/Math.max(1,items.length-1),y:105+(i%2)*100}));
- for(let i=0;i<cultureNodes.length;i++)for(let j=i+1;j<cultureNodes.length;j++){
-  const a=cultureNodes[i],b=cultureNodes[j];
-  const common=a.trace.tags.filter(tag=>b.trace.tags.includes(tag));
-  const sharedRegion=a.trace.focus.toLocaleLowerCase().split(/[ ,/]+/).some(word=>word.length>3&&b.trace.focus.toLocaleLowerCase().includes(word));
-  if(common.length||sharedRegion){
-   ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo((a.x+b.x)/2,Math.min(a.y,b.y)-35,b.x,b.y);
-   ctx.strokeStyle='rgba(170,190,220,.3)';ctx.lineWidth=1+Math.min(common.length,2);ctx.stroke();
-  }
- }
+ cultureNodes=items.map((trace,i)=>({trace,x:55+i*(w-110)/Math.max(1,items.length-1),y:95+(i%2)*95}));
+ const nodeById=new Map(cultureNodes.map(n=>[n.trace.id,n]));
+ culturalRelations.forEach(edge=>{
+  const a=nodeById.get(edge.from),b=nodeById.get(edge.to);if(!a||!b)return;
+  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo((a.x+b.x)/2,Math.min(a.y,b.y)-38,b.x,b.y);
+  ctx.strokeStyle=edge.status==='DOCUMENTED'?'rgba(240,171,252,.8)':'rgba(147,197,253,.45)';
+  ctx.lineWidth=edge.status==='DOCUMENTED'?2.5:1.5;ctx.stroke();
+  const mx=(a.x+b.x)/2,my=(a.y+b.y)/2-20;ctx.fillStyle='#cbd5e1';ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText(edge.type.replaceAll('_',' '),mx,my);
+ });
  cultureNodes.forEach(n=>{
   const color=n.trace.kind==='documented-influence'?'#f0abfc':n.trace.kind==='interpretive-framework'?'#fbbf24':'#93c5fd';
   ctx.beginPath();ctx.arc(n.x,n.y,9,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
   ctx.fillStyle='#f4f4f5';ctx.font='12px system-ui';ctx.textAlign=n.x<140?'left':n.x>w-140?'right':'center';
-  const title=n.trace.title;for(let i=0;i<Math.min(2,Math.ceil(title.length/20));i++)ctx.fillText(title.slice(i*20,(i+1)*20),n.x,n.y+(n.y<150?28:34)+i*14);
+  const title=n.trace.title;for(let i=0;i<Math.min(2,Math.ceil(title.length/20));i++)ctx.fillText(title.slice(i*20,(i+1)*20),n.x,n.y+(n.y<150?27:33)+i*14);
  });
- ctx.fillStyle='#a1a1aa';ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillText('Линии = общие тематические метки / пересечения описаний, не доказанная причинность',14,h-14);
+ ctx.fillStyle='#a1a1aa';ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillText('Показаны только рёбра из cultural-relations.json; сравнительные связи не означают прямого влияния.',14,h-14);
 }
 function bindCulturalTraces(){
  $('culture-query').addEventListener('input',renderCulturalTraces);
