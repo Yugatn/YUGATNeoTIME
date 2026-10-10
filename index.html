@@ -77,6 +77,7 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
  <button type="button" id="philosophy-all">Вся линия</button>
  <button type="button" id="philosophy-ancient">Античность</button>
  <button type="button" id="philosophy-modern">Новое время и современность</button>
+ <button type="button" id="philosophy-unverified">Неподтверждённые вопросы</button>
 </div>
 <div id="philosophy-timeline" style="display:grid;gap:10px"></div>
 <h3 style="font-size:1rem;margin-top:16px">Связи и свидетельства</h3>
@@ -113,7 +114,7 @@ async function loadPhilosophicalContinuity(){
 }
 function renderPhilosophicalContinuity(){
  if(!philosophyData)return;
- const nodes=philosophyData.nodes.filter(n=>philosophyFilter==='all'||(philosophyFilter==='ancient'?n.yearEnd<0:n.yearEnd>=0));
+ const nodes=philosophyData.nodes.filter(n=>philosophyFilter==='all'||(philosophyFilter==='ancient'?n.yearEnd<0:philosophyFilter==='modern'?n.yearEnd>=0:n.kind==='unverified-hypothesis'));
  const ids=new Set(nodes.map(n=>n.id));
  const timeline=$('philosophy-timeline');timeline.replaceChildren();
  nodes.forEach(n=>{
@@ -121,7 +122,7 @@ function renderPhilosophicalContinuity(){
   const date=document.createElement('div');date.className='small muted';date.textContent=n.era;card.appendChild(date);
   const body=document.createElement('div');
   const title=document.createElement('h3');title.style.cssText='margin:0 0 7px;font-size:1rem';title.textContent=n.title;body.appendChild(title);
-  const kind=document.createElement('p');kind.className='small muted';kind.textContent='Тип записи: '+n.kind;body.appendChild(kind);
+  const kind=document.createElement('p');kind.className='small muted';kind.textContent='Тип записи: '+n.kind+(n.kind==='unverified-hypothesis'?' · ГИПОТЕЗА, НЕ УСТАНОВЛЕННЫЙ ФАКТ':'');body.appendChild(kind);
   const desc=document.createElement('p');desc.textContent=n.description;body.appendChild(desc);
   const question=document.createElement('p');question.className='small';question.textContent='Вопрос для исследования: '+n.question;body.appendChild(question);
   const link=document.createElement('a');link.href=n.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Источник: '+n.sourceTitle;body.appendChild(link);
@@ -143,6 +144,7 @@ function bindPhilosophicalContinuity(){
  $('philosophy-all').addEventListener('click',()=>{philosophyFilter='all';renderPhilosophicalContinuity();});
  $('philosophy-ancient').addEventListener('click',()=>{philosophyFilter='ancient';renderPhilosophicalContinuity();});
  $('philosophy-modern').addEventListener('click',()=>{philosophyFilter='modern';renderPhilosophicalContinuity();});
+ $('philosophy-unverified').addEventListener('click',()=>{philosophyFilter='unverified';renderPhilosophicalContinuity();});
 }
 let culturalTraces=[];
 let culturalRelations=[];
