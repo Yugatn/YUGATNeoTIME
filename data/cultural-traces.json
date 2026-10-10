@@ -1,0 +1,190 @@
+{
+  "schema": "YUGATNeoTIME.CulturalTrace/1.0",
+  "title": "Культурные следы в истории взаимосвязей",
+  "notice": "Примеры показывают возможные каналы передачи образов и идей. Они не доказывают изменение взглядов целого народа без независимых свидетельств о рецепции.",
+  "traces": [
+    {
+      "id": "marco-polo",
+      "title": "Путешествие Марко Поло",
+      "period": "конец XIII века; текст записан около 1298 года",
+      "origin": "Венецианская культурная среда",
+      "focus": "Азия, торговля, дворы и города",
+      "medium": "путевой рассказ",
+      "audiences": [
+        "европейские читатели"
+      ],
+      "mechanism": "Литературное описание дальних обществ расширяло географическое воображение читателей и влияло на европейские представления об Азии; степень фактической точности отдельных эпизодов обсуждается.",
+      "kind": "documented-context",
+      "sourceTitle": "Encyclopaedia Britannica — Marco Polo",
+      "sourceUrl": "https://www.britannica.com/biography/Marco-Polo",
+      "tags": [
+        "путешествие",
+        "Азия",
+        "литература",
+        "образы Другого"
+      ],
+      "confidence": "context documented; effects varied"
+    },
+    {
+      "id": "xuanzang",
+      "title": "Путешествие Сюаньцзана в Индию",
+      "period": "629–645 годы",
+      "origin": "Китай эпохи Тан",
+      "focus": "Индия, буддийские центры и тексты",
+      "medium": "путешествие, перевод, религиозно-философские тексты",
+      "audiences": [
+        "китайские учёные и буддийские общины"
+      ],
+      "mechanism": "Сюаньцзан привёз тексты и знания, а переводческая деятельность помогла передаче буддийских учений и понятий между языковыми и культурными традициями.",
+      "kind": "documented-context",
+      "sourceTitle": "Encyclopaedia Britannica — Xuanzang",
+      "sourceUrl": "https://www.britannica.com/biography/Xuanzang",
+      "tags": [
+        "перевод",
+        "буддизм",
+        "Индия",
+        "Китай",
+        "обмен знаниями"
+      ],
+      "confidence": "documented historical transmission"
+    },
+    {
+      "id": "ibn-battuta",
+      "title": "Путешествия Ибн Баттуты",
+      "period": "1325–1354 годы; рассказ оформлен позднее",
+      "origin": "Марокко и исламская учёная среда",
+      "focus": "Северная и Восточная Африка, Ближний Восток, Южная и Центральная Азия",
+      "medium": "путевой рассказ",
+      "audiences": [
+        "читатели арабоязычного мира"
+      ],
+      "mechanism": "Рассказ фиксировал нормы, маршруты и общества разных регионов; он позволяет изучать связи через путешествия, религиозные институты и торговые сети.",
+      "kind": "documented-context",
+      "sourceTitle": "Encyclopaedia Britannica — Ibn Battuta",
+      "sourceUrl": "https://www.britannica.com/biography/Ibn-Battuta",
+      "tags": [
+        "путешествие",
+        "Африка",
+        "Азия",
+        "торговля",
+        "религия"
+      ],
+      "confidence": "documented travel narrative"
+    },
+    {
+      "id": "goethe-hafiz",
+      "title": "Гёте и персидская поэтическая традиция",
+      "period": "1814–1819 годы",
+      "origin": "Немецкоязычная литература",
+      "focus": "Персидская поэзия, особенно Хафиз",
+      "medium": "поэтический цикл «Западно-восточный диван»",
+      "audiences": [
+        "немецкоязычные читатели"
+      ],
+      "mechanism": "Знакомство Гёте с переводами Хафиза стало одним из импульсов для литературного диалога Запада и Востока. Это конкретный документируемый пример влияния, а не доказательство изменения взглядов всего этноса.",
+      "kind": "documented-influence",
+      "sourceTitle": "Goethe-Institut — West-Eastern Divan / Goethe and the Orient",
+      "sourceUrl": "https://www.goethe.de/en/kul.html",
+      "tags": [
+        "поэзия",
+        "перевод",
+        "Персия",
+        "Германия",
+        "межкультурный диалог"
+      ],
+      "confidence": "specific literary influence documented"
+    },
+    {
+      "id": "fitzgerald-rubaiyat",
+      "title": "Эдвард Фицджеральд и «Рубаи» Омара Хайяма",
+      "period": "1859 год и последующие переиздания",
+      "origin": "Англоязычная литература",
+      "focus": "Персидская поэзия в викторианской Англии",
+      "medium": "поэтический перевод и адаптация",
+      "audiences": [
+        "англоязычные читатели"
+      ],
+      "mechanism": "Перевод-адаптация сделал имя Хайяма широко известным англоязычной публике, одновременно сильно переработав исходный материал. Пример показывает, что культурный след может менять образ источника.",
+      "kind": "documented-influence",
+      "sourceTitle": "Encyclopaedia Britannica — Edward FitzGerald",
+      "sourceUrl": "https://www.britannica.com/biography/Edward-FitzGerald",
+      "tags": [
+        "перевод",
+        "Персия",
+        "Англия",
+        "поэзия",
+        "адаптация"
+      ],
+      "confidence": "reception documented; translation is interpretive"
+    },
+    {
+      "id": "arthur-waley",
+      "title": "Переводы китайской и японской литературы Артура Уэйли",
+      "period": "XX век, особенно 1910-е–1950-е годы",
+      "origin": "Британия",
+      "focus": "Китайская и японская классическая литература",
+      "medium": "переводы и литературная критика",
+      "audiences": [
+        "англоязычные читатели и писатели"
+      ],
+      "mechanism": "Переводы сделали ряд азиатских литературных произведений доступнее англоязычной аудитории и повлияли на их международное восприятие; конкретное влияние следует устанавливать по текстам и свидетельствам читателей.",
+      "kind": "documented-context",
+      "sourceTitle": "Encyclopaedia Britannica — Arthur Waley",
+      "sourceUrl": "https://www.britannica.com/biography/Arthur-Waley",
+      "tags": [
+        "перевод",
+        "Китай",
+        "Япония",
+        "литература",
+        "рецепция"
+      ],
+      "confidence": "translation history documented"
+    },
+    {
+      "id": "tagore",
+      "title": "Рабиндранат Тагор и международный литературный обмен",
+      "period": "конец XIX — первая половина XX века",
+      "origin": "Бенгалия / Южная Азия",
+      "focus": "Бенгальская литература, философия и гуманизм",
+      "medium": "поэзия, эссе, лекции, переводы",
+      "audiences": [
+        "читатели в Южной Азии, Европе и других регионах"
+      ],
+      "mechanism": "Переводы и международные поездки помогли произведениям Тагора пересекать языковые границы. Переводные версии и их контекст нужно рассматривать отдельно от оригиналов.",
+      "kind": "documented-context",
+      "sourceTitle": "Nobel Prize — Rabindranath Tagore",
+      "sourceUrl": "https://www.nobelprize.org/prizes/literature/1913/tagore/biographical/",
+      "tags": [
+        "Бенгалия",
+        "перевод",
+        "поэзия",
+        "философия",
+        "межкультурный обмен"
+      ],
+      "confidence": "international reception documented"
+    },
+    {
+      "id": "orientalism",
+      "title": "Путешествие как литературный образ и вопрос ориентализма",
+      "period": "XVIII–XXI века",
+      "origin": "Разные литературные и академические традиции",
+      "focus": "То, как авторы изображают другие общества",
+      "medium": "романы, путевые заметки, переводы, критика",
+      "audiences": [
+        "читатели разных языковых сообществ"
+      ],
+      "mechanism": "Литература может направлять внимание читателя на новые идеи, но также упрощать, романтизировать или экзотизировать культуры. Следует сравнивать авторский текст, источники, рецензии, переводы и читательские свидетельства.",
+      "kind": "interpretive-framework",
+      "sourceTitle": "Edward Said, Orientalism — publisher / reference overview",
+      "sourceUrl": "https://www.penguinrandomhouse.com/books/159481/orientalism-by-edward-w-said/",
+      "tags": [
+        "литература",
+        "восприятие",
+        "культурная память",
+        "критика",
+        "образ Другого"
+      ],
+      "confidence": "framework for critical analysis"
+    }
+  ]
+}
