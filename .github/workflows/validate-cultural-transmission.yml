@@ -1,0 +1,30 @@
+name: Validate cultural transmission graph
+
+on:
+  push:
+    paths:
+      - 'schemas/cultural-transmission.schema.json'
+      - 'data/cultural-transmission-example.json'
+      - 'scripts/validate_cultural_transmission.py'
+      - '.github/workflows/validate-cultural-transmission.yml'
+  pull_request:
+    paths:
+      - 'schemas/cultural-transmission.schema.json'
+      - 'data/cultural-transmission-example.json'
+      - 'scripts/validate_cultural_transmission.py'
+      - '.github/workflows/validate-cultural-transmission.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate cultural transmission graph
+        run: python scripts/validate_cultural_transmission.py
