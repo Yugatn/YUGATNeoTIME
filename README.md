@@ -79,3 +79,9 @@ MVP не предполагает, что одна бесспорная эпох
 - JSON Schema: [cultural-transmission.schema.json](./schemas/cultural-transmission.schema.json).
 - Синтетический пример: [cultural-transmission-example.json](./data/cultural-transmission-example.json). Пример полностью вымышлен и не является историческим утверждением.
 - Проверка целостности графа: `python3 scripts/validate_cultural_transmission.py`.
+
+## Интерактивный граф культурной передачи
+
+- Страница графа: [cultural-graph.html](./cultural-graph.html) — интерактивная карта записей и связей, поиск, фильтрация по типу отношения и статусу доказательности, карточка выбранного узла.
+- Главная страница Атласа содержит ссылку на граф.
+- Текущая выборка остаётся синтетической: она нужна для демонстрации UI и не утверждает реальные исторические связи.
