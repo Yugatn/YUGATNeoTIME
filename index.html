@@ -71,6 +71,18 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <h3 style="font-size:1rem">Связи с указанием типа</h3><div id="culture-relations" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
 <h3 style="font-size:1rem">Записи культурных следов</h3><div id="culture-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px"></div>
 <p class="small muted">Методологическая оговорка: факт публикации или перевода не доказывает, что весь этнос изменил мировоззрение. Для такого вывода нужны отдельные данные о читателях, распространении текста, критике, образовании и общественной рецепции.</p>
+<div class="rule"></div>
+<h2>Сценарная лаборатория · идеи и искусство</h2>
+<p class="small muted">Учебная модель для исследования возможных последствий культурных идей. Настройки меняют набор качественных сценариев, но не создают статистически обоснованный прогноз.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:12px 0" id="art-scenario-controls">
+ <label>Доступность распространения<select id="art-access"><option value="low">Низкая</option><option value="medium" selected>Средняя</option><option value="high">Высокая</option></select></label>
+ <label>Поддержка институций<select id="art-support"><option value="low">Низкая</option><option value="medium" selected>Средняя</option><option value="high">Высокая</option></select></label>
+ <label>Общественная полемика<select id="art-controversy"><option value="low">Низкая</option><option value="medium" selected>Средняя</option><option value="high">Высокая</option></select></label>
+ <label>Качество свидетельств<select id="art-evidence"><option value="low">Слабое</option><option value="medium" selected>Частичное</option><option value="high">Хорошее</option></select></label>
+</div>
+<div id="art-scenario-results" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"></div>
+<p id="art-scenario-status" class="small muted" aria-live="polite">Загрузка сценарной модели…</p>
+<p class="small muted">Сценарии условны. Полемика может увеличивать заметность, но не доказывает принятие; поддержка институций не гарантирует художественного влияния. Причинные выводы требуют источников, альтернативных объяснений и проверки на исторических данных.</p>
 <div class="rule"></div><h2>Философская непрерывность · от Сократа до сегодняшнего дня</h2>
 <p class="small muted">Исследовательская точка входа в историю идей. Здесь различаются исторические события, передача текстов, литературный рассказ и вопросы, на которые пока нет подтверждённых ответов.</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
@@ -101,6 +113,37 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+let artScenarioData=null;
+async function loadArtScenarioModel(){
+ try{
+  const response=await fetch('data/art-idea-scenarios.json');
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  artScenarioData=await response.json();
+  renderArtScenarios();
+ }catch(error){$('art-scenario-status').textContent='Сценарная модель недоступна: '+error.message;}
+}
+function renderArtScenarios(){
+ if(!artScenarioData)return;
+ const access=$('art-access').value,support=$('art-support').value,controversy=$('art-controversy').value,evidence=$('art-evidence').value;
+ const selected=[];
+ if(access!=='low')selected.push('continuation');
+ if(support==='high')selected.push('institutional');
+ if(controversy==='high')selected.push('controversy');
+ if(evidence==='low')selected.push('uncertainty');
+ if(!selected.length)selected.push('uncertainty');
+ const results=$('art-scenario-results');results.replaceChildren();
+ artScenarioData.scenarios.filter(item=>selected.includes(item.id)).forEach(item=>{
+  const card=document.createElement('article');card.style.cssText='border:1px solid var(--line);border-radius:12px;padding:12px';
+  const title=document.createElement('h3');title.style.cssText='font-size:1rem;margin:0 0 8px';title.textContent=item.title;card.appendChild(title);
+  const desc=document.createElement('p');desc.textContent=item.description;card.appendChild(desc);
+  const meta=document.createElement('p');meta.className='small muted';meta.textContent=item.confidence;card.appendChild(meta);
+  results.appendChild(card);
+ });
+ $('art-scenario-status').textContent='Активно сценариев: '+selected.length+'. Набор изменён по условным правилам, вероятности не рассчитываются.';
+}
+function bindArtScenarioModel(){
+ ['art-access','art-support','art-controversy','art-evidence'].forEach(id=>$(id).addEventListener('change',renderArtScenarios));
+}
 let philosophyData=null;
 let philosophyFilter='all';
 async function loadPhilosophicalContinuity(){
@@ -367,7 +410,7 @@ function drawProjection(r){
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
-bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();bindPhilosophicalContinuity();loadPhilosophicalContinuity();
+bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();bindPhilosophicalContinuity();loadPhilosophicalContinuity();bindArtScenarioModel();loadArtScenarioModel();
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
