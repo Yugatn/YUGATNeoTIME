@@ -1,0 +1,66 @@
+{
+  "schema": "YUGATNeoTIME.CulturalRelation/1.0",
+  "title": "Типизированные связи культурных следов",
+  "notice": "Рёбра являются исследовательскими отношениями, а не все они означают прямое влияние. Сравнительные связи помечены отдельно от документированного влияния.",
+  "relationTypes": {
+    "documented_influence": "Документированное влияние",
+    "translation_reception": "Перевод и рецепция",
+    "travelogue_comparison": "Сопоставление путевых рассказов",
+    "cross_cultural_exchange": "Межкультурный обмен",
+    "critical_comparison": "Критическое сопоставление"
+  },
+  "edges": [
+    {
+      "id": "rel-goethe-hafiz",
+      "from": "goethe-hafiz",
+      "to": "fitzgerald-rubaiyat",
+      "type": "critical_comparison",
+      "label": "Персидская поэзия в европейской рецепции",
+      "description": "Оба случая показывают, как персидская поэтическая традиция входила в немецко- и англоязычные литературные контексты. Это сравнительная связь, а не утверждение, что один автор повлиял на другого.",
+      "evidence": "Сопоставление двух отдельных историй рецепции персидской поэзии; переводные формы и контексты существенно различаются.",
+      "sourceTitle": "Encyclopaedia Britannica — Edward FitzGerald",
+      "sourceUrl": "https://www.britannica.com/biography/Edward-FitzGerald",
+      "status": "COMPARATIVE",
+      "confidence": "medium"
+    },
+    {
+      "id": "rel-xuanzang-goethe",
+      "from": "xuanzang",
+      "to": "goethe-hafiz",
+      "type": "cross_cultural_exchange",
+      "label": "Передача идей через культурные посредники",
+      "description": "Сопоставление разных эпох и каналов межкультурного обмена: путешествие и перевод буддийских текстов в Китае эпохи Тан; чтение переводов персидской поэзии в Европе. Связь тематическая, не прямая историческая цепь.",
+      "evidence": "Оба случая показывают посредничество путешественников, переводчиков и текстов; прямое влияние между ними не заявляется.",
+      "sourceTitle": "Encyclopaedia Britannica — Xuanzang",
+      "sourceUrl": "https://www.britannica.com/biography/Xuanzang",
+      "status": "COMPARATIVE",
+      "confidence": "medium"
+    },
+    {
+      "id": "rel-marco-battuta",
+      "from": "marco-polo",
+      "to": "ibn-battuta",
+      "type": "travelogue_comparison",
+      "label": "Путевые рассказы о связанных регионах",
+      "description": "Сравнение двух известных средневековых путешественников и их описаний обществ Евразии и Африки. Это жанровое и историко-географическое сопоставление, а не доказательство взаимного влияния.",
+      "evidence": "Обе записи относятся к путевым рассказам, описывающим несколько регионов и культур.",
+      "sourceTitle": "Encyclopaedia Britannica — Marco Polo",
+      "sourceUrl": "https://www.britannica.com/biography/Marco-Polo",
+      "status": "COMPARATIVE",
+      "confidence": "medium"
+    },
+    {
+      "id": "rel-waley-tagar",
+      "from": "arthur-waley",
+      "to": "tagore",
+      "type": "cross_cultural_exchange",
+      "label": "Литература Южной, Восточной Азии и международная рецепция",
+      "description": "Сопоставление разных моделей выхода азиатской литературы к международной аудитории: переводы классических текстов и авторское творчество, лекции и переводы собственных произведений. Прямая связь между фигурами не утверждается.",
+      "evidence": "Сравниваются каналы межъязыкового распространения, а не заявляется взаимное влияние.",
+      "sourceTitle": "Nobel Prize — Rabindranath Tagore",
+      "sourceUrl": "https://www.nobelprize.org/prizes/literature/1913/tagore/biographical/",
+      "status": "COMPARATIVE",
+      "confidence": "medium"
+    }
+  ]
+}
