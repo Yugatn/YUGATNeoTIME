@@ -38,6 +38,17 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <div class="rule"></div><h2>Атлас календарей · происхождение результатов</h2>
 <p class="small muted">Каждый слой хранит собственную систему, метод расчёта, источник, неопределённость и статус. Историческая подпись не считается подтверждённой без источника.</p>
 <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.88rem"><thead><tr><th style="text-align:left;padding:9px;border-bottom:1px solid var(--line)">Слой</th><th style="text-align:left;padding:9px;border-bottom:1px solid var(--line)">Значение</th><th style="text-align:left;padding:9px;border-bottom:1px solid var(--line)">Метод и происхождение</th><th style="text-align:left;padding:9px;border-bottom:1px solid var(--line)">Статус</th></tr></thead><tbody id="atlas-rows"><tr><td colspan="4" class="small muted">Рассчитайте дату, чтобы увидеть слои.</td></tr></tbody></table></div>
+<div class="rule"></div><h2>История по дате · карта взаимосвязей</h2>
+<p class="small muted">Демонстрационная подборка событий мировой истории. Фильтруйте по году или теме. Линии показывают общие теги/участников в наборе данных, а не автоматически доказанную причинность.</p>
+<div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:12px 0">
+ <label style="flex:1;min-width:130px">Год<input id="history-year" type="number" min="1" max="9999" placeholder="Например, 1945" style="display:block;width:100%;margin-top:5px"></label>
+ <label style="flex:2;min-width:180px">Поиск события, страны, народа или темы<input id="history-query" type="search" placeholder="революция, ООН, Египет…" style="display:block;width:100%;margin-top:5px"></label>
+ <button id="history-reset" type="button">Сбросить</button>
+</div>
+<div id="history-status" class="small muted" aria-live="polite">Загрузка исторических данных…</div>
+<div style="overflow-x:auto;margin:12px 0"><canvas id="history-map" width="1000" height="300" style="width:100%;min-width:600px;border:1px solid var(--line);border-radius:12px" aria-label="Схематическая карта взаимосвязей между событиями"></canvas></div>
+<div id="history-events" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"></div>
+<p class="small muted">Статус источника: в каждой записи указан внешний источник. Географическая полнота и представленность народов пока ограничены; отсутствие события в подборке не означает, что оно было неважным.</p>
 <div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
 <div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
 <p id="reverse-result" class="small muted" aria-live="polite">Введите Long Count, чтобы получить григорианскую дату при выбранной корреляции.</p></section>
@@ -55,6 +66,63 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+let historyEvents=[];
+async function loadHistory(){
+ const status=$('history-status');
+ try{
+  const response=await fetch('data/historical-events.json');
+  if(!response.ok)throw new Error('Не удалось загрузить data/historical-events.json (HTTP '+response.status+').');
+  const payload=await response.json();
+  if(!payload||!Array.isArray(payload.events))throw new Error('Формат набора исторических событий не распознан.');
+  historyEvents=payload.events;
+  renderHistory();
+ }catch(error){status.textContent='Исторические данные пока недоступны: '+error.message+' Если страницу открыли как локальный файл, запустите её через веб-сервер или GitHub Pages.';}
+}
+function renderHistory(){
+ const query=$('history-query').value.trim().toLocaleLowerCase();
+ const year=$('history-year').value.trim();
+ const visible=historyEvents.filter(ev=>{
+  if(year&&String(ev.date).slice(0,4)!==year)return false;
+  const text=[ev.title,ev.region,ev.summary,...(ev.actors||[]),...(ev.places||[]),...(ev.tags||[])].join(' ').toLocaleLowerCase();
+  return !query||text.includes(query);
+ }).sort((a,b)=>a.date.localeCompare(b.date));
+ $('history-status').textContent='Показано '+visible.length+' из '+historyEvents.length+' демонстрационных событий. Набор не является полной мировой хроникой.';
+ const container=$('history-events');container.replaceChildren();
+ visible.forEach(ev=>{
+  const card=document.createElement('article');card.style.cssText='border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0';
+  const date=document.createElement('div');date.className='small muted';date.textContent=ev.date+' · '+ev.region;card.appendChild(date);
+  const title=document.createElement('h3');title.style.cssText='font-size:1rem;margin:7px 0';title.textContent=ev.title;card.appendChild(title);
+  const summary=document.createElement('p');summary.className='small';summary.textContent=ev.summary;card.appendChild(summary);
+  const actors=document.createElement('p');actors.className='small muted';actors.textContent='Участники: '+(ev.actors||[]).join(', ');card.appendChild(actors);
+  const tags=document.createElement('p');tags.className='small';tags.textContent='Темы: '+(ev.tags||[]).join(' · ');card.appendChild(tags);
+  const link=document.createElement('a');link.href=ev.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Источник: '+ev.sourceTitle;link.className='small';card.appendChild(link);
+  const status=document.createElement('div');status.className='small muted';status.style.marginTop='7px';status.textContent='Эпистемический статус: '+ev.status+' · оценка источника: '+ev.confidence;card.appendChild(status);
+  container.appendChild(card);
+ });
+ drawHistoryMap(visible);
+}
+function drawHistoryMap(events){
+ const canvas=$('history-map');if(!canvas)return;
+ const ctx=canvas.getContext('2d');const w=canvas.width,h=canvas.height;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b0b0d';ctx.fillRect(0,0,w,h);
+ if(!events.length){ctx.fillStyle='#bbb';ctx.textAlign='center';ctx.fillText('Нет событий по заданному фильтру',w/2,h/2);return;}
+ const sorted=[...events].sort((a,b)=>a.date.localeCompare(b.date));
+ const nodes=sorted.map((ev,i)=>({ev,x:events.length===1?w/2:60+i*(w-120)/(events.length-1),y:80+(i%3)*65}));
+ const links=[];
+ for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+  const a=nodes[i].ev,b=nodes[j].ev;
+  const common=(a.tags||[]).filter(t=>(b.tags||[]).includes(t));
+  const sharedActors=(a.actors||[]).filter(t=>(b.actors||[]).includes(t));
+  if(common.length||sharedActors.length)links.push({a:nodes[i],b:nodes[j],label:sharedActors.length?'общие участники':'общая тема'});
+ }
+ links.forEach(l=>{ctx.beginPath();ctx.moveTo(l.a.x,l.a.y);ctx.lineTo(l.b.x,l.b.y);ctx.strokeStyle='rgba(180,190,210,.22)';ctx.lineWidth=1;ctx.stroke();});
+ nodes.forEach(n=>{
+  ctx.beginPath();ctx.arc(n.x,n.y,7,0,Math.PI*2);ctx.fillStyle='#e4e4e7';ctx.fill();
+  ctx.fillStyle='#f4f4f5';ctx.font='12px system-ui';ctx.textAlign=n.x>w-150?'right':n.x<150?'left':'center';
+  ctx.fillText(n.ev.date.slice(0,4)+' · '+n.ev.title.slice(0,28),n.x,n.y-14);
+ });
+ ctx.fillStyle='#aaa';ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillText('Линии = общие теги/участники в выбранной выборке, не доказательство причинности',16,h-14);
+}
 function renderAtlas(atlas){
  const body=$('atlas-rows');if(!body)return;body.replaceChildren();
  atlas.layers.forEach(layer=>{const tr=document.createElement('tr');[layer.system,layer.value,layer.method+' · '+layer.source+' · Неопределённость: '+layer.uncertainty,layer.status].forEach((value,index)=>{const td=document.createElement('td');td.textContent=value;td.style.padding='9px';td.style.borderBottom='1px solid var(--line)';td.style.verticalAlign='top';if(index===3)td.style.whiteSpace='nowrap';tr.appendChild(td);});body.appendChild(tr);});
@@ -72,6 +140,7 @@ function drawProjection(r){
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
+$('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',renderHistory);$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
 </script></body></html>
