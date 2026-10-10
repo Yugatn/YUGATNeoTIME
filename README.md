@@ -15,7 +15,9 @@
 - Кольцевая 2D-проекция фаз календарных циклов для исследовательского сопоставления.
 - Унифицированный слой Атласа времени с методом, источником, неопределённостью и статусом каждого результата: [TIME_ATLAS_SPEC.md](./docs/TIME_ATLAS_SPEC.md).
 - Поиск по историческим событиям по точной дате, году и теме, с демонстрационной картой связей: [HUMAN_HISTORY_MAP.md](./docs/HUMAN_HISTORY_MAP.md).
+- Интерактивный концептуальный атлас от ранней Вселенной до ИИ, с разделением научных моделей и гипотез: [COSMIC_TO_AI_HOLOGRAPHIC_ATLAS.md](./docs/COSMIC_TO_AI_HOLOGRAPHIC_ATLAS.md).
 - Начальный демонстрационный набор событий с источниками: [historical-events.json](./data/historical-events.json).
+- 14 узлов карты «От ранней Вселенной до ИИ»: [cosmic-to-ai-atlas.json](./data/cosmic-to-ai-atlas.json).
 - Описание архитектуры проекции и ограничений: [HOLOGRAPHIC_TIME_PROJECTION.md](./docs/HOLOGRAPHIC_TIME_PROJECTION.md).
 - Вычисления выполняются в браузере без сторонних библиотек.
 
