@@ -19,6 +19,7 @@
 - Культурные следы: путешествия, литературные образы, переводы и передача идей между обществами: [CULTURAL_TRACES_AND_IDEA_TRANSMISSION.md](./docs/CULTURAL_TRACES_AND_IDEA_TRANSMISSION.md).
 - Типизированный граф культурных связей с явными рёбрами и эпистемическими статусами: [CULTURAL_RELATION_GRAPH.md](./docs/CULTURAL_RELATION_GRAPH.md).
 - Философская линия от Сократа и Платона через историю передачи текстов к современным дискуссиям: [PHILOSOPHICAL_CONTINUITY_SOCRATES_TO_PRESENT.md](./docs/PHILOSOPHICAL_CONTINUITY_SOCRATES_TO_PRESENT.md).
+- Реестр источников философской линии: [philosophical-sources.json](./data/philosophical-sources.json); проверка связности данных: `python3 scripts/validate_philosophical_continuity.py`.
 - Начальный демонстрационный набор событий с источниками: [historical-events.json](./data/historical-events.json).
 - 14 узлов карты «От ранней Вселенной до ИИ»: [cosmic-to-ai-atlas.json](./data/cosmic-to-ai-atlas.json).
 - Начальный набор культурных следов и литературных связей: [cultural-traces.json](./data/cultural-traces.json).
