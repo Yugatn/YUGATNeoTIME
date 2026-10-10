@@ -22,6 +22,28 @@ function jdnToGregorian(jdn){
  const day=e-Math.floor((153*m+2)/5)+1;const month=m+3-12*Math.floor(m/10);const year=100*b+d-4800+Math.floor(m/10);
  return String(year).padStart(4,'0')+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
 }
+function julianToJdn(isoDate){
+ const match=/^(\\d{4,})-(\\d{2})-(\\d{2})$/.exec(String(isoDate));
+ if(!match)throw new Error('Юлианская дата должна быть в формате YYYY-MM-DD.');
+ const y=Number(match[1]),m=Number(match[2]),d=Number(match[3]);
+ const leap=(y%4===0),monthDays=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+ if(m<1||m>12||d<1||d>monthDays[m-1])throw new Error('Некорректная дата юлианского календаря.');
+ const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
+ return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-32083;
+}
+function jdnToJulian(jdn){
+ if(!Number.isSafeInteger(jdn))throw new Error('Номер дня должен быть целым безопасным числом.');
+ const c=jdn+32082;const d=Math.floor((4*c+3)/1461);const e=c-Math.floor(1461*d/4);const m=Math.floor((5*e+2)/153);
+ const day=e-Math.floor((153*m+2)/5)+1;const month=m+3-12*Math.floor(m/10);const year=d-4800+Math.floor(m/10);
+ return String(year).padStart(4,'0')+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+}
+function russianEraFromJdn(jdn){
+ const julian=jdnToJulian(jdn);const [year,month,day]=julian.split('-').map(Number);
+ // Model the September year style widely used in Muscovite official dating before Peter I.
+ // This is not a universal converter for every earlier Russian dating convention.
+ const annoMundi=year+(month>=9?5509:5508);
+ return {julianDate:julian,annoMundi,style:'September year style',label:'Лето '+annoMundi+' от сотворения мира',caveat:'Модель сентябрьского стиля для датировок позднего допетровского периода; более ранние стили и локальные практики требуют отдельного режима.'};
+}
 function longCountFromDays(days){
  if(!Number.isSafeInteger(days))throw new Error('Число дней должно быть целым.');
  if(days<0)return 'До эпохи 0.0.0.0.0 (отрицательный Long Count не отображается в MVP)';
@@ -43,7 +65,7 @@ function egyptianFromJdn(jdn,epochJdn){
 function fromGregorian(isoDate,correlation=DEFAULT_CORRELATION,egyptianEpochDate='2026-01-01'){
  correlation=Number(correlation);if(!Number.isSafeInteger(correlation))throw new Error('Корреляция должна быть целым числом JDN.');
  const jdn=gregorianToJdn(isoDate);const days=jdn-correlation;const tzolkinNumber=mod(days+3,13)+1;const tzolkinName=TZOLKIN_NAMES[mod(days+19,20)];const haabIndex=mod(days+348,365);const haabMonth=haabIndex<360?Math.floor(haabIndex/20):18;const haabDay=haabIndex<360?haabIndex%20:haabIndex-360;const egyptianEpochJdn=gregorianToJdn(egyptianEpochDate);
- return {gregorian:isoDate,jdn,absoluteDay:days,longCount:longCountFromDays(days),tzolkin:tzolkinNumber+' '+tzolkinName,haab:haabDay+' '+HAAB_MONTHS[haabMonth],correlation,egyptian:egyptianFromJdn(jdn,egyptianEpochJdn),egyptianEpochDate,egyptianEpochJdn};
+ const russianEra=russianEraFromJdn(jdn);return {gregorian:isoDate,jdn,absoluteDay:days,julianDate:jdnToJulian(jdn),russianEra,longCount:longCountFromDays(days),tzolkin:tzolkinNumber+' '+tzolkinName,haab:haabDay+' '+HAAB_MONTHS[haabMonth],correlation,egyptian:egyptianFromJdn(jdn,egyptianEpochJdn),egyptianEpochDate,egyptianEpochJdn};
 }
-root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),EGYPTIAN_MONTHS:EGYPTIAN_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,parseLongCount,egyptianFromJdn,fromGregorian});
+root.MayaTime=Object.freeze({DEFAULT_CORRELATION,TZOLKIN_NAMES:TZOLKIN_NAMES.slice(),HAAB_MONTHS:HAAB_MONTHS.slice(),EGYPTIAN_MONTHS:EGYPTIAN_MONTHS.slice(),gregorianToJdn,gregorianFromJdn:jdnToGregorian,julianToJdn,julianFromJdn:jdnToJulian,russianEraFromJdn,parseLongCount,egyptianFromJdn,fromGregorian});
 })(typeof globalThis!=='undefined'?globalThis:this);
