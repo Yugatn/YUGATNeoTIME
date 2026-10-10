@@ -24,6 +24,7 @@ on:
       - 'docs/SCENARIO_FORECASTING_PROTOCOL.md'
       - 'schemas/historical-timeline.schema.json'
       - 'data/historical-timeline-example.json'
+      - 'data/socrates-plato-starter.json'
       - 'scripts/validate_historical_timeline.py'
       - '.github/workflows/validate-cultural-transmission.yml'
   workflow_dispatch:
