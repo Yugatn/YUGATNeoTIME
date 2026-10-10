@@ -49,6 +49,17 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <div style="overflow-x:auto;margin:12px 0"><canvas id="history-map" width="1000" height="300" style="width:100%;min-width:600px;border:1px solid var(--line);border-radius:12px" aria-label="Схематическая карта взаимосвязей между событиями"></canvas></div>
 <div id="history-events" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"></div>
 <p class="small muted">Статус источника: в каждой записи указан внешний источник. Географическая полнота и представленность народов пока ограничены; отсутствие события в подборке не означает, что оно было неважным.</p>
+<div class="rule"></div><h2>Голографический атлас · от Вселенной до ИИ</h2>
+<p class="small muted">Интерактивная концептуальная карта масштабов и переходов: космология, происхождение жизни, клеточная эволюция, сознание, культура и ИИ. Связи между областями не означают, что это одна доказанная причинная цепь.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+ <button type="button" id="cosmic-fit">Показать весь путь</button>
+ <button type="button" id="cosmic-bio">Слой жизни</button>
+ <button type="button" id="cosmic-culture">Слой культуры и ИИ</button>
+</div>
+<div style="overflow-x:auto"><canvas id="cosmic-atlas" width="1200" height="470" style="width:100%;min-width:680px;border:1px solid var(--line);border-radius:14px;display:block" aria-label="Интерактивная карта развития от Вселенной до искусственного интеллекта"></canvas></div>
+<p class="small muted" id="cosmic-status" aria-live="polite">Загрузка узлов карты… Выберите узел, чтобы прочитать описание и открыть источник.</p>
+<div id="cosmic-detail" style="border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:10px"><strong>Выберите узел карты</strong><p class="small muted">Каждый узел содержит временную оценку, тип утверждения, исследовательский вопрос и источник.</p></div>
+<p class="small muted">Важно: гипотеза о слиянии двух систем с последующим делением показана как отдельная исследовательская идея о происхождении жизни. Она не означает, что Вселенная возникла из клетки или что клеточное деление породило космос. Современная космология и биология описывают разные процессы.</p>
 <div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
 <div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
 <p id="reverse-result" class="small muted" aria-live="polite">Введите Long Count, чтобы получить григорианскую дату при выбранной корреляции.</p></section>
@@ -66,6 +77,71 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+let cosmicStages=[];
+let cosmicNodes=[];
+async function loadCosmicAtlas(){
+ const status=$('cosmic-status');
+ try{
+  const response=await fetch('data/cosmic-to-ai-atlas.json');
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  const data=await response.json();
+  if(!Array.isArray(data.stages))throw new Error('Некорректная структура атласа');
+  cosmicStages=data.stages;
+  drawCosmicAtlas('all');
+  if(cosmicStages.length)showCosmicDetail(cosmicStages[0].id);
+ }catch(error){status.textContent='Не удалось загрузить карту: '+error.message+'. Откройте через GitHub Pages или локальный веб-сервер.';}
+}
+function drawCosmicAtlas(filter){
+ const canvas=$('cosmic-atlas');if(!canvas)return;
+ const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#090a10';ctx.fillRect(0,0,w,h);
+ const visible=cosmicStages.filter(s=>filter==='all'||(filter==='bio'?['происхождение жизни','биология','эволюция'].includes(s.domain):(s.domain==='история'||s.domain==='технологии'||s.domain==='ИИ'||s.domain==='антропология')));
+ const palette={scientific:'#e4e4e7','open-question':'#fbbf24',hypothesis:'#f472b6'};
+ cosmicNodes=visible.map((stage,i)=>({stage,x:60+i*(w-120)/Math.max(1,visible.length-1),y:150+(i%2)*115}));
+ ctx.font='12px system-ui';ctx.textAlign='center';
+ cosmicNodes.forEach((node,i)=>{
+  if(i===0)return;
+  const prev=cosmicNodes[i-1];
+  ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.bezierCurveTo((prev.x+node.x)/2,prev.y-70,(prev.x+node.x)/2,node.y+70,node.x,node.y);
+  ctx.strokeStyle='rgba(160,180,220,.35)';ctx.lineWidth=2;ctx.stroke();
+ });
+ cosmicNodes.forEach(node=>{
+  const color=palette[node.stage.kind]||'#93c5fd';
+  ctx.beginPath();ctx.arc(node.x,node.y,12,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+  ctx.beginPath();ctx.arc(node.x,node.y,19,0,Math.PI*2);ctx.strokeStyle=color+'66';ctx.lineWidth=1;ctx.stroke();
+  const label=node.stage.title;
+  const lines=[];for(let i=0;i<label.length;i+=19)lines.push(label.slice(i,i+19));
+  ctx.fillStyle='#f4f4f5';lines.slice(0,3).forEach((line,j)=>ctx.fillText(line,node.x,node.y+(node.y<200?34:42)+j*15));
+  ctx.fillStyle='#a1a1aa';ctx.fillText(node.stage.era,node.x,node.y+(node.y<200?84:92));
+ });
+ ctx.fillStyle='#a1a1aa';ctx.textAlign='left';ctx.fillText('Условные обозначения:',18,h-62);
+ ctx.fillStyle='#e4e4e7';ctx.fillText('● подтверждённая общая научная рамка',18,h-43);
+ ctx.fillStyle='#fbbf24';ctx.fillText('● открытый вопрос',330,h-43);
+ ctx.fillStyle='#f472b6';ctx.fillText('● гипотеза / интерпретация',500,h-43);
+ $('cosmic-status').textContent='Показано узлов: '+visible.length+' из '+cosmicStages.length+'. Нажмите на узел для описания. Линии обозначают концептуальную последовательность, не одинаковую степень доказанности.';
+}
+function showCosmicDetail(id){
+ const stage=cosmicStages.find(s=>s.id===id);if(!stage)return;
+ const box=$('cosmic-detail');box.replaceChildren();
+ const title=document.createElement('h3');title.textContent=stage.title;title.style.marginTop='0';box.appendChild(title);
+ const era=document.createElement('p');era.className='small muted';era.textContent=stage.era+' · '+stage.domain+' · статус: '+stage.kind;box.appendChild(era);
+ const summary=document.createElement('p');summary.textContent=stage.summary;box.appendChild(summary);
+ const question=document.createElement('p');question.className='small';question.textContent='Исследовательский вопрос: '+stage.question;box.appendChild(question);
+ const link=document.createElement('a');link.href=stage.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Источник: '+stage.sourceTitle;box.appendChild(link);
+ const canvas=$('cosmic-atlas'),node=cosmicNodes.find(n=>n.stage.id===id);
+ if(node&&canvas){const ctx=canvas.getContext('2d');ctx.beginPath();ctx.arc(node.x,node.y,23,0,Math.PI*2);ctx.strokeStyle='#ffffff';ctx.lineWidth=3;ctx.stroke();}
+}
+function bindCosmicAtlas(){
+ $('cosmic-fit').addEventListener('click',()=>drawCosmicAtlas('all'));
+ $('cosmic-bio').addEventListener('click',()=>drawCosmicAtlas('bio'));
+ $('cosmic-culture').addEventListener('click',()=>drawCosmicAtlas('culture'));
+ $('cosmic-atlas').addEventListener('click',event=>{
+  const canvas=$('cosmic-atlas'),rect=canvas.getBoundingClientRect();
+  const x=(event.clientX-rect.left)*canvas.width/rect.width,y=(event.clientY-rect.top)*canvas.height/rect.height;
+  const node=cosmicNodes.find(n=>Math.hypot(n.x-x,n.y-y)<26);
+  if(node)showCosmicDetail(node.stage.id);
+ });
+}
 let historyEvents=[];
 async function loadHistory(){
  const status=$('history-status');
@@ -142,6 +218,7 @@ function drawProjection(r){
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
+bindCosmicAtlas();loadCosmicAtlas();
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
