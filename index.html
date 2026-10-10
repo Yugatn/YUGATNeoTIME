@@ -38,13 +38,33 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
 <div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
 <p id="reverse-result" class="small muted" aria-live="polite">Введите Long Count, чтобы получить григорианскую дату при выбранной корреляции.</p></section>
+<section class="panel" aria-labelledby="projection-title">
+<h2 id="projection-title">Голографическая проекция времени</h2>
+<p class="small muted">Экспериментальная визуализация: один выбранный день проецируется на несколько циклических слоёв. Это вычислительная модель для сравнения фаз, не физическая голограмма и не доказательство голографической природы времени.</p>
+<div style="width:100%;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#050505">
+<canvas id="time-projection" width="900" height="480" role="img" aria-label="Кольцевая проекция календарных циклов; каждый слой показывает положение выбранного дня в цикле" style="display:block;width:100%;height:auto"></canvas>
+</div>
+<p id="projection-caption" class="small muted" aria-live="polite">Выберите дату, чтобы обновить проекцию.</p>
+</section>
 <section class="panel"><h2>Что означает «синтез»</h2><p>Система не смешивает календарные традиции в один недифференцированный счётчик. Она хранит их как отдельные слои, связанные правилами преобразования. Каждый результат зависит от входной даты, календарного алгоритма и выбранной корреляции.</p>
 <p class="small muted"><strong>OBSERVED:</strong> введённая дата и параметр корреляции. <strong>DERIVED:</strong> значения, вычисленные алгоритмом. <strong>RESIDUAL:</strong> исторические споры, локальные традиции и временные модели, которых пока нет в прототипе.</p></section>
 <footer><p><strong>YUGATNeoTIME</strong> · прототип 0.1</p><p>Не является астрологическим прогнозом и не утверждает причинной связи между календарными циклами и событиями.</p><p><a href="https://github.com/Yugatn/YUGATNeoTIME">Репозиторий на GitHub</a> · <a href="./README.md">Документация</a></p></footer>
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
-function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);$('out-gregorian').textContent=r.gregorian;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';}catch(e){$('status').textContent=e.message;}}
+function drawProjection(r){
+ const canvas=$('time-projection');if(!canvas)return;const ctx=canvas.getContext('2d');if(!ctx)return;
+ const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2-3;ctx.clearRect(0,0,w,h);ctx.fillStyle='#050505';ctx.fillRect(0,0,w,h);
+ const rings=[{name:'Tzolk’in · 260',period:260,phase:((r.jdn-r.correlation)%260+260)%260},{name:'Haab’ · 365',period:365,phase:((r.jdn-r.correlation)%365+365)%365},{name:'Египетский год · 365',period:365,rphase:r.egyptian.dayOfYear-1,phase:r.egyptian.dayOfYear-1},{name:'Long Count',period:144000,phase:((r.jdn-r.correlation)%144000+144000)%144000}];
+ const radii=[158,124,90,56];ctx.lineWidth=1;
+ rings.forEach((ring,i)=>{const radius=radii[i];ctx.beginPath();ctx.strokeStyle='#555';ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.stroke();for(let t=0;t<60;t++){const a=t*Math.PI/30-Math.PI/2;const inner=radius-(t%5===0?8:3);ctx.beginPath();ctx.strokeStyle=t%5===0?'#aaa':'#555';ctx.moveTo(cx+Math.cos(a)*inner,cy+Math.sin(a)*inner);ctx.lineTo(cx+Math.cos(a)*radius,cy+Math.sin(a)*radius);ctx.stroke();}
+ const phase=ring.phase/ring.period;const angle=phase*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.strokeStyle='#f4f4f4';ctx.lineWidth=2;ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(angle)*radius,cy+Math.sin(angle)*radius);ctx.stroke();ctx.beginPath();ctx.fillStyle='#fff';ctx.arc(cx+Math.cos(angle)*radius,cy+Math.sin(angle)*radius,4,0,Math.PI*2);ctx.fill();ctx.lineWidth=1;
+ });
+ ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='bold 20px system-ui';ctx.fillText(r.gregorian,cx,cy-7);ctx.font='12px system-ui';ctx.fillStyle='#aaa';ctx.fillText('JDN '+r.jdn,cx,cy+14);
+ ctx.textAlign='left';ctx.font='13px system-ui';rings.forEach((ring,i)=>{ctx.fillStyle='#ddd';ctx.fillText(ring.name,20,26+i*21);});
+ $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
+}
+function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);$('out-gregorian').textContent=r.gregorian;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
 </script></body></html>
