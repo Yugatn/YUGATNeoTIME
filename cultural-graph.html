@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Граф культурной передачи — YUGATNeoTIME</title>
+<style>
+:root{color-scheme:dark;--bg:#08090c;--panel:#11141a;--line:#303743;--text:#f1f3f6;--muted:#a4adba;--accent:#d5e3ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:auto;padding:24px 16px 64px}a{color:var(--accent)}h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.15}h2{font-size:1.2rem}p{max-width:85ch}.muted,.small{color:var(--muted)}.small{font-size:.9rem}
+.panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px;margin:14px 0}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}label{display:block;color:var(--muted);font-size:.9rem}input,select,button{font:inherit;color:var(--text);background:#0a0c10;border:1px solid var(--line);border-radius:8px;padding:10px;width:100%;margin-top:5px}button{cursor:pointer;background:#202733}button:hover{border-color:#8997ad}
+#graph{width:100%;height:460px;display:block;border:1px solid var(--line);border-radius:12px;background:#090b10;touch-action:manipulation}
+#detail{min-height:130px}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:.8rem;margin:2px}.warning{border-left:3px solid #c8a66a;padding-left:12px}.legend{display:flex;gap:8px;flex-wrap:wrap}.itemlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#0b0e13}.item h3{font-size:1rem;margin:0 0 6px}.item button{margin-top:10px}
+@media(max-width:600px){main{padding:18px 12px 40px}#graph{height:420px}}
+</style>
+</head>
+<body><main>
+<p class="small"><a href="./index.html">← YUGATNeoTIME · Синтез времени</a></p>
+<h1>Граф культурной передачи</h1>
+<p>Исследовательская карта связей между идеями, произведениями, переводами, критикой и последующими культурными явлениями. Каждый узел можно открыть, чтобы увидеть его статус и источники.</p>
+<div class="panel warning"><strong>Статус текущего набора: синтетический пример.</strong> Все записи вымышлены, источники отсутствуют, связи помечены как <code>NOT_TESTED</code>. Карта демонстрирует устройство интерфейса, а не реальные исторические влияния.</div>
+<div class="panel controls">
+<label>Поиск узла<input id="query" type="search" placeholder="Идея, произведение, регион…"></label>
+<label>Статус доказательности<select id="status"><option value="">Все статусы</option><option value="observed">OBSERVED · наблюдалось</option><option value="derived">DERIVED · выведено</option><option value="claimed">CLAIMED · заявлено</option><option value="not-tested">NOT_TESTED · не проверено</option><option value="conflicted">CONFLICTED · противоречивые данные</option><option value="residual">RESIDUAL · неизвестное/остаток</option></select></label>
+<label>Тип связи<select id="relation"><option value="">Все связи</option><option value="documented-influence">Документированное влияние</option><option value="translation">Перевод</option><option value="publication">Публикация</option><option value="review">Рецензия</option><option value="teaching">Преподавание</option><option value="adaptation">Адаптация</option><option value="temporal-sequence">Последовательность во времени</option><option value="correlation">Корреляция</option><option value="proposed-mechanism">Предполагаемый механизм</option><option value="alternative-explanation">Альтернативное объяснение</option><option value="unknown">Неизвестно</option></select></label>
+<button id="reset" type="button">Сбросить фильтры</button>
+</div>
+<div class="panel"><div class="legend small"><span class="tag">Узел — историческая запись</span><span class="tag">Линия — тип отношения</span><span class="tag">Пунктир — гипотеза или непроверенная связь</span></div><canvas id="graph" width="1100" height="460" aria-label="Граф культурной передачи, узлы можно выбирать мышью или касанием"></canvas><p id="statusline" class="small muted" aria-live="polite">Загрузка данных…</p></div>
+<div class="panel" id="detail"><strong>Выберите узел</strong><p class="muted">Здесь появятся описание, даты, статус доказательности и источники.</p></div>
+<h2>Записи в текущей выборке</h2><div id="records" class="itemlist"></div>
+<div class="panel"><h2>Правила интерпретации</h2><ul><li>Последовательность событий не доказывает влияние.</li><li>Сходство мотивов не доказывает, что один автор заимствовал у другого.</li><li>Пустой список источников означает, что связь не подтверждена.</li><li>Пропуски архивов и неравномерная сохранность культурных свидетельств должны быть видимы.</li><li>Реальный исторический набор должен содержать проверяемые ссылки на источники и конкретные издания, где это возможно.</li></ul><p class="small">Формат данных и ограничения: <a href="./docs/CULTURAL_TRANSMISSION_DATA_MODEL.md">модель культурной передачи</a>. <a href="./data/cultural-transmission-example.json">Текущий демонстрационный набор JSON</a>.</p></div>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+let dataset=null,positions=[],visibleRecords=[],visibleRelations=[],selectedId=null;
+const labels={idea:"Идея",artwork:"Произведение",edition:"Издание",translation:"Перевод",review:"Рецензия",institution:"Институция",discussion:"Дискуссия","observed-outcome":"Наблюдаемый результат"};
+const statusLabels={observed:"OBSERVED · наблюдалось",derived:"DERIVED · выведено",claimed:"CLAIMED · заявлено","not-tested":"NOT_TESTED · не проверено",conflicted:"CONFLICTED · противоречивые данные",residual:"RESIDUAL · неизвестное/остаток"};
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function match(record){const q=$("query").value.trim().toLocaleLowerCase();const st=$("status").value;return (!st||record.evidenceStatus===st)&&(!q||[record.title,record.description,record.region,record.language,record.id].join(" ").toLocaleLowerCase().includes(q));}
+function render(){
+ if(!dataset)return;
+ visibleRecords=dataset.records.filter(match);
+ const ids=new Set(visibleRecords.map(x=>x.id));
+ visibleRelations=dataset.relations.filter(r=>ids.has(r.from)&&ids.has(r.to)&&(!$("relation").value||r.relationType===$("relation").value));
+ positions=visibleRecords.map((record,i)=>{const angle=(Math.PI*2*i/Math.max(visibleRecords.length,1))-Math.PI/2;return {id:record.id,x:550+Math.cos(angle)*Math.min(365,visibleRecords.length*58),y:230+Math.sin(angle)*150,record};});
+ draw();renderList();
+ $("statusline").textContent="Узлов: "+visibleRecords.length+" · связей: "+visibleRelations.length+" · набор: "+dataset.datasetStatus+". Связи не следует считать доказанными только по расположению на карте.";
+ if(selectedId&&!ids.has(selectedId))selectedId=null;
+ if(!selectedId&&visibleRecords.length)showDetail(visibleRecords[0].id);
+}
+function draw(){
+ const canvas=$("graph"),ctx=canvas.getContext("2d"),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));ctx.setTransform(canvas.width/1100,0,0,canvas.height/460,0,0);ctx.clearRect(0,0,1100,460);
+ const byId=new Map(positions.map(p=>[p.id,p]));
+ visibleRelations.forEach(rel=>{const a=byId.get(rel.from),b=byId.get(rel.to);if(!a||!b)return;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=rel.status==="observed"?"#d5e3ff":"#79879b";ctx.lineWidth=rel.status==="observed"?2.5:1.5;ctx.setLineDash(rel.status==="observed"?[]:[6,5]);ctx.stroke();ctx.setLineDash([]);});
+ positions.forEach(p=>{const active=p.id===selectedId;ctx.beginPath();ctx.arc(p.x,p.y,active?29:24,0,Math.PI*2);ctx.fillStyle=active?"#d5e3ff":"#202733";ctx.fill();ctx.strokeStyle=active?"#ffffff":"#7c899b";ctx.lineWidth=active?2.5:1.2;ctx.stroke();ctx.fillStyle=active?"#10141b":"#f1f3f6";ctx.font="12px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(positions.indexOf(p)+1),p.x,p.y);ctx.fillStyle="#f1f3f6";ctx.font="13px system-ui";ctx.textBaseline="top";let name=p.record.title; if(name.length>30)name=name.slice(0,27)+"…";ctx.fillText(name,p.x,p.y+31);});
+ if(!positions.length){ctx.fillStyle="#a4adba";ctx.textAlign="center";ctx.font="16px system-ui";ctx.fillText("Нет записей по заданным фильтрам",550,230);}
+}
+function showDetail(id){
+ const record=dataset.records.find(x=>x.id===id);if(!record)return;selectedId=id;draw();
+ const relations=dataset.relations.filter(r=>r.from===id||r.to===id);
+ const sourceHtml=record.sources.length?'<ul>'+record.sources.map(s=>'<li><a href="'+esc(s)+'" target="_blank" rel="noopener noreferrer">'+esc(s)+'</a></li>').join("")+'</ul>':'<p class="muted">Источники не указаны. Исторические выводы по этой записи не подтверждены.</p>';
+ $("detail").innerHTML='<span class="tag">'+esc(labels[record.recordType]||record.recordType)+'</span><span class="tag">'+esc(statusLabels[record.evidenceStatus]||record.evidenceStatus)+'</span><h2>'+esc(record.title)+'</h2><p>'+esc(record.description||"Описание отсутствует.")+'</p><p class="small muted">Регион: '+esc(record.region||"не указан")+' · Язык: '+esc(record.language||"не указан")+' · Период: '+esc(record.period?.start??"неизвестен")+(record.period?.end?" — "+esc(record.period.end):"")+' · Точность: '+esc(record.period?.precision||"не указана")+'</p><p><strong>Связи с этой записью: '+relations.length+'</strong></p>'+(relations.length?'<ul>'+relations.map(r=>'<li>'+esc(r.from===id?"Исходящая":"Входящая")+': '+esc(r.relationType)+' · '+esc(statusLabels[r.status]||r.status)+' — '+esc(r.description)+'</li>').join("")+'</ul>':'<p class="muted">Связей пока нет.</p>')+'<h3>Источники</h3>'+sourceHtml;
+}
+function renderList(){const host=$("records");host.replaceChildren();visibleRecords.forEach(record=>{const card=document.createElement("article");card.className="item";const title=document.createElement("h3");title.textContent=record.title;card.appendChild(title);const p=document.createElement("p");p.className="small muted";p.textContent=(labels[record.recordType]||record.recordType)+" · "+(statusLabels[record.evidenceStatus]||record.evidenceStatus);card.appendChild(p);const btn=document.createElement("button");btn.type="button";btn.textContent="Открыть запись";btn.addEventListener("click",()=>showDetail(record.id));card.appendChild(btn);host.appendChild(card);});}
+function point(event){const canvas=$("graph"),r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)/r.width*1100,y:(event.clientY-r.top)/r.height*460};}
+$("graph").addEventListener("click",event=>{const p=point(event);let best=null,dist=Infinity;positions.forEach(n=>{const d=Math.hypot(n.x-p.x,n.y-p.y);if(d<dist){dist=d;best=n;}});if(best&&dist<42)showDetail(best.id);});
+["query","status","relation"].forEach(id=>$(id).addEventListener(id==="query"?"input":"change",()=>{selectedId=null;render();}));
+$("reset").addEventListener("click",()=>{$("query").value="";$("status").value="";$("relation").value="";selectedId=null;render();});
+window.addEventListener("resize",draw);
+fetch("./data/cultural-transmission-example.json").then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(d=>{dataset=d;render();}).catch(e=>{$("statusline").textContent="Не удалось загрузить данные: "+e.message+". Откройте проект через GitHub Pages или локальный HTTP-сервер.";});
+})();
+</script></body></html>
