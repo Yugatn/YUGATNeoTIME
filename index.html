@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="YUGATNeoTIME — исследовательский синтез календарных систем на основе календаря Майя.">
+<title>YUGATNeoTIME — Синтез времени</title>
+<style>
+:root{color-scheme:dark;--bg:#090909;--panel:#121212;--line:#353535;--text:#f2f2f2;--muted:#aaa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{width:min(980px,100% - 32px);margin:0 auto;padding:44px 0 72px}header{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:28px}
+.eyebrow{color:var(--muted);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase}h1{font-size:clamp(2rem,6vw,4rem);line-height:1.03;letter-spacing:-.045em;margin:.35em 0}h2{font-size:1.2rem;margin:0 0 12px}p{margin:.5em 0 1em}.muted{color:var(--muted)}.small{font-size:.88rem}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:18px 0}.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+.field{display:flex;flex-direction:column;gap:6px;min-width:180px;flex:1}label{font-size:.88rem;color:var(--muted)}
+input,button{font:inherit;color:var(--text);background:#080808;border:1px solid #555;border-radius:9px;padding:10px 12px;min-height:44px}button{cursor:pointer;background:#eee;color:#111;border-color:#eee;font-weight:650}button:hover{opacity:.88}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.result{border:1px solid var(--line);border-radius:12px;padding:18px;min-height:132px}.result .name{color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}.result .value{font-size:1.4rem;font-weight:650;overflow-wrap:anywhere;margin-top:8px}.result .detail{font-size:.86rem;color:var(--muted);margin-top:5px}
+.rule{height:1px;background:var(--line);margin:18px 0}.tag{display:inline-block;border:1px solid #555;border-radius:100px;padding:3px 9px;font-size:.75rem;color:#ddd;margin:0 5px 5px 0}
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.86rem}a{color:var(--text)}:focus-visible{outline:2px solid white;outline-offset:3px}
+@media(max-width:600px){main{padding-top:28px}.panel{padding:16px}.result{min-height:unset}}
+</style>
+</head>
+<body><main>
+<header><div class="eyebrow">YUGATN · исследовательский проект</div><h1>Синтез времени</h1>
+<p class="muted">Календарь как система координат. Несколько способов описать один день — без предположения, что один из них исчерпывает реальность.</p>
+<span class="tag">MVP 0.1</span><span class="tag">Майя · Long Count · Tzolk'in · Haab'</span></header>
+<section class="panel" aria-labelledby="input-title"><h2 id="input-title">Выбрать день</h2><div class="controls">
+<div class="field"><label for="gregorian">Григорианская дата</label><input id="gregorian" type="date"></div>
+<div class="field"><label for="correlation">Корреляция GMT (JDN эпохи)</label><input id="correlation" type="number" step="1" value="584283"></div>
+<button id="convert" type="button">Синтезировать</button></div>
+<p class="small muted">Корреляция задаёт привязку календаря Майя к абсолютной шкале дней. Значение 584283 используется здесь как распространённая настройка, а не как бесспорно установленный факт.</p></section>
+<section class="panel" aria-labelledby="output-title"><h2 id="output-title">Слои выбранного времени</h2><p id="status" class="muted small" aria-live="polite">Результаты появятся после выбора даты.</p>
+<div class="cards">
+<div class="result"><div class="name">Гражданский слой</div><div class="value" id="out-gregorian">—</div><div class="detail">Григорианская дата</div></div>
+<div class="result"><div class="name">Майя · Long Count</div><div class="value" id="out-long">—</div><div class="detail" id="out-days">Абсолютный номер дня: —</div></div>
+<div class="result"><div class="name">Майя · Tzolk'in</div><div class="value" id="out-tzolkin">—</div><div class="detail">Цикл из 13 чисел и 20 имён дней</div></div>
+<div class="result"><div class="name">Майя · Haab'</div><div class="value" id="out-haab">—</div><div class="detail">18 месяцев по 20 дней и Wayeb' из 5 дней</div></div></div>
+<div class="rule"></div><h2>Обратное преобразование</h2><div class="controls">
+<div class="field"><label for="longcount">Long Count, например 13.0.0.0.0</label><input id="longcount" inputmode="numeric" value="13.0.0.0.0" placeholder="бактун.к'атун.тун.виналь.кин"></div><button id="reverse" type="button">Найти дату</button></div>
+<p id="reverse-result" class="small muted" aria-live="polite">Введите Long Count, чтобы получить григорианскую дату при выбранной корреляции.</p></section>
+<section class="panel"><h2>Что означает «синтез»</h2><p>Система не смешивает календарные традиции в один недифференцированный счётчик. Она хранит их как отдельные слои, связанные правилами преобразования. Каждый результат зависит от входной даты, календарного алгоритма и выбранной корреляции.</p>
+<p class="small muted"><strong>OBSERVED:</strong> введённая дата и параметр корреляции. <strong>DERIVED:</strong> значения, вычисленные алгоритмом. <strong>RESIDUAL:</strong> исторические споры, локальные традиции и временные модели, которых пока нет в прототипе.</p></section>
+<footer><p><strong>YUGATNeoTIME</strong> · прототип 0.1</p><p>Не является астрологическим прогнозом и не утверждает причинной связи между календарными циклами и событиями.</p><p><a href="https://github.com/Yugatn/YUGATNeoTIME">Репозиторий на GitHub</a> · <a href="./README.md">Документация</a></p></footer>
+</main>
+<script src="./src/calendar-engine.js"></script><script>
+(function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const r=MayaTime.fromGregorian(date,corr);$('out-gregorian').textContent=r.gregorian;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';}catch(e){$('status').textContent=e.message;}}
+$('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);
+$('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
+</script></body></html>
