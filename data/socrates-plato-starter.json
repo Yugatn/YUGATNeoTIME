@@ -2,8 +2,8 @@
   "schemaVersion": "1.0",
   "datasetId": "socrates-plato-starter",
   "datasetStatus": "research-draft",
-  "title": "Сократ и Платон: начальный исторический маршрут",
-  "description": "Исследовательский набор с источниками для проверки модели исторической шкалы. Даты приблизительны там, где это отражено в поле precision; связи не следует понимать как полную реконструкцию интеллектуальной передачи.",
+  "title": "От Сократа к Аристотелю: ранняя цепочка философской передачи",
+  "description": "Исследовательский набор с источниками, расширенный от Сократа и Платона к Аристотелю, Александру Македонскому и Ликею. Даты и связи требуют критического чтения; набор не является полной историей античной философии.",
   "events": [
     {
       "id": "socrates-trial-and-death",
@@ -151,6 +151,106 @@
           "note": "Первичный литературный источник, отражающий платоновское изображение защиты Сократа."
         }
       ]
+    },
+    {
+      "id": "aristotle-joins-academy",
+      "title": "Аристотель присоединяется к Академии Платона",
+      "date": {
+        "start": "c. 367 BCE",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "около 367 до н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Афины, Древняя Греция",
+      "place": "Академия близ Афин",
+      "peopleIds": [
+        "aristotle",
+        "plato"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy",
+        "education"
+      ],
+      "eventType": "study-and-teaching",
+      "description": "Аристотель прибыл в Афины и стал связан с Академией Платона. Это документируемый элемент биографической традиции, но точная дата прибытия приводится приблизительно.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        }
+      ]
+    },
+    {
+      "id": "aristotle-tutors-alexander",
+      "title": "Аристотель становится наставником Александра Македонского",
+      "date": {
+        "start": "c. 343/342 BCE",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "около 343/342 до н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Македония",
+      "place": "Миеза (традиционная локализация обучения)",
+      "peopleIds": [
+        "aristotle",
+        "alexander-the-great"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy",
+        "macedon",
+        "education"
+      ],
+      "eventType": "tutoring",
+      "description": "Античная биографическая традиция связывает Аристотеля с обучением юного Александра. Масштаб влияния наставника на последующие решения Александра нельзя выводить только из факта обучения.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        }
+      ]
+    },
+    {
+      "id": "aristotle-founds-lyceum",
+      "title": "Аристотель основывает Ликей в Афинах",
+      "date": {
+        "start": "c. 335 BCE",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "historical BCE chronology; no year zero",
+        "originalDateText": "около 335 до н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Афины, Древняя Греция",
+      "place": "Ликей, Афины",
+      "peopleIds": [
+        "aristotle"
+      ],
+      "cultureTags": [
+        "ancient-greek-philosophy",
+        "education",
+        "research"
+      ],
+      "eventType": "institution",
+      "description": "После возвращения в Афины Аристотель организовал собственную философскую школу, известную как Ликей. Датировка приблизительна; институт развивался в конкретном историческом и политическом контексте.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        }
+      ]
     }
   ],
   "relations": [
@@ -213,6 +313,76 @@
           "note": "Обзор ограничений источниковой базы."
         }
       ]
+    },
+    {
+      "id": "plato-academy-to-aristotle-study",
+      "from": "plato-academy",
+      "to": "aristotle-joins-academy",
+      "relationType": "taught",
+      "status": "claimed",
+      "description": "Аристотель учился в Академии, связанной с Платоном. Это свидетельствует о непосредственном институциональном контакте, но не означает полного согласия Аристотеля с учением Платона.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        },
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Plato",
+          "url": "https://plato.stanford.edu/entries/plato/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор Академии и её места в философской биографии Платона."
+        }
+      ]
+    },
+    {
+      "id": "aristotle-to-alexander-tutoring",
+      "from": "aristotle-tutors-alexander",
+      "to": "aristotle-founds-lyceum",
+      "relationType": "preceded",
+      "status": "derived",
+      "description": "Наставничество Александра предшествует основанию Ликея в принятой приблизительной хронологии; сама последовательность не доказывает причинной связи между событиями.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        }
+      ]
+    },
+    {
+      "id": "aristotle-teaches-alexander",
+      "from": "aristotle-joins-academy",
+      "to": "aristotle-tutors-alexander",
+      "relationType": "preceded",
+      "status": "derived",
+      "description": "Обучение Аристотеля в Академии предшествовало его роли наставника Александра в принятой хронологии. Последовательность биографии не доказывает, какие именно идеи Александр усвоил.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        }
+      ]
+    },
+    {
+      "id": "aristotle-founds-lyceum-link",
+      "from": "aristotle-joins-academy",
+      "to": "aristotle-founds-lyceum",
+      "relationType": "participant-in",
+      "status": "claimed",
+      "description": "Узлы отражают этапы биографии Аристотеля: связь с Академией и позднейшую организацию собственной школы. Это не утверждает, что Ликей был простым продолжением Академии.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Aristotle",
+          "url": "https://plato.stanford.edu/entries/aristotle/",
+          "sourceType": "scholarly-reference",
+          "note": "Современный научный обзор биографии Аристотеля, Академии, Ликея и его роли наставника Александра."
+        }
+      ]
     }
   ],
   "limitations": [
@@ -221,6 +391,9 @@
     "Диалоги Платона — литературные и философские источники, а не дословные стенограммы бесед Сократа.",
     "Связи со статусом claimed обозначают атрибутированное источниками утверждение, а не независимое причинное доказательство.",
     "Для полноценной публикации необходимо проверить точные библиографические детали и расширить корпус первичных и современных научных источников.",
-    "Набор не делает утверждений о прямом чтении этих текстов Лениным или конкретными современными студентами."
+    "Набор не делает утверждений о прямом чтении этих текстов Лениным или конкретными современными студентами.",
+    "Расширение включает Аристотеля, традицию его наставничества Александра и основание Ликея; датировки приблизительны.",
+    "Факт наставничества сам по себе не доказывает конкретного интеллектуального влияния на политические решения Александра.",
+    "Связи derived обозначают ограниченный хронологический вывод, а не причинность."
   ]
 }
