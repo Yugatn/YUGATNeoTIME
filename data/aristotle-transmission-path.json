@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "aristotle-textual-transmission",
+  "datasetStatus": "research-draft",
+  "title": "Путь текстов Аристотеля: греческий, сирийский, арабский и латинский контексты",
+  "description": "Исследовательский набор о переводах и рецепции аристотелевских текстов. Он показывает документированные историками движения текстов, но не предполагает, что идеи сохранялись неизменными при переводе.",
+  "events": [
+    {
+      "id": "greek-aristotle-corpus",
+      "title": "Формирование и сохранение греческого корпуса сочинений Аристотеля",
+      "date": {
+        "start": "4th century BCE onward",
+        "end": null,
+        "precision": "approximate",
+        "calendar": "historical BCE/CE chronology; no year zero",
+        "originalDateText": "с IV века до н. э.; история передачи продолжается в последующие эпохи"
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Восточное Средиземноморье",
+      "place": null,
+      "peopleIds": [
+        "aristotle",
+        "peripatetic-commentators"
+      ],
+      "cultureTags": [
+        "greek-philosophy",
+        "manuscript-culture"
+      ],
+      "eventType": "textual-transmission",
+      "description": "Сочинения Аристотеля передавались через рукописную традицию, редакции и комментарии. Нынешний корпус нельзя считать простой неизменной копией авторских оригиналов.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: The Textual Transmission of the Aristotelian Corpus",
+          "url": "https://plato.stanford.edu/entries/aristotle-text/",
+          "sourceType": "scholarly-reference",
+          "note": "Исследование рукописной и переводной истории корпуса."
+        }
+      ]
+    },
+    {
+      "id": "greek-syriac-arabic-translations",
+      "title": "Перевод греческих философских и научных текстов на сирийский и арабский",
+      "date": {
+        "start": "8th century CE",
+        "end": "10th century CE",
+        "precision": "century",
+        "calendar": "Common Era chronology",
+        "originalDateText": "VIII–X века н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Ближний Восток; в том числе Багдад и сирийскоязычные интеллектуальные среды",
+      "place": null,
+      "peopleIds": [
+        "hunayn-ibn-ishaq",
+        "al-kindi",
+        "syriac-translators"
+      ],
+      "cultureTags": [
+        "greek-philosophy",
+        "syriac-scholarship",
+        "arabic-philosophy",
+        "translation"
+      ],
+      "eventType": "translation-movement",
+      "description": "В VIII–X веках значительная часть греческого философского и научного наследия переводилась на арабский; в ряде случаев передача проходила через сирийский. Работали переводчики разных религиозных и языковых общин. Не все тексты и версии прошли одинаковый путь.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Medieval Philosophy, section Translation Movements",
+          "url": "https://plato.stanford.edu/entries/medieval-philosophy/",
+          "sourceType": "scholarly-reference",
+          "note": "Описывает перевод греческих текстов на сирийский и арабский, в том числе корпуса Аристотеля."
+        },
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Greek Sources in Arabic and Islamic Philosophy",
+          "url": "https://plato.stanford.edu/entries/arabic-islamic-greek/",
+          "sourceType": "scholarly-reference",
+          "note": "История переводческих движений и адаптации греческих источников в арабоязычной философии."
+        }
+      ]
+    },
+    {
+      "id": "arabic-latin-translations",
+      "title": "Переводы арабоязычных философских текстов на латинский",
+      "date": {
+        "start": "12th century CE",
+        "end": "13th century CE",
+        "precision": "century",
+        "calendar": "Common Era chronology",
+        "originalDateText": "XII–XIII века н. э."
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Иберийский полуостров, Сицилия и латинская Европа",
+      "place": "Толедо и Сицилия — важные, но не единственные центры",
+      "peopleIds": [
+        "gerard-of-cremona",
+        "translators-toledo-sicily"
+      ],
+      "cultureTags": [
+        "arabic-philosophy",
+        "latin-scholarship",
+        "translation",
+        "cross-cultural-transmission"
+      ],
+      "eventType": "translation-movement",
+      "description": "В XII–XIII веках на латинский переводили арабоязычные философские тексты, включая труды и комментарии, связанные с Аристотелем. Часть аристотелевских работ также переводилась непосредственно с греческого; единого маршрута для всех текстов не существовало.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Medieval Philosophy, section Translation Movements",
+          "url": "https://plato.stanford.edu/entries/medieval-philosophy/",
+          "sourceType": "scholarly-reference",
+          "note": "Описывает арабо-латинские и греко-латинские переводческие движения."
+        },
+        {
+          "title": "Cambridge History of Later Medieval Philosophy: Aristoteles Latinus",
+          "url": "https://www.cambridge.org/core/books/abs/cambridge-history-of-later-medieval-philosophy/aristoteles-latinus/6C993D65FE3FEFC15C4BD3A2D415133E",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор средневековых латинских переводов Аристотеля, включая переводы с арабского и греческого."
+        }
+      ]
+    },
+    {
+      "id": "aristotle-latin-university-reception",
+      "title": "Распространение латинского Аристотеля в средневековой учёности",
+      "date": {
+        "start": "12th century CE",
+        "end": "13th century CE",
+        "precision": "century",
+        "calendar": "Common Era chronology",
+        "originalDateText": "XII–XIII века н. э. и последующее изучение"
+      },
+      "dateBasis": "scholarly-estimate",
+      "region": "Латинская Европа",
+      "place": "Университетские центры, в том числе Париж",
+      "peopleIds": [
+        "aristotle",
+        "medieval-scholars"
+      ],
+      "cultureTags": [
+        "scholasticism",
+        "universities",
+        "latin-philosophy"
+      ],
+      "eventType": "educational-reception",
+      "description": "Латинские версии сочинений Аристотеля и комментарии к ним стали важными инструментами средневековой философской и научной работы. Рецепция включала споры, переосмысление и институциональные ограничения, а не простое копирование античных взглядов.",
+      "evidenceStatus": "claimed",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Medieval Philosophy",
+          "url": "https://plato.stanford.edu/entries/medieval-philosophy/",
+          "sourceType": "scholarly-reference",
+          "note": "Обзор рецепции Аристотеля и влияния переводов на университетские программы."
+        },
+        {
+          "title": "KU Leuven: The Aristoteles Latinus project and its history",
+          "url": "https://hiw.kuleuven.be/dwmc/research/al/about/history.html",
+          "sourceType": "scholarly-reference",
+          "note": "Описание научного проекта по критическому изучению средневековых греко-латинских переводов."
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "greek-to-syriac-arabic",
+      "from": "greek-aristotle-corpus",
+      "to": "greek-syriac-arabic-translations",
+      "relationType": "translated-and-transmitted",
+      "status": "claimed",
+      "description": "Греческий корпус и связанные с ним комментарии стали частью переводческого движения в сирийский и арабский языки. Конкретный путь нужно устанавливать отдельно для каждого произведения и версии.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Medieval Philosophy",
+          "url": "https://plato.stanford.edu/entries/medieval-philosophy/",
+          "sourceType": "scholarly-reference",
+          "note": "Обобщает переводческое движение VIII–X веков."
+        }
+      ]
+    },
+    {
+      "id": "arabic-to-latin",
+      "from": "greek-syriac-arabic-translations",
+      "to": "arabic-latin-translations",
+      "relationType": "translated-and-transmitted",
+      "status": "claimed",
+      "description": "Некоторые арабские переводы Аристотеля и труды арабоязычных философов были переведены на латинский. Не следует считать, что каждый латинский текст прошёл через арабский: многие переводились с греческого.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Medieval Philosophy",
+          "url": "https://plato.stanford.edu/entries/medieval-philosophy/",
+          "sourceType": "scholarly-reference",
+          "note": "Сопоставляет греко-латинские и арабо-латинские маршруты."
+        },
+        {
+          "title": "Cambridge History of Later Medieval Philosophy: Aristoteles Latinus",
+          "url": "https://www.cambridge.org/core/books/abs/cambridge-history-of-later-medieval-philosophy/aristoteles-latinus/6C993D65FE3FEFC15C4BD3A2D415133E",
+          "sourceType": "scholarly-reference",
+          "note": "Подтверждает существование нескольких переводческих маршрутов."
+        }
+      ]
+    },
+    {
+      "id": "latin-translations-to-scholastic-reception",
+      "from": "arabic-latin-translations",
+      "to": "aristotle-latin-university-reception",
+      "relationType": "institutional-reception",
+      "status": "claimed",
+      "description": "Переводные тексты и комментарии участвовали в изменении средневековой учёности и университетских программ; воздействие различалось по произведениям, местам и периодам.",
+      "sources": [
+        {
+          "title": "Stanford Encyclopedia of Philosophy: Medieval Philosophy",
+          "url": "https://plato.stanford.edu/entries/medieval-philosophy/",
+          "sourceType": "scholarly-reference",
+          "note": "Описывает влияние переводческих движений на университетские программы."
+        },
+        {
+          "title": "KU Leuven: The Aristoteles Latinus project and its history",
+          "url": "https://hiw.kuleuven.be/dwmc/research/al/about/history.html",
+          "sourceType": "scholarly-reference",
+          "note": "Объясняет роль латинских переводов в средневековой философии и науке."
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Набор показывает крупные переводческие движения, а не полную генеалогию каждого текста Аристотеля.",
+    "Для конкретного произведения необходимо отдельно установить греческую рукопись, сирийские и арабские версии, переводчика, латинскую версию и датировку.",
+    "Перевод не является нейтральной копией: терминология, комментарии, редакции и культурный контекст могли менять интерпретацию.",
+    "Последовательность событий не доказывает прямую причинность и не означает неизменность идей.",
+    "Статус research-draft означает, что ссылки на научные обзоры включены, но набор ещё не прошёл независимую экспертную верификацию."
+  ]
+}
