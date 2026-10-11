@@ -372,9 +372,9 @@
       "id": "aristotle-founds-lyceum-link",
       "from": "aristotle-joins-academy",
       "to": "aristotle-founds-lyceum",
-      "relationType": "participant-in",
-      "status": "claimed",
-      "description": "Узлы отражают этапы биографии Аристотеля: связь с Академией и позднейшую организацию собственной школы. Это не утверждает, что Ликей был простым продолжением Академии.",
+      "relationType": "preceded",
+      "status": "derived",
+      "description": "Этап связи Аристотеля с Академией предшествует основанию им Ликея в принятой приблизительной хронологии. Это хронологическая связь, а не утверждение о прямом институциональном наследовании.",
       "sources": [
         {
           "title": "Stanford Encyclopedia of Philosophy: Aristotle",
