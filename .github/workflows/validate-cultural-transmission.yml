@@ -26,6 +26,7 @@ on:
       - 'schemas/historical-timeline.schema.json'
       - 'data/historical-timeline-example.json'
       - 'data/socrates-plato-starter.json'
+      - 'data/aristotle-transmission-path.json'
       - 'scripts/validate_historical_timeline.py'
       - '.github/workflows/validate-cultural-transmission.yml'
   workflow_dispatch:
