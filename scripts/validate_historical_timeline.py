@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = [
     ROOT / "data" / "historical-timeline-example.json",
     ROOT / "data" / "socrates-plato-starter.json",
+    ROOT / "data" / "aristotle-transmission-path.json",
 ]
 ALLOWED = {"observed", "derived", "claimed", "not-tested", "conflicted", "residual"}
 DATE_PRECISIONS = {"day", "month", "year", "decade", "century", "approximate", "unknown"}
