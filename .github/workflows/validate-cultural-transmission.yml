@@ -20,6 +20,7 @@ on:
     paths:
       - 'schemas/cultural-transmission.schema.json'
       - 'data/cultural-transmission-example.json'
+      - 'data/translation-network-aristotle.json'
       - 'data/scenario-forecast-template.json'
       - 'scripts/validate_cultural_transmission.py'
       - 'scripts/validate_scenario_template.py'
