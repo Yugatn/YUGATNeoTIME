@@ -462,10 +462,10 @@ function bindProjectionTouch(){
 }
 function handGesture(landmarks){
  const index=landmarks[8],thumb=landmarks[4],indexPip=landmarks[6];
- const pinching=Math.hypot(index.x-thumb.x,index.y-thumb.y)<.055;
+ const pinchDistance=Math.hypot(index.x-thumb.x,index.y-thumb.y),pinching=pinchDistance<.055;
  if(pinching){
-  if(lastPinch!==null)changeProjectionScale((lastPinch-index.y)*1.4);
-  lastPinch=index.y;
+  if(lastPinch!==null)changeProjectionScale((lastPinch-pinchDistance)*8);
+  lastPinch=pinchDistance;
  }else lastPinch=null;
  const indexRaised=index.y<indexPip.y-.015;
  if(indexRaised){
