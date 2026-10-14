@@ -109,8 +109,19 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <section class="panel" aria-labelledby="projection-title">
 <h2 id="projection-title">Голографическая проекция времени</h2>
 <p class="small muted">Экспериментальная визуализация: один выбранный день проецируется на несколько циклических слоёв. Это вычислительная модель для сравнения фаз, не физическая голограмма и не доказательство голографической природы времени.</p>
-<div style="width:100%;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#050505">
-<canvas id="time-projection" width="900" height="480" role="img" aria-label="Кольцевая проекция календарных циклов; каждый слой показывает положение выбранного дня в цикле" style="display:block;width:100%;height:auto"></canvas>
+<div style="width:100%;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#050505;perspective:1000px">
+<canvas id="time-projection" width="900" height="480" role="img" aria-label="Кольцевая проекция календарных циклов; перетаскивайте, чтобы вращать, или используйте жесты касания" tabindex="0" style="display:block;width:100%;height:auto;transform-origin:center center;touch-action:none;cursor:grab"></canvas>
+</div>
+<div class="panel" style="margin:12px 0;background:#0d0d0d" aria-labelledby="projection-controls-title">
+<h2 id="projection-controls-title">Управление проекцией</h2>
+<p class="small muted">На смартфоне: перетащите одним пальцем для вращения, сведите или разведите два пальца для масштаба. Камера включается только по вашей команде и используется локально в браузере для распознавания жестов.</p>
+<div class="controls">
+<button id="projection-reset" type="button">Сбросить вид</button>
+<button id="hand-start" type="button">Включить управление рукой</button>
+<button id="hand-stop" type="button" disabled>Выключить камеру</button>
+</div>
+<p id="hand-status" class="small muted" aria-live="polite">Камера выключена. Управление касаниями доступно без камеры.</p>
+<video id="hand-video" playsinline muted aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"></video>
 </div>
 <p id="projection-caption" class="small muted" aria-live="polite">Выберите дату, чтобы обновить проекцию.</p>
 </section>
@@ -416,6 +427,87 @@ function drawProjection(r){
  ctx.textAlign='left';ctx.font='13px system-ui';rings.forEach((ring,i)=>{ctx.fillStyle='#ddd';ctx.fillText(ring.name,20,26+i*21);});
  $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
 }
+let projectionView={rx:0,ry:0,scale:1};
+const projectionPointers=new Map();
+let projectionDrag=null,projectionPinch=null,handTracker=null,handStream=null,handFrame=null,handBusy=false,lastHandPoint=null,lastPinch=null;
+function applyProjectionView(){
+ const canvas=$('time-projection');
+ canvas.style.transform='perspective(1000px) rotateX('+projectionView.rx+'deg) rotateY('+projectionView.ry+'deg) scale('+projectionView.scale+')';
+ canvas.style.cursor=projectionDrag?'grabbing':'grab';
+}
+function resetProjectionView(){projectionView={rx:0,ry:0,scale:1};applyProjectionView();}
+function changeProjectionScale(delta){projectionView.scale=Math.max(.65,Math.min(1.8,projectionView.scale+delta));applyProjectionView();}
+function bindProjectionTouch(){
+ const canvas=$('time-projection');
+ canvas.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='mouse'&&event.button!==0)return;
+  canvas.setPointerCapture(event.pointerId);projectionPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+  if(projectionPointers.size===1)projectionDrag={x:event.clientX,y:event.clientY};
+  if(projectionPointers.size===2){const pts=[...projectionPointers.values()];projectionPinch=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);projectionDrag=null;}
+ });
+ canvas.addEventListener('pointermove',event=>{
+  if(!projectionPointers.has(event.pointerId))return;
+  const previous=projectionPointers.get(event.pointerId),dx=event.clientX-previous.x,dy=event.clientY-previous.y;
+  projectionPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+  if(projectionPointers.size>=2){
+   const pts=[...projectionPointers.values()],dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+   if(projectionPinch!==null&&dist>0)changeProjectionScale((dist-projectionPinch)*.004);
+   projectionPinch=dist;
+  }else if(projectionDrag){projectionView.ry=Math.max(-65,Math.min(65,projectionView.ry+dx*.45));projectionView.rx=Math.max(-55,Math.min(55,projectionView.rx-dy*.45));applyProjectionView();}
+ });
+ const end=event=>{projectionPointers.delete(event.pointerId);if(projectionPointers.size<2)projectionPinch=null;if(projectionPointers.size===1){const p=[...projectionPointers.values()][0];projectionDrag={x:p.x,y:p.y};}else projectionDrag=null;};
+ canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);canvas.addEventListener('lostpointercapture',end);
+ canvas.addEventListener('wheel',event=>{event.preventDefault();changeProjectionScale(event.deltaY<0?.06:-.06);},{passive:false});
+ $('projection-reset').addEventListener('click',resetProjectionView);
+}
+function handGesture(landmarks){
+ const index=landmarks[8],thumb=landmarks[4],indexPip=landmarks[6];
+ const pinching=Math.hypot(index.x-thumb.x,index.y-thumb.y)<.055;
+ if(pinching){
+  if(lastPinch!==null)changeProjectionScale((lastPinch-index.y)*1.4);
+  lastPinch=index.y;
+ }else lastPinch=null;
+ const indexRaised=index.y<indexPip.y-.015;
+ if(indexRaised){
+  if(lastHandPoint){const dx=index.x-lastHandPoint.x,dy=index.y-lastHandPoint.y;projectionView.ry=Math.max(-65,Math.min(65,projectionView.ry+dx*240));projectionView.rx=Math.max(-55,Math.min(55,projectionView.rx+dy*200));applyProjectionView();}
+  lastHandPoint={x:index.x,y:index.y};
+ }else lastHandPoint=null;
+}
+async function startHandControl(){
+ const status=$('hand-status'),start=$('hand-start'),stop=$('hand-stop');
+ try{
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('Браузер не предоставляет доступ к камере. Нужен HTTPS и поддерживаемый браузер.');
+  status.textContent='Запрашивается доступ к камере…';
+  const scriptUrl='https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
+  if(!window.Hands)await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=scriptUrl;script.onload=resolve;script.onerror=()=>reject(new Error('Не удалось загрузить библиотеку распознавания жестов. Проверьте подключение к сети.'));document.head.appendChild(script);});
+  handStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false});
+  const video=$('hand-video');video.srcObject=handStream;await video.play();
+  handTracker=new window.Hands({locateFile:file=>'https://cdn.jsdelivr.net/npm/@mediapipe/hands/'+file});
+  handTracker.setOptions({maxNumHands:1,modelComplexity:0,minDetectionConfidence:.65,minTrackingConfidence:.55});
+  handTracker.onResults(results=>{
+   if(results.multiHandLandmarks&&results.multiHandLandmarks.length){handGesture(results.multiHandLandmarks[0]);status.textContent='Жест распознан. Поднимите указательный палец и двигайте рукой для вращения; соедините большой и указательный пальцы для масштаба.';}
+   else{lastHandPoint=null;lastPinch=null;status.textContent='Камера включена. Поместите кисть в кадр.';}
+  });
+  start.disabled=true;stop.disabled=false;
+  const loop=async()=>{if(!handStream||!handTracker)return;if(video.readyState>=2&&!handBusy){handBusy=true;try{await handTracker.send({image:video});}catch(e){status.textContent='Ошибка распознавания жестов: '+e.message;}finally{handBusy=false;}}handFrame=requestAnimationFrame(loop);};
+  handFrame=requestAnimationFrame(loop);
+  status.textContent='Камера включена. Поместите кисть в кадр.';
+ }catch(error){stopHandControl();status.textContent='Управление рукой не запущено: '+error.message;}
+}
+function stopHandControl(){
+ if(handFrame)cancelAnimationFrame(handFrame);handFrame=null;
+ if(handStream){handStream.getTracks().forEach(track=>track.stop());handStream=null;}
+ const video=$('hand-video');if(video)video.srcObject=null;
+ if(handTracker){try{handTracker.close();}catch(e){}handTracker=null;}
+ handBusy=false;lastHandPoint=null;lastPinch=null;
+ if($('hand-start'))$('hand-start').disabled=false;
+ if($('hand-stop'))$('hand-stop').disabled=true;
+ if($('hand-status'))$('hand-status').textContent='Камера выключена. Управление касаниями доступно без камеры.';
+}
+$('hand-start').addEventListener('click',startHandControl);
+$('hand-stop').addEventListener('click',stopHandControl);
+window.addEventListener('pagehide',stopHandControl);
+bindProjectionTouch();applyProjectionView();
 function run(){try{const date=$('gregorian').value;const corr=Number($('correlation').value);if(!date)throw new Error('Выберите григорианскую дату.');const epoch=$('egyptian-epoch').value;if(!epoch)throw new Error('Укажите расчётную египетскую эпоху.');const r=MayaTime.fromGregorian(date,corr,epoch);renderAtlas(MayaTime.atlasFromGregorian(date,corr,epoch));$('out-gregorian').textContent=r.gregorian;$('out-julian').textContent=r.julianDate;$('out-russian-era').textContent=r.russianEra.label;$('out-russian-era-detail').textContent=r.russianEra.caveat;$('out-long').textContent=r.longCount;$('out-days').textContent='Абсолютный номер дня: '+r.absoluteDay;$('out-tzolkin').textContent=r.tzolkin;$('out-haab').textContent=r.haab;$('out-egyptian').textContent=r.egyptian.label;$('out-egyptian-detail').textContent='День года '+r.egyptian.dayOfYear+' из 365 · эпоха: '+r.egyptianEpochDate;$('status').textContent='Вычислено локально. Корреляция GMT: '+corr+'.';drawProjection(r);}catch(e){$('status').textContent=e.message;}}
 bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();bindPhilosophicalContinuity();loadPhilosophicalContinuity();bindArtScenarioModel();loadArtScenarioModel();
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
