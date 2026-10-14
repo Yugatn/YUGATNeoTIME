@@ -3,25 +3,115 @@
   "$id": "https://yugatn.github.io/YUGATNeoTIME/schemas/cultural-transmission.schema.json",
   "title": "YUGATNeoTIME Cultural Transmission Record",
   "type": "object",
-  "required": ["schemaVersion", "records", "relations", "limitations"],
+  "required": [
+    "schemaVersion",
+    "datasetStatus",
+    "records",
+    "relations",
+    "limitations"
+  ],
   "properties": {
-    "schemaVersion": { "const": "1.0" },
+    "schemaVersion": {
+      "const": "1.0"
+    },
     "records": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "recordType", "title", "period", "region", "evidenceStatus", "sources"],
+        "required": [
+          "id",
+          "recordType",
+          "title",
+          "period",
+          "region",
+          "evidenceStatus",
+          "sources"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-          "recordType": { "enum": ["idea", "artwork", "edition", "translation", "review", "institution", "discussion", "observed-outcome"] },
-          "title": { "type": "string", "minLength": 1 },
-          "period": { "type": "object", "required": ["start", "precision"], "properties": { "start": { "type": ["integer", "string"] }, "end": { "type": ["integer", "string", "null"] }, "precision": { "enum": ["day", "month", "year", "decade", "approximate", "unknown"] } }, "additionalProperties": false },
-          "region": { "type": "string" },
-          "language": { "type": ["string", "null"] },
-          "description": { "type": "string" },
-          "evidenceStatus": { "enum": ["observed", "derived", "claimed", "not-tested", "conflicted", "residual"] },
-          "sources": { "type": "array", "items": { "type": "string" } },
-          "metrics": { "type": "object" }
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "recordType": {
+            "enum": [
+              "idea",
+              "artwork",
+              "edition",
+              "translation",
+              "review",
+              "institution",
+              "discussion",
+              "observed-outcome"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "period": {
+            "type": "object",
+            "required": [
+              "start",
+              "precision"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "integer",
+                  "string"
+                ]
+              },
+              "end": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "precision": {
+                "enum": [
+                  "day",
+                  "month",
+                  "year",
+                  "decade",
+                  "approximate",
+                  "unknown"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "region": {
+            "type": "string"
+          },
+          "language": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidenceStatus": {
+            "enum": [
+              "observed",
+              "derived",
+              "claimed",
+              "not-tested",
+              "conflicted",
+              "residual"
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metrics": {
+            "type": "object"
+          }
         },
         "additionalProperties": false
       }
@@ -30,20 +120,85 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "from", "to", "relationType", "status", "description", "sources"],
+        "required": [
+          "id",
+          "from",
+          "to",
+          "relationType",
+          "status",
+          "description",
+          "sources"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "from": { "type": "string" },
-          "to": { "type": "string" },
-          "relationType": { "enum": ["documented-influence", "translation", "publication", "review", "teaching", "adaptation", "temporal-sequence", "correlation", "proposed-mechanism", "alternative-explanation", "unknown"] },
-          "status": { "enum": ["observed", "derived", "claimed", "not-tested", "conflicted", "residual"] },
-          "description": { "type": "string" },
-          "sources": { "type": "array", "items": { "type": "string" } }
+          "id": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "relationType": {
+            "enum": [
+              "documented-influence",
+              "translation",
+              "publication",
+              "review",
+              "teaching",
+              "adaptation",
+              "temporal-sequence",
+              "correlation",
+              "proposed-mechanism",
+              "alternative-explanation",
+              "unknown"
+            ]
+          },
+          "status": {
+            "enum": [
+              "observed",
+              "derived",
+              "claimed",
+              "not-tested",
+              "conflicted",
+              "residual"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         },
         "additionalProperties": false
       }
     },
-    "limitations": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "datasetStatus": {
+      "enum": [
+        "synthetic-example",
+        "research-draft",
+        "source-reviewed"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    }
   },
   "additionalProperties": false
 }
