@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yugatn.github.io/YUGATNeoTIME/schemas/intellectual-transmission.schema.json",
+  "title": "YUGATNeoTIME Intellectual Transmission Graph",
+  "description": "Schema for tracing the movement and reinterpretation of works, translations, people, and institutions without treating chronology as proof of causation.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "graphId",
+    "status",
+    "title",
+    "entities",
+    "relations",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "graphId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "synthetic-example",
+        "research-draft",
+        "source-reviewed"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      },
+      "minItems": 1
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "title",
+        "url",
+        "sourceType"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "sourceType": {
+          "enum": [
+            "primary",
+            "scholarly-reference",
+            "archive",
+            "catalogue",
+            "dataset",
+            "other"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "id",
+        "entityType",
+        "label",
+        "description",
+        "evidenceStatus",
+        "sources"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "entityType": {
+          "enum": [
+            "person",
+            "work",
+            "translation",
+            "manuscript",
+            "institution",
+            "language",
+            "event",
+            "concept"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "precision": {
+              "enum": [
+                "day",
+                "month",
+                "year",
+                "decade",
+                "century",
+                "approximate",
+                "unknown"
+              ]
+            },
+            "calendar": {
+              "type": "string"
+            },
+            "originalDateText": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "start",
+            "precision"
+          ],
+          "additionalProperties": false
+        },
+        "language": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "evidenceStatus": {
+          "enum": [
+            "observed",
+            "derived",
+            "claimed",
+            "not-tested",
+            "conflicted",
+            "residual"
+          ]
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "required": [
+        "id",
+        "from",
+        "to",
+        "relationType",
+        "status",
+        "description",
+        "sources"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "relationType": {
+          "enum": [
+            "authored",
+            "translated-into",
+            "translated-from",
+            "copied",
+            "commented-on",
+            "taught",
+            "studied-at",
+            "preserved-by",
+            "quoted",
+            "adapted",
+            "influenced",
+            "institutional-reception",
+            "chronologically-precedes",
+            "disputed-by",
+            "related-to"
+          ]
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "derived",
+            "claimed",
+            "not-tested",
+            "conflicted",
+            "residual"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "mechanism": {
+          "type": "string"
+        },
+        "confidenceNote": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
