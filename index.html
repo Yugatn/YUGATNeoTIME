@@ -415,25 +415,51 @@ function renderAtlas(atlas){
  const body=$('atlas-rows');if(!body)return;body.replaceChildren();
  atlas.layers.forEach(layer=>{const tr=document.createElement('tr');[layer.system,layer.value,layer.method+' · '+layer.source+' · Неопределённость: '+layer.uncertainty,layer.status].forEach((value,index)=>{const td=document.createElement('td');td.textContent=value;td.style.padding='9px';td.style.borderBottom='1px solid var(--line)';td.style.verticalAlign='top';if(index===3)td.style.whiteSpace='nowrap';tr.appendChild(td);});body.appendChild(tr);});
 }
+let lastProjectionResult=null;
 function drawProjection(r){
+ lastProjectionResult=r;
  const canvas=$('time-projection');if(!canvas)return;const ctx=canvas.getContext('2d');if(!ctx)return;
- const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2-3;ctx.clearRect(0,0,w,h);ctx.fillStyle='#050505';ctx.fillRect(0,0,w,h);
- const rings=[{name:'Tzolk’in · 260',period:260,phase:((r.jdn-r.correlation)%260+260)%260},{name:'Haab’ · 365',period:365,phase:((r.jdn-r.correlation)%365+365)%365},{name:'Египетский год · 365',period:365,rphase:r.egyptian.dayOfYear-1,phase:r.egyptian.dayOfYear-1},{name:'Long Count',period:144000,phase:((r.jdn-r.correlation)%144000+144000)%144000}];
- const radii=[158,124,90,56];ctx.lineWidth=1;
- rings.forEach((ring,i)=>{const radius=radii[i];ctx.beginPath();ctx.strokeStyle='#555';ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.stroke();for(let t=0;t<60;t++){const a=t*Math.PI/30-Math.PI/2;const inner=radius-(t%5===0?8:3);ctx.beginPath();ctx.strokeStyle=t%5===0?'#aaa':'#555';ctx.moveTo(cx+Math.cos(a)*inner,cy+Math.sin(a)*inner);ctx.lineTo(cx+Math.cos(a)*radius,cy+Math.sin(a)*radius);ctx.stroke();}
- const phase=ring.phase/ring.period;const angle=phase*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.strokeStyle='#f4f4f4';ctx.lineWidth=2;ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(angle)*radius,cy+Math.sin(angle)*radius);ctx.stroke();ctx.beginPath();ctx.fillStyle='#fff';ctx.arc(cx+Math.cos(angle)*radius,cy+Math.sin(angle)*radius,4,0,Math.PI*2);ctx.fill();ctx.lineWidth=1;
+ const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#050505';ctx.fillRect(0,0,w,h);
+ const rotationX=projectionView.rx*Math.PI/180,rotationY=projectionView.ry*Math.PI/180;
+ const focal=430*projectionView.scale;
+ function rotate(p){const cyy=Math.cos(rotationY),syy=Math.sin(rotationY),cxx=Math.cos(rotationX),sxx=Math.sin(rotationX);const x=p.x*cyy-p.z*syy,z=p.x*syy+p.z*cyy;return{x,y:p.y*cxx-z*sxx,z:p.y*sxx+z*cxx};}
+ function project(p){const q=rotate(p),depth=focal/(focal+q.z+240);return{x:cx+q.x*depth,y:cy+q.y*depth,z:q.z,depth};}
+ const cycles=[
+  {name:'Tzolk’in · 260',period:260,phase:((r.jdn-r.correlation)%260+260)%260,radius:145,y:-52,tilt:.35},
+  {name:'Haab’ · 365',period:365,phase:((r.jdn-r.correlation)%365+365)%365,radius:112,y:2,tilt:-.42},
+  {name:'Египетский год · 365',period:365,phase:r.egyptian.dayOfYear-1,radius:80,y:55,tilt:.55},
+  {name:'Long Count · 144 000',period:144000,phase:((r.jdn-r.correlation)%144000+144000)%144000,radius:49,y:0,tilt:-.15}
+ ];
+ const stars=[];for(let i=0;i<95;i++){const x=((i*137.5)%w),y=((i*71.3)%h);stars.push({x,y,a:.18+(i%5)*.1});}
+ stars.forEach(s=>{ctx.fillStyle='rgba(210,225,255,'+s.a+')';ctx.fillRect(s.x,s.y,1.5,1.5);});
+ // Faint 3D reference axes.
+ const axes=[[{x:-225,y:0,z:0},{x:225,y:0,z:0}],[{x:0,y:-170,z:0},{x:0,y:170,z:0}],[{x:0,y:0,z:-150},{x:0,y:0,z:150}]];
+ axes.forEach(a=>{const p=project(a[0]),q=project(a[1]);ctx.beginPath();ctx.strokeStyle='#242b33';ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();});
+ const renderItems=[];
+ cycles.forEach((ring,idx)=>{
+  const pts=[];for(let t=0;t<=180;t++){const a=t/180*Math.PI*2;const local={x:Math.cos(a)*ring.radius,y:Math.sin(a)*ring.radius*Math.cos(ring.tilt)+ring.y,z:Math.sin(a)*ring.radius*Math.sin(ring.tilt)};pts.push(project(local));}
+  ctx.beginPath();pts.forEach((p,i)=>{if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});ctx.closePath();ctx.strokeStyle=['#8fa9c4','#d3dbe5','#9da8b4','#ffffff'][idx];ctx.globalAlpha=.62;ctx.lineWidth=1.2;ctx.stroke();ctx.globalAlpha=1;
+  for(let t=0;t<36;t++){const a=t/36*Math.PI*2;const p=project({x:Math.cos(a)*ring.radius,y:Math.sin(a)*ring.radius*Math.cos(ring.tilt)+ring.y,z:Math.sin(a)*ring.radius*Math.sin(ring.tilt)});ctx.beginPath();ctx.fillStyle=t%3===0?'#cbd7e5':'#687887';ctx.arc(p.x,p.y,t%3===0?1.8:1,0,Math.PI*2);ctx.fill();}
+  const a=ring.phase/ring.period*Math.PI*2-Math.PI/2;
+  const marker=project({x:Math.cos(a)*ring.radius,y:Math.sin(a)*ring.radius*Math.cos(ring.tilt)+ring.y,z:Math.sin(a)*ring.radius*Math.sin(ring.tilt)});
+  renderItems.push({ring,marker,idx});
  });
- ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='bold 20px system-ui';ctx.fillText(r.gregorian,cx,cy-7);ctx.font='12px system-ui';ctx.fillStyle='#aaa';ctx.fillText('JDN '+r.jdn,cx,cy+14);
- ctx.textAlign='left';ctx.font='13px system-ui';rings.forEach((ring,i)=>{ctx.fillStyle='#ddd';ctx.fillText(ring.name,20,26+i*21);});
- $('projection-caption').textContent='Положение дня в циклах рассчитано по выбранным соглашениям. Радиусы показывают разные масштабы циклов; линии не означают физическую связь между календарями.';
+ // Depth-order markers for a clearer spatial reading.
+ renderItems.sort((a,b)=>a.marker.z-b.marker.z);
+ renderItems.forEach(({ring,marker,idx})=>{ctx.beginPath();ctx.strokeStyle='#f2f5f8';ctx.globalAlpha=.7;ctx.moveTo(cx,cy);ctx.lineTo(marker.x,marker.y);ctx.stroke();ctx.globalAlpha=1;ctx.beginPath();ctx.fillStyle='#fff';ctx.shadowColor='#a9d6ff';ctx.shadowBlur=10;ctx.arc(marker.x,marker.y,5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.font='12px system-ui';ctx.fillStyle='#e2e8f0';ctx.textAlign=marker.x<cx?'right':'left';ctx.fillText(ring.name,marker.x+(marker.x<cx?-10:10),marker.y-8);});
+ const center=project({x:0,y:0,z:0});ctx.beginPath();ctx.fillStyle='#fff';ctx.arc(center.x,center.y,3,0,Math.PI*2);ctx.fill();
+ ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='bold 18px system-ui';ctx.fillText(r.gregorian,cx,26);ctx.font='12px system-ui';ctx.fillStyle='#aeb8c5';ctx.fillText('JDN '+r.jdn+' · интерактивная 3D-проекция',cx,45);
+ $('projection-caption').textContent='Схематическая 3D-проекция фаз календарных циклов. Положение маркеров вычислено по выбранной дате и корреляции; пространственная форма нужна для навигации и не означает физическую связь календарей.';
 }
 let projectionView={rx:0,ry:0,scale:1};
 const projectionPointers=new Map();
 let projectionDrag=null,projectionPinch=null,handTracker=null,handStream=null,handFrame=null,handBusy=false,lastHandPoint=null,lastPinch=null;
 function applyProjectionView(){
  const canvas=$('time-projection');
- canvas.style.transform='perspective(1000px) rotateX('+projectionView.rx+'deg) rotateY('+projectionView.ry+'deg) scale('+projectionView.scale+')';
+ canvas.style.transform='none';
  canvas.style.cursor=projectionDrag?'grabbing':'grab';
+ if(lastProjectionResult)drawProjection(lastProjectionResult);
 }
 function resetProjectionView(){projectionView={rx:0,ry:0,scale:1};applyProjectionView();}
 function changeProjectionScale(delta){projectionView.scale=Math.max(.65,Math.min(1.8,projectionView.scale+delta));applyProjectionView();}
