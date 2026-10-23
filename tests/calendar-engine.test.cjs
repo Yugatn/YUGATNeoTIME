@@ -8,6 +8,8 @@ assert.equal(C.julianFromJdn(C.gregorianToJdn('2000-01-01')), '1999-12-19');
 assert.equal(C.gregorianFromJdn(C.julianToJdn('2000-01-01')), '2000-01-14');
 assert.equal(C.julianFromJdn(C.julianToJdn('1700-03-01')), '1700-03-01');
 assert.equal(C.gregorianFromJdn(C.julianToJdn('1700-03-01')), '1700-03-12');
+assert.throws(() => C.julianToJdn('not-a-date'), /формате YYYY-MM-DD/);
+assert.throws(() => C.julianToJdn('1700-02-30'), /Некорректная дата/);
 
 const sample = C.fromGregorian('2026-10-11', C.DEFAULT_CORRELATION, '2026-01-01');
 assert.equal(sample.julianDate, C.julianFromJdn(sample.jdn));
