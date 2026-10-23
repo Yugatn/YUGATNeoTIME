@@ -23,7 +23,7 @@ function jdnToGregorian(jdn){
  return String(year).padStart(4,'0')+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
 }
 function julianToJdn(isoDate){
- const match=/^(\d{4,})-(\\d{2})-(\\d{2})$/.exec(String(isoDate));
+ const match=/^(\d{4,})-(\d{2})-(\d{2})$/.exec(String(isoDate));
  if(!match)throw new Error('Юлианская дата должна быть в формате YYYY-MM-DD.');
  const y=Number(match[1]),m=Number(match[2]),d=Number(match[3]);
  const leap=(y%4===0),monthDays=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
