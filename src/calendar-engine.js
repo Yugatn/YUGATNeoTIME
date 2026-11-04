@@ -11,8 +11,10 @@ function gregorianToJdn(isoDate){
  const match=/^(\d{4,})-(\d{2})-(\d{2})$/.exec(String(isoDate));
  if(!match)throw new Error('Дата должна быть в формате YYYY-MM-DD.');
  let y=Number(match[1]),m=Number(match[2]),d=Number(match[3]);
- const check=new Date(Date.UTC(y,m-1,d));
- if(check.getUTCFullYear()!==y||check.getUTCMonth()!==m-1||check.getUTCDate()!==d)throw new Error('Некорректная календарная дата.');
+ // Date.UTC maps years 0–99 to 1900–1999; validate historically early years arithmetically.
+ const leap=(y%4===0&&(y%100!==0||y%400===0));
+ const monthDays=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+ if(!Number.isSafeInteger(y)||y<1||m<1||m>12||d<1||d>monthDays[m-1])throw new Error('Некорректная календарная дата.');
  const a=Math.floor((14-m)/12);y+=4800-a;m+=12*a-3;
  return d+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
 }
