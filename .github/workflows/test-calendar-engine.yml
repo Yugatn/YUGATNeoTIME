@@ -1,0 +1,26 @@
+name: Calendar engine regression tests
+
+on:
+  push:
+    paths:
+      - "src/calendar-engine.js"
+      - "tests/calendar-engine.test.cjs"
+      - ".github/workflows/test-calendar-engine.yml"
+  pull_request:
+    paths:
+      - "src/calendar-engine.js"
+      - "tests/calendar-engine.test.cjs"
+      - ".github/workflows/test-calendar-engine.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  calendar-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node tests/calendar-engine.test.cjs
