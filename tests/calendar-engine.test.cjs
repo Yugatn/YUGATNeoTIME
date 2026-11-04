@@ -24,4 +24,13 @@ assert.ok(atlas.layers.some(x => x.id === 'maya.long-count'));
 assert.ok(atlas.layers.some(x => x.id === 'egyptian.civil' && x.status === 'NOT_TESTED'));
 assert.ok(atlas.layers.every(x => x.id && x.system && x.method && x.source && x.uncertainty && x.status));
 
+// Historical early-year regression: JavaScript Date.UTC(4, ...) silently means 1904.
+assert.equal(C.gregorianFromJdn(C.gregorianToJdn('0004-02-29')), '0004-02-29');
+assert.equal(C.gregorianFromJdn(C.gregorianToJdn('0099-12-31')), '0099-12-31');
+assert.equal(C.gregorianFromJdn(C.gregorianToJdn('0100-03-01')), '0100-03-01');
+assert.throws(() => C.gregorianToJdn('0100-02-29'), /Некорректная/);
+assert.throws(() => C.gregorianToJdn('1900-02-29'), /Некорректная/);
+assert.equal(C.gregorianFromJdn(C.gregorianToJdn('2000-02-29')), '2000-02-29');
+assert.throws(() => C.gregorianToJdn('0000-01-01'), /Некорректная/);
+
 console.log('calendar-engine tests passed');
