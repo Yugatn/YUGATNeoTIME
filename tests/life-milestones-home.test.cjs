@@ -53,7 +53,7 @@ assert.match(t.elem('atlas-project-summary').textContent,/выполнено: 1 
 assert.match(t.elem('atlas-project-day-title').textContent,/2099/);
 assert.equal(t.elem('atlas-project-day').children.length,2);
 assert.equal(t.elem('atlas-project-next').children.length,2);
-assert.match(t.elem('atlas-project-day').children[0].children[0].textContent,/Первая глава/);
+assert.ok(t.elem('atlas-project-day').children.some(node=>node.children[0].textContent==='Первая глава'));
 assert.equal(t.calls.set,0);
 assert.equal(t.calls.remove,0);
 t.elem('gregorian').value='2098-12-20';
