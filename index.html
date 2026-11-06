@@ -132,6 +132,8 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 </main>
 <script src="./src/calendar-engine.js"></script><script>
 (function(){const $=id=>document.getElementById(id);const now=new Date();$('gregorian').value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+// A milestone link passes only an ISO date; the calendar validates it before use.
+try{const selected=new URLSearchParams(window.location.search).get('date');if(selected&&/^\d{4}-\d{2}-\d{2}$/.test(selected)){MayaTime.gregorianToJdn(selected);$('gregorian').value=selected;}}catch(error){/* Malformed links retain today's date. */}
 let artScenarioData=null;
 async function loadArtScenarioModel(){
  try{
