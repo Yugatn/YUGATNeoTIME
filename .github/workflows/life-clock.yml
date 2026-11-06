@@ -9,6 +9,8 @@ on:
       - 'src/life-insights-ui.js'
       - 'tests/life-milestones.test.cjs'
       - 'src/life-milestones-ui.js'
+      - 'tests/life-milestones-home.test.cjs'
+      - 'src/life-milestones-home.js'
       - 'src/life-milestones.js'
       - 'src/life-insights.js'
       - 'tests/life-clock.test.cjs'
@@ -23,6 +25,8 @@ on:
       - 'src/life-insights-ui.js'
       - 'tests/life-milestones.test.cjs'
       - 'src/life-milestones-ui.js'
+      - 'tests/life-milestones-home.test.cjs'
+      - 'src/life-milestones-home.js'
       - 'src/life-milestones.js'
       - 'src/life-insights.js'
       - 'tests/life-clock.test.cjs'
@@ -44,6 +48,8 @@ jobs:
         run: node tests/life-insights.test.cjs
       - name: Verify project milestones, calendar links and privacy
         run: node tests/life-milestones.test.cjs
+      - name: Verify saved milestones in Atlas calendar
+        run: node tests/life-milestones-home.test.cjs
       - name: Verify JavaScript syntax
         run: |
           node --check src/life-clock.js
@@ -52,3 +58,4 @@ jobs:
           node --check src/life-insights-ui.js
           node --check src/life-milestones.js
           node --check src/life-milestones-ui.js
+          node --check src/life-milestones-home.js
