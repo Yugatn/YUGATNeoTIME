@@ -183,6 +183,7 @@
         selectedDate=cell.date;
         const day=M.utcDay(selectedDate);
         viewYear=day.getUTCFullYear();viewMonth=day.getUTCMonth()+1;
+        if(!editingId)$('milestone-date').value=selectedDate;
         renderCalendar();renderSelectedDay();
       });
       grid.appendChild(btn);
@@ -232,13 +233,22 @@
       const name=$('horizon-name').value.trim()||'Личный проект развития';
       const start=$('horizon-start').value||localToday();
       const projectId=unique('project');
-      save(M.addProject(state,{id:projectId,name,start}), 'Проект создан. Теперь можно добавить контрольные даты.');
+      const next=M.addProject(state,{id:projectId,name,start});
+      selectedDate=next.projects[next.projects.length-1].start;
+      viewYear=Number(selectedDate.slice(0,4));viewMonth=Number(selectedDate.slice(5,7));
       cancelEdit();
+      save(next, 'Проект создан. Теперь можно добавить контрольные даты.');
     }catch(e){notice(e.message);}
   });
   $('milestone-project-select').addEventListener('change',()=>{
-    try{save(M.chooseProject(state,$('milestone-project-select').value),'Выбран другой проект.');cancelEdit();}
-    catch(e){notice(e.message);}
+    try{
+      const next=M.chooseProject(state,$('milestone-project-select').value);
+      const selected=next.projects.find(p=>p.id===next.selectedProjectId);
+      selectedDate=selected.start;
+      viewYear=Number(selectedDate.slice(0,4));viewMonth=Number(selectedDate.slice(5,7));
+      cancelEdit();
+      save(next,'Выбран другой проект.');
+    }catch(e){notice(e.message);}
   });
   $('milestone-delete-project').addEventListener('click',()=>{
     const p=active();if(!p)return;
@@ -274,6 +284,7 @@
   $('milestone-next-month').addEventListener('click',()=>changeMonth(1));
   $('milestone-today').addEventListener('click',()=>{
     selectedDate=localToday();viewYear=Number(selectedDate.slice(0,4));viewMonth=Number(selectedDate.slice(5,7));
+    if(!editingId)$('milestone-date').value=selectedDate;
     renderCalendar();renderSelectedDay();
   });
   $('milestone-date').value=selectedDate;
