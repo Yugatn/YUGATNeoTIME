@@ -5,6 +5,9 @@ on:
       - 'life-clock.html'
       - 'src/life-clock.js'
       - 'src/life-clock-ui.js'
+      - 'tests/life-insights.test.cjs'
+      - 'src/life-insights-ui.js'
+      - 'src/life-insights.js'
       - 'tests/life-clock.test.cjs'
       - 'tests/life-clock-ui.test.cjs'
       - '.github/workflows/life-clock.yml'
@@ -13,6 +16,9 @@ on:
       - 'life-clock.html'
       - 'src/life-clock.js'
       - 'src/life-clock-ui.js'
+      - 'tests/life-insights.test.cjs'
+      - 'src/life-insights-ui.js'
+      - 'src/life-insights.js'
       - 'tests/life-clock.test.cjs'
       - 'tests/life-clock-ui.test.cjs'
       - '.github/workflows/life-clock.yml'
@@ -28,7 +34,11 @@ jobs:
         run: node tests/life-clock.test.cjs
       - name: Verify life-clock UI with mocked World Bank API
         run: node tests/life-clock-ui.test.cjs
+      - name: Verify NCHS age-conditional data and personal horizon UI
+        run: node tests/life-insights.test.cjs
       - name: Verify JavaScript syntax
         run: |
           node --check src/life-clock.js
           node --check src/life-clock-ui.js
+          node --check src/life-insights.js
+          node --check src/life-insights-ui.js
