@@ -30,6 +30,16 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <div class="field"><label for="correlation">Корреляция GMT (JDN эпохи)</label><input id="correlation" type="number" step="1" value="584283"></div><div class="field"><label for="egyptian-epoch">Египетская расчётная эпоха (1 Thoth, год 1)</label><input id="egyptian-epoch" type="date" value="2026-01-01"></div>
 <button id="convert" type="button">Синтезировать</button></div>
 <p class="small muted">Корреляция GMT задаёт привязку календаря Майя. Египетская эпоха — настраиваемая математическая точка отсчёта для 365-дневного календаря, а не утверждение о реальной исторической дате начала египетского летосчисления.</p></section>
+<section class="panel" aria-labelledby="atlas-project-title">
+<h2 id="atlas-project-title">Мои проекты · календарные этапы</h2>
+<p id="atlas-project-summary" class="small muted">Загрузка сохранённых контрольных дат…</p>
+<p class="small muted">Сюда попадают только этапы, сохранённые вами на этом устройстве с разрешения в <a href="./life-clock.html">«Часах жизни»</a>. Выберите григорианскую дату выше, чтобы увидеть связанные с ней события; данные не отправляются на сервер проекта.</p>
+<h3 id="atlas-project-day-title" style="font-size:1rem">Этапы выбранного дня</h3>
+<div id="atlas-project-day" class="cards"></div>
+<h3 style="font-size:1rem;margin-top:18px">Ближайшие запланированные этапы</h3>
+<div id="atlas-project-next" class="cards"></div>
+<p class="small muted">Выбрать, завершить или изменить этап можно в <a href="./life-clock.html">календаре проектов</a>. В этом блоке информация доступна только для просмотра.</p>
+</section>
 <section class="panel" aria-labelledby="output-title"><h2 id="output-title">Слои выбранного времени</h2><p id="status" class="muted small" aria-live="polite">Результаты появятся после выбора даты.</p>
 <div class="cards">
 <div class="result"><div class="name">Гражданский слой</div><div class="value" id="out-gregorian">—</div><div class="detail">Григорианская дата</div></div><div class="result"><div class="name">Юлианский календарь</div><div class="value" id="out-julian">—</div><div class="detail">Юлианская дата того же дня</div></div><div class="result"><div class="name">Допетровское летоисчисление</div><div class="value" id="out-russian-era">—</div><div class="detail" id="out-russian-era-detail">Сентябрьский стиль как модель для позднего допетровского периода</div></div>
@@ -542,4 +552,4 @@ bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();bi
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
-</script></body></html>
+</script><script src="./src/life-milestones.js"></script><script src="./src/life-milestones-home.js"></script></body></html>
