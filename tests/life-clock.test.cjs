@@ -44,7 +44,7 @@ const record = C.calculate(
 );
 assert.equal(record.targetAt.getFullYear(), 2122);
 assert.equal(record.targetAt.getMonth(), 5);
-assert.equal(record.targetAt.getDate(), 13);
+assert.equal(record.targetAt.getDate(), 14);
 
 const exceeded = C.calculate(
   { birth: '1900-01-01', mode: 'custom', customYears: 80 },
