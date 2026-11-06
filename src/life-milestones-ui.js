@@ -218,8 +218,9 @@
     const adjusted=new Date(0);
     adjusted.setUTCHours(0,0,0,0);
     adjusted.setUTCFullYear(viewYear,viewMonth-1+amount,1);
-    viewYear=adjusted.getUTCFullYear();viewMonth=adjusted.getUTCMonth()+1;
-    if(viewYear<1||viewYear>9999)return;
+    const nextYear=adjusted.getUTCFullYear(), nextMonth=adjusted.getUTCMonth()+1;
+    if(nextYear<1||nextYear>9999)return;
+    viewYear=nextYear;viewMonth=nextMonth;
     renderCalendar();renderSelectedDay();
   }
   function emitChange(el) {
