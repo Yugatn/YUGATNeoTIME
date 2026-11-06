@@ -44,6 +44,12 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 #status{min-height:24px}
 @media(max-width:680px){main{padding:20px 14px 50px}.panel{padding:18px}.controls,.clock-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.number{font-size:1.55rem}}
 @media(prefers-reduced-motion:reduce){.fill{transition:none}}
+.horizon-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.horizon-card{background:#09120d;border:1px solid var(--border);padding:16px;border-radius:14px}
+.horizon-heading{font-weight:700;font-size:1.05rem;margin-bottom:10px}
+.horizon-numbers{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.78rem;color:var(--muted);margin:0 0 12px}
+.horizon-numbers strong{color:var(--text);font-variant-numeric:tabular-nums;display:block;font-size:1rem;margin-top:5px;overflow-wrap:anywhere}
+@media(max-width:680px){.horizon-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body><main>
@@ -85,6 +91,64 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 <div class="metric"><div class="title">24-часовых суток прожито</div><strong id="days-lived">—</strong></div>
 <div class="metric"><div class="title">До ориентира / сверх него</div><strong id="days-left">—</strong></div>
 </div>
+
+</section>
+<section class="panel" aria-labelledby="conditional-title">
+<h2 id="conditional-title">Статистика с учётом уже достигнутого возраста</h2>
+<p class="small muted">Отдельная справочная модель по таблицам дожития NCHS за 2024 год. Она <strong>не изменяет</strong> главные часы и не прогнозирует дату смерти конкретного субъекта.</p>
+<div class="controls">
+  <div class="field"><label for="insights-group">Группа в американской статистике (оба пола)</label><select id="insights-group"></select></div>
+  <div class="field"><label for="insights-source-year">Год таблицы</label><input id="insights-source-year" type="text" value="2024" disabled></div>
+</div>
+<div class="metrics" style="margin:15px 0">
+  <div class="metric"><div class="title">Достигнутый возраст</div><strong id="insights-age">—</strong></div>
+  <div class="metric"><div class="title">В среднем остаётся, лет</div><strong id="insights-remaining">—</strong></div>
+  <div class="metric"><div class="title">Условный возрастной ориентир</div><strong id="insights-reference-age">—</strong></div>
+</div>
+<p id="insights-note" class="small muted" role="status">Введите дату рождения в верхней части страницы.</p>
+<p class="small muted">Значение eₓ из NCHS — средний остаток лет для людей, <em>уже достигших возраста x</em>, при условном сохранении возрастных показателей смертности 2024 года. Для возрастов между опубликованными опорными точками используется линейная интерполяция и округление до 0,1 года. Данные после 100 лет не экстраполируются. <a href="https://www.cdc.gov/nchs/data/nvsr/nvsr75/nvsr75-05.pdf" target="_blank" rel="noopener noreferrer">NCHS, 2024, таблица A</a>.</p>
+</section>
+<section class="panel" aria-labelledby="horizons-title">
+<h2 id="horizons-title">Личные горизонты развития</h2>
+<p class="small muted">Это не обратный отсчёт жизни. Отметьте начало творческого проекта, учёбы или другого дела. У каждого горизонта два счётчика: от 0 до 100 % и от 100 до 0 %. Вы сами устанавливаете масштаб и можете менять его.</p>
+<div class="controls">
+ <div class="field"><label for="horizon-start">Дата начала проекта</label><input id="horizon-start" type="date" required></div>
+ <div class="field"><label for="horizon-name">Название проекта (необязательно)</label><input id="horizon-name" type="text" maxlength="100" placeholder="Например, новая книга"></div>
+ <div class="field"><label for="horizon-custom">Дополнительный горизонт, лет</label><input id="horizon-custom" type="number" min="1" max="100" step="1" value="30"></div>
+</div>
+<p id="horizon-title" class="small muted"></p>
+<div class="horizon-grid">
+
+<div class="horizon-card" aria-label="Горизонт 5 лет">
+<div class="horizon-heading">5 лет</div>
+<div class="horizon-numbers"><span>Пройдено<strong id="horizon-5-up">—</strong></span><span>До завершения<strong id="horizon-5-down">—</strong></span></div>
+<div class="track" role="progressbar" aria-label="Пройдено, горизонт 5 лет" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="horizon-5-bar"><div class="fill" id="horizon-5-fill"></div></div>
+<p class="small muted" id="horizon-5-label">—</p>
+</div>
+
+<div class="horizon-card" aria-label="Горизонт 10 лет">
+<div class="horizon-heading">10 лет</div>
+<div class="horizon-numbers"><span>Пройдено<strong id="horizon-10-up">—</strong></span><span>До завершения<strong id="horizon-10-down">—</strong></span></div>
+<div class="track" role="progressbar" aria-label="Пройдено, горизонт 10 лет" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="horizon-10-bar"><div class="fill" id="horizon-10-fill"></div></div>
+<p class="small muted" id="horizon-10-label">—</p>
+</div>
+
+<div class="horizon-card" aria-label="Горизонт 20 лет">
+<div class="horizon-heading">20 лет</div>
+<div class="horizon-numbers"><span>Пройдено<strong id="horizon-20-up">—</strong></span><span>До завершения<strong id="horizon-20-down">—</strong></span></div>
+<div class="track" role="progressbar" aria-label="Пройдено, горизонт 20 лет" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="horizon-20-bar"><div class="fill" id="horizon-20-fill"></div></div>
+<p class="small muted" id="horizon-20-label">—</p>
+</div>
+
+<div class="horizon-card" aria-label="Горизонт Дополнительный горизонт">
+<div class="horizon-heading">Дополнительный горизонт</div>
+<div class="horizon-numbers"><span>Пройдено<strong id="horizon-custom-up">—</strong></span><span>До завершения<strong id="horizon-custom-down">—</strong></span></div>
+<div class="track" role="progressbar" aria-label="Пройдено, горизонт Дополнительный горизонт" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="horizon-custom-bar"><div class="fill" id="horizon-custom-fill"></div></div>
+<p class="small muted" id="horizon-custom-label">—</p>
+</div>
+</div>
+<p class="small muted" id="horizon-status" role="status">Расчёт жизненных горизонтов работает локально.</p>
+<p class="small muted">По умолчанию параметры проектов не сохраняются. Общий переключатель «Запомнить параметры» выше распространяется и на эту панель. Кнопка удаления настроек очищает оба модуля.</p>
 </section>
 <section class="panel"><h2>Что измеряют эти часы</h2>
 <p>Счётчик обновляется каждые 250 миллисекунд и показывает долю прошедшего <em>условного</em> интервала относительно выбранной продолжительности жизни. Время рождения неизвестно, поэтому началом считается 00:00 местного времени в указанную дату. Даже очень длинное десятичное число не означает столь же точного прогноза.</p>
@@ -95,5 +159,7 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 </main>
 <script src="./src/life-clock.js"></script>
 <script src="./src/life-clock-ui.js"></script>
+<script src="./src/life-insights.js"></script>
+<script src="./src/life-insights-ui.js"></script>
 </body>
 </html>
