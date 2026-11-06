@@ -7,6 +7,9 @@ on:
       - 'src/life-clock-ui.js'
       - 'tests/life-insights.test.cjs'
       - 'src/life-insights-ui.js'
+      - 'tests/life-milestones.test.cjs'
+      - 'src/life-milestones-ui.js'
+      - 'src/life-milestones.js'
       - 'src/life-insights.js'
       - 'tests/life-clock.test.cjs'
       - 'tests/life-clock-ui.test.cjs'
@@ -18,6 +21,9 @@ on:
       - 'src/life-clock-ui.js'
       - 'tests/life-insights.test.cjs'
       - 'src/life-insights-ui.js'
+      - 'tests/life-milestones.test.cjs'
+      - 'src/life-milestones-ui.js'
+      - 'src/life-milestones.js'
       - 'src/life-insights.js'
       - 'tests/life-clock.test.cjs'
       - 'tests/life-clock-ui.test.cjs'
@@ -36,9 +42,13 @@ jobs:
         run: node tests/life-clock-ui.test.cjs
       - name: Verify NCHS age-conditional data and personal horizon UI
         run: node tests/life-insights.test.cjs
+      - name: Verify project milestones, calendar links and privacy
+        run: node tests/life-milestones.test.cjs
       - name: Verify JavaScript syntax
         run: |
           node --check src/life-clock.js
           node --check src/life-clock-ui.js
           node --check src/life-insights.js
           node --check src/life-insights-ui.js
+          node --check src/life-milestones.js
+          node --check src/life-milestones-ui.js
