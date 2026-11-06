@@ -50,6 +50,40 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 .horizon-numbers{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.78rem;color:var(--muted);margin:0 0 12px}
 .horizon-numbers strong{color:var(--text);font-variant-numeric:tabular-nums;display:block;font-size:1rem;margin-top:5px;overflow-wrap:anywhere}
 @media(max-width:680px){.horizon-grid{grid-template-columns:1fr}}
+
+/* Integrated project milestone calendar */
+.milestone-toolbar{display:flex;align-items:end;flex-wrap:wrap;gap:12px}
+.milestone-toolbar .field{flex:1;min-width:220px}
+.milestone-action-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.milestone-action-row button,.milestone-actions button{font-size:.88rem}
+button:disabled{opacity:.45;cursor:not-allowed}
+.milestone-progress{height:12px;border:1px solid #52745d;background:#15291c;border-radius:30px;overflow:hidden}
+#milestone-progress-bar{height:100%;width:0%;background:#83edab;transition:width .25s}
+.milestone-calendar-header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:18px 0 12px}
+.milestone-calendar-header h3{margin:0;font-size:1.2rem;text-transform:capitalize}
+.milestone-calendar-header button{min-height:40px;padding:7px 12px}
+.milestone-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.milestone-weekday{text-align:center;padding:7px 0;font-size:.76rem;color:#b6c8bc}
+.milestone-day{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px;min-height:69px;padding:8px;background:#0b1610;color:#f4f8f4;border:1px solid #334d3a;border-radius:8px;font-weight:500;font-size:.92rem}
+.milestone-day.outside{opacity:.55}
+.milestone-day.has-events{border-color:#65bb80}
+.milestone-day.finished{border-color:#d0f7d9}
+.milestone-day.selected{outline:2px solid #bdfad0;outline-offset:0}
+.milestone-count{font-size:.69rem;color:#b3f6c7;white-space:nowrap}
+.milestone-day-details{border:1px solid var(--border);border-radius:12px;padding:14px;margin:14px 0 20px}
+.milestone-day-heading{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.milestone-atlas-link{color:#c4efd0;font-size:.88rem}
+.milestone-list{display:grid;gap:10px}
+.milestone-item{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);border-radius:12px;padding:12px;background:#0a120d}
+.milestone-item.is-done{border-color:#8acba1}
+.milestone-item-main{display:flex;gap:12px;align-items:center;min-width:180px;flex:1}
+.milestone-item-details{min-width:0;overflow-wrap:anywhere}
+.milestone-item.is-done .milestone-item-details strong{text-decoration:line-through;text-decoration-thickness:1px}
+.milestone-check{width:22px;height:22px;min-height:22px;flex-shrink:0;accent-color:var(--accent)}
+.milestone-item-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button.milestone-mini-button{min-height:37px;padding:7px 11px;background:transparent;color:var(--text);border-color:#48634e;font-weight:500}
+@media(max-width:680px){.milestone-day{min-height:55px;padding:6px 4px}.milestone-calendar{gap:3px}.milestone-count{font-size:.62rem}.milestone-item-controls{width:100%}}
+
 </style>
 </head>
 <body><main>
@@ -150,6 +184,45 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 <p class="small muted" id="horizon-status" role="status">Расчёт жизненных горизонтов работает локально.</p>
 <p class="small muted">По умолчанию параметры проектов не сохраняются. Общий переключатель «Запомнить параметры» выше распространяется и на эту панель. Кнопка удаления настроек очищает оба модуля.</p>
 </section>
+<section class="panel" aria-labelledby="milestone-title-section">
+<h2 id="milestone-title-section">Проекты и календарь развития</h2>
+<p class="small muted">Привяжите этапы к выбранному горизонту, отмечайте выполненное и наблюдайте за ходом проекта. Прогресс определяется количеством завершённых этапов, а не прошедшим временем: это два разных измерения деятельности.</p>
+<div class="milestone-toolbar">
+ <div class="field"><label for="milestone-project-select">Активный проект</label><select id="milestone-project-select"></select></div>
+ <button id="milestone-create-project" type="button">Создать из личного горизонта</button>
+</div>
+<div class="milestone-action-row">
+ <button id="milestone-apply-horizon" class="secondary" type="button" disabled>Применить к часам горизонтов</button>
+ <button id="milestone-delete-project" class="secondary" type="button" disabled>Удалить проект</button>
+</div>
+<p id="milestone-project-detail" class="small muted">Для начала создайте проект из выбранного личного горизонта.</p>
+<div class="metric" style="margin:14px 0">
+ <div class="title">Прогресс выполненных этапов</div><strong id="milestone-progress-value">0 / 0 этапов</strong>
+ <div class="milestone-progress" id="milestone-progress-track" role="progressbar" aria-label="Процент выполненных этапов" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="milestone-progress-bar"></div></div>
+ <p id="milestone-next" class="small muted">Проект не выбран.</p>
+</div>
+<h3>Контрольная дата</h3>
+<div class="controls">
+ <div class="field"><label for="milestone-title">Название этапа</label><input id="milestone-title" type="text" maxlength="140" placeholder="Например, завершить редактуру главы"></div>
+ <div class="field"><label for="milestone-date">Дата этапа</label><input id="milestone-date" type="date"></div>
+</div>
+<div class="milestone-action-row">
+ <button id="milestone-add" type="button" disabled>Добавить этап</button>
+ <button id="milestone-cancel" class="secondary hidden" type="button">Отменить редактирование</button>
+</div>
+<p id="milestone-status" class="small muted" role="status">Проекты и даты хранятся только в этой вкладке, пока вы не включите сохранение параметров.</p>
+<div class="milestone-calendar-header">
+ <button id="milestone-prev" class="secondary" type="button" aria-label="Предыдущий месяц">‹</button>
+ <h3 id="milestone-month-label">Месяц</h3>
+ <div class="milestone-actions"><button id="milestone-today" class="secondary" type="button">Сегодня</button> <button id="milestone-next-month" class="secondary" type="button" aria-label="Следующий месяц">›</button></div>
+</div>
+<div class="milestone-calendar" id="milestone-calendar" aria-label="Календарь контрольных дат с понедельника по воскресенье"></div>
+<div class="milestone-day-details" id="milestone-selected-day" aria-live="polite"></div>
+<h3>Все этапы выбранного проекта</h3>
+<div class="milestone-list" id="milestone-list"></div>
+<p class="small muted">Выбор даты в календаре открывает её этапы; ссылка «В календарь» передаёт только дату в основной Атлас YUGATNeoTIME. Названия проектов и дата рождения не включаются в ссылку. Локальное сохранение этапов включается общим переключателем выше; общая кнопка очистки удаляет и их.</p>
+</section>
+
 <section class="panel"><h2>Что измеряют эти часы</h2>
 <p>Счётчик обновляется каждые 250 миллисекунд и показывает долю прошедшего <em>условного</em> интервала относительно выбранной продолжительности жизни. Время рождения неизвестно, поэтому началом считается 00:00 местного времени в указанную дату. Даже очень длинное десятичное число не означает столь же точного прогноза.</p>
 <p>Средняя ожидаемая продолжительность жизни <em>при рождении</em> — статистическая оценка для популяции в определённый год; это не средняя оставшаяся жизнь человека его сегодняшнего возраста. Достижение 100 % по выбранной шкале не означает конец жизни: индикатор останется на 100 %, а дополнительный показатель покажет превышение ориентира.</p>
@@ -161,5 +234,7 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 <script src="./src/life-clock-ui.js"></script>
 <script src="./src/life-insights.js"></script>
 <script src="./src/life-insights-ui.js"></script>
+<script src="./src/life-milestones.js"></script>
+<script src="./src/life-milestones-ui.js"></script>
 </body>
 </html>
