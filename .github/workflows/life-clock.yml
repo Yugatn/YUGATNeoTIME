@@ -6,6 +6,7 @@ on:
       - 'src/life-clock.js'
       - 'src/life-clock-ui.js'
       - 'tests/life-clock.test.cjs'
+      - 'tests/life-clock-ui.test.cjs'
       - '.github/workflows/life-clock.yml'
   pull_request:
     paths:
@@ -13,6 +14,7 @@ on:
       - 'src/life-clock.js'
       - 'src/life-clock-ui.js'
       - 'tests/life-clock.test.cjs'
+      - 'tests/life-clock-ui.test.cjs'
       - '.github/workflows/life-clock.yml'
 jobs:
   verify:
@@ -24,6 +26,8 @@ jobs:
           node-version: '22'
       - name: Verify life-clock arithmetic
         run: node tests/life-clock.test.cjs
+      - name: Verify life-clock UI with mocked World Bank API
+        run: node tests/life-clock-ui.test.cjs
       - name: Verify JavaScript syntax
         run: |
           node --check src/life-clock.js
