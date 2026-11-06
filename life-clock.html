@@ -58,13 +58,17 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 <div class="controls">
 <div class="field"><label for="birth">Дата рождения</label><input id="birth" type="date" autocomplete="bday" required></div>
 <div class="field"><label for="mode">Относительно какого ориентира считать?</label>
-<select id="mode"><option value="group">Статистика по группе населения</option><option value="record">Рекорд долгожительства</option><option value="custom">Собственный ориентир</option></select></div>
-<div class="field" id="group-field"><label for="group">Этнос / группа статистического учёта (США, 2024)</label><select id="group"></select></div>
+<select id="mode"><option value="country">По стране проживания / миру</option><option value="group">По статистической группе США</option><option value="record">Рекорд долгожительства</option><option value="custom">Собственный ориентир</option></select></div>
+<div class="field" id="country-field"><label for="country">Страна или мир</label><select id="country"></select></div>
+<div class="field" id="country-year-field"><label for="country-year">Год статистики Всемирного банка</label><select id="country-year"></select></div>
+<div class="field hidden" id="group-field"><label for="group">Группа статистического учёта (США)</label><select id="group"></select></div>
+<div class="field hidden" id="group-year-field"><label for="group-year">Год статистики NCHS</label><select id="group-year"></select></div>
 <div class="field hidden" id="custom-field"><label for="custom-years">Собственный ориентир, лет</label><input id="custom-years" type="number" min="1" max="250" step="0.1" value="100"></div>
 </div>
+<p id="data-detail" class="small muted" aria-live="polite">2024: локальная подборка Всемирного банка.</p>
 <label class="privacy"><input id="remember" type="checkbox">Запомнить параметры только в этом браузере (необязательно)</label>
-<p class="small muted">Группы из американской статистики — это категории учёта, а не универсальные свойства этносов. Страна проживания, условия жизни и исторический период существенно влияют на оценки. Никаких выводов о происхождении человека приложение не делает.</p>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button id="clear" class="secondary" type="button">Удалить сохранённые настройки</button></div>
+<p class="small muted">Страна проживания не определяет этнос. Американские группы — национальные статистические категории, а не врождённые «сроки жизни». Ни один выбранный показатель не предсказывает продолжительность вашей жизни. При запросе данных за 2020–2023 годы внешний API Всемирного банка получает только код выбранной страны и год; браузер также раскрывает серверу ваш сетевой адрес. Дата рождения никуда не передаётся.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button id="refresh-country" class="secondary hidden" type="button">Повторить загрузку статистики</button><button id="clear" class="secondary" type="button">Удалить сохранённые настройки</button></div>
 <p class="small" id="status" role="status">Укажите дату рождения, чтобы запустить часы.</p>
 </section>
 <section class="panel" aria-labelledby="time-title">
@@ -75,6 +79,7 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 <div class="clock"><div class="caption">До ориентира · от 100 к 0</div><div class="number" id="remaining">—</div><div class="track" role="progressbar" aria-label="Процент до ориентира" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="remaining-track"><div class="fill remaining" id="remaining-fill"></div></div></div>
 </div>
 <p class="small muted" id="reference-label">Выберите дату и ориентир.</p>
+<p class="small"><a id="source-link" class="hidden" href="https://data.worldbank.org/indicator/SP.DYN.LE00.IN" target="_blank" rel="noopener noreferrer">Статистический первоисточник</a></p>
 <div class="metrics">
 <div class="metric"><div class="title">Полных лет</div><strong id="age-years">—</strong></div>
 <div class="metric"><div class="title">24-часовых суток прожито</div><strong id="days-lived">—</strong></div>
@@ -85,7 +90,7 @@ button.secondary{background:transparent;color:var(--text);border-color:var(--bor
 <p>Счётчик обновляется каждые 250 миллисекунд и показывает долю прошедшего <em>условного</em> интервала относительно выбранной продолжительности жизни. Время рождения неизвестно, поэтому началом считается 00:00 местного времени в указанную дату. Даже очень длинное десятичное число не означает столь же точного прогноза.</p>
 <p>Средняя ожидаемая продолжительность жизни <em>при рождении</em> — статистическая оценка для популяции в определённый год; это не средняя оставшаяся жизнь человека его сегодняшнего возраста. Достижение 100 % по выбранной шкале не означает конец жизни: индикатор останется на 100 %, а дополнительный показатель покажет превышение ориентира.</p>
 <p>За рекордный ориентир взят наибольший документально подтверждённый возраст — <strong>122 года и 164 дня</strong> (Жанна Кальман). Это рекорд наблюдений, но не доказанный максимально возможный возраст.</p>
-<p class="small muted">Источники: <a href="https://www.ncbi.nlm.nih.gov/books/NBK624813/" target="_blank" rel="noopener noreferrer">NCHS, United States Life Tables, 2024</a> и <a href="https://www.guinnessworldrecords.com/world-records/oldest-person" target="_blank" rel="noopener noreferrer">Guinness World Records — Oldest person ever</a>. Расчёт локальный; приложение не передаёт дату рождения на сервер.</p>
+<p class="small muted">Источники: <a href="https://data.worldbank.org/indicator/SP.DYN.LE00.IN" target="_blank" rel="noopener noreferrer">Всемирный банк · WDI SP.DYN.LE00.IN</a>, <a href="https://www.ncbi.nlm.nih.gov/books/NBK624813/" target="_blank" rel="noopener noreferrer">NCHS, United States Life Tables, 2024</a> и <a href="https://www.guinnessworldrecords.com/world-records/oldest-person" target="_blank" rel="noopener noreferrer">Guinness World Records</a>. 2024: локально сохранённые и округлённые значения. 2020–2023: по запросу загружаются официальные числовые значения. Расчёт процентов выполняется локально.</p>
 </section>
 </main>
 <script src="./src/life-clock.js"></script>
