@@ -167,6 +167,7 @@
     renderConditional();
     renderHorizons();
   });
+  if (!$('horizon-custom').value) $('horizon-custom').value = '30';
   restoreHorizons();
   renderConditional();
   renderHorizons();
