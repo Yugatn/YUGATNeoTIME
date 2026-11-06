@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="YUGATNeoTIME — Часы жизни: два встречных счётчика времени относительно выбранного ориентира.">
+<title>Часы жизни — YUGATNeoTIME</title>
+<style>
+:root{color-scheme:dark;--bg:#080b0a;--panel:#111715;--border:#35493f;--text:#f2f6f3;--muted:#adbbb3;--accent:#88e9a6;--angle:0deg}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#173325 0,#080b0a 60%);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+main{max-width:1080px;margin:auto;padding:30px 20px 70px}
+a{color:#b4efc5}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #b4efc5;outline-offset:3px}
+header{padding:12px 0 24px;border-bottom:1px solid var(--border)}
+.eyebrow{color:var(--accent);font-size:.77rem;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(2.7rem,8vw,5.4rem);line-height:1.06;letter-spacing:-.06em;margin:.2em 0}
+h2{font-size:1.1rem;margin:0 0 14px}
+p{margin:.5em 0 1em}.muted{color:var(--muted)}.small{font-size:.88rem}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:24px;margin:20px 0}
+.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{display:grid;gap:6px;align-content:start}
+.field label{color:var(--muted);font-size:.88rem}
+input,select,button{font:inherit;min-height:45px;border-radius:10px;padding:10px 12px}
+input,select{width:100%;background:#08100c;color:var(--text);border:1px solid #506858}
+button{border:1px solid var(--accent);background:var(--accent);color:#06100b;font-weight:700;cursor:pointer}
+button.secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.hidden{display:none!important}.privacy{display:flex;gap:10px;align-items:center;font-size:.88rem;color:var(--muted);cursor:pointer;margin:16px 0 0}.privacy input{width:18px;height:18px;min-height:unset}
+.clock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.clock{background:#0a110d;border:1px solid var(--border);border-radius:18px;padding:20px;min-width:0}
+.clock .caption{color:var(--muted);font-size:.84rem;letter-spacing:.08em;text-transform:uppercase}
+.number{font-variant-numeric:tabular-nums;overflow-wrap:anywhere;font-size:clamp(1.4rem,3.4vw,2.5rem);font-weight:650;letter-spacing:-.04em;margin:9px 0 20px}
+.number span{font-size:.52em;letter-spacing:0;color:var(--muted)}
+.track{height:10px;border:1px solid #4b6454;background:#17291e;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#398454,#adffbf);transition:width .25s linear}
+.fill.remaining{background:linear-gradient(90deg,#7c9786,#f2f6f3)}
+.ring{width:180px;height:180px;margin:8px auto 24px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) var(--angle),#263c2e var(--angle));box-shadow:0 0 0 1px #315440}
+.ring:before{content:"";grid-area:1/1;border-radius:50%;width:144px;height:144px;background:#101814}
+.ring .inner{grid-area:1/1;z-index:1;text-align:center;font-size:1.1rem;font-variant-numeric:tabular-nums}
+.ring .inner strong{display:block;font-size:1.6rem}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.metric{border:1px solid var(--border);border-radius:12px;padding:12px;background:#09120d}
+.metric .title{color:var(--muted);font-size:.83rem}.metric strong{display:block;margin-top:5px;font-variant-numeric:tabular-nums}
+#status{min-height:24px}
+@media(max-width:680px){main{padding:20px 14px 50px}.panel{padding:18px}.controls,.clock-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.number{font-size:1.55rem}}
+@media(prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body><main>
+<header>
+<div class="eyebrow">YUGATNeoTIME · субъект и время</div>
+<p class="small"><a href="./index.html">← Календарь / Синтез времени</a></p>
+<h1>Часы жизни</h1>
+<p class="muted">Не обратный отсчёт до смерти, а изменяемая шкала прожитого времени и открытых возможностей. Один счётчик растёт от 0 к 100 %, второй движется от 100 к 0 %.</p>
+</header>
+<section class="panel" aria-labelledby="settings-title">
+<h2 id="settings-title">Параметры времени</h2>
+<div class="controls">
+<div class="field"><label for="birth">Дата рождения</label><input id="birth" type="date" autocomplete="bday" required></div>
+<div class="field"><label for="mode">Относительно какого ориентира считать?</label>
+<select id="mode"><option value="group">Статистика по группе населения</option><option value="record">Рекорд долгожительства</option><option value="custom">Собственный ориентир</option></select></div>
+<div class="field" id="group-field"><label for="group">Этнос / группа статистического учёта (США, 2024)</label><select id="group"></select></div>
+<div class="field hidden" id="custom-field"><label for="custom-years">Собственный ориентир, лет</label><input id="custom-years" type="number" min="1" max="250" step="0.1" value="100"></div>
+</div>
+<label class="privacy"><input id="remember" type="checkbox">Запомнить параметры только в этом браузере (необязательно)</label>
+<p class="small muted">Группы из американской статистики — это категории учёта, а не универсальные свойства этносов. Страна проживания, условия жизни и исторический период существенно влияют на оценки. Никаких выводов о происхождении человека приложение не делает.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button id="clear" class="secondary" type="button">Удалить сохранённые настройки</button></div>
+<p class="small" id="status" role="status">Укажите дату рождения, чтобы запустить часы.</p>
+</section>
+<section class="panel" aria-labelledby="time-title">
+<h2 id="time-title">Два направления одного времени</h2>
+<div class="ring" id="ring"><div class="inner">Ориентир<strong id="ring-value">—</strong></div></div>
+<div class="clock-grid">
+<div class="clock"><div class="caption">Прожито · от 0 к 100</div><div class="number" id="elapsed">—</div><div class="track" role="progressbar" aria-label="Прожитый процент ориентирного периода" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="elapsed-track"><div class="fill" id="elapsed-fill"></div></div></div>
+<div class="clock"><div class="caption">До ориентира · от 100 к 0</div><div class="number" id="remaining">—</div><div class="track" role="progressbar" aria-label="Процент до ориентира" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="remaining-track"><div class="fill remaining" id="remaining-fill"></div></div></div>
+</div>
+<p class="small muted" id="reference-label">Выберите дату и ориентир.</p>
+<div class="metrics">
+<div class="metric"><div class="title">Полных лет</div><strong id="age-years">—</strong></div>
+<div class="metric"><div class="title">24-часовых суток прожито</div><strong id="days-lived">—</strong></div>
+<div class="metric"><div class="title">До ориентира / сверх него</div><strong id="days-left">—</strong></div>
+</div>
+</section>
+<section class="panel"><h2>Что измеряют эти часы</h2>
+<p>Счётчик обновляется каждые 250 миллисекунд и показывает долю прошедшего <em>условного</em> интервала относительно выбранной продолжительности жизни. Время рождения неизвестно, поэтому началом считается 00:00 местного времени в указанную дату. Даже очень длинное десятичное число не означает столь же точного прогноза.</p>
+<p>Средняя ожидаемая продолжительность жизни <em>при рождении</em> — статистическая оценка для популяции в определённый год; это не средняя оставшаяся жизнь человека его сегодняшнего возраста. Достижение 100 % по выбранной шкале не означает конец жизни: индикатор останется на 100 %, а дополнительный показатель покажет превышение ориентира.</p>
+<p>За рекордный ориентир взят наибольший документально подтверждённый возраст — <strong>122 года и 164 дня</strong> (Жанна Кальман). Это рекорд наблюдений, но не доказанный максимально возможный возраст.</p>
+<p class="small muted">Источники: <a href="https://www.ncbi.nlm.nih.gov/books/NBK624813/" target="_blank" rel="noopener noreferrer">NCHS, United States Life Tables, 2024</a> и <a href="https://www.guinnessworldrecords.com/world-records/oldest-person" target="_blank" rel="noopener noreferrer">Guinness World Records — Oldest person ever</a>. Расчёт локальный; приложение не передаёт дату рождения на сервер.</p>
+</section>
+</main>
+<script src="./src/life-clock.js"></script>
+<script src="./src/life-clock-ui.js"></script>
+</body>
+</html>
