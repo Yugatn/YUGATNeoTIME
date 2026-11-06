@@ -85,3 +85,48 @@ assert.equal(
 );
 
 console.log('life-clock tests passed');
+
+
+
+// Geography-specific data and provenance.
+assert.equal(C.COUNTRIES.length, 22);
+assert.deepEqual(C.COUNTRY_YEARS, [2024, 2023, 2022, 2021, 2020]);
+assert.equal(C.countryReference('DEU', 2024).years, 81);
+assert.equal(C.countryReference('WLD', 2024).years, 73);
+assert.equal(C.countryReference('RUS', 2024).years, 73);
+assert.match(C.countryReference('JPN', 2024).label, /Япония · 2024/);
+assert.match(C.countryReference('DEU', 2024).rounding, /округлено/);
+assert.equal(C.countryReference('DEU', 2023, 81.0414634146342).years, 81.0414634146342);
+assert.match(C.countryReference('DEU', 2023, 81.0414634146342).sourceName, /Всемирный банк/);
+assert.equal(C.groupReference('us-asian', 2023).years, 85.2);
+assert.equal(C.groupReference('us-hispanic', 2023).years, 81.3);
+assert.equal(C.groupReference('us-black', 2024).years, 74.8);
+assert.throws(() => C.countryReference('unknown', 2024), /Выберите страну/);
+assert.throws(() => C.countryReference('DEU', 2018, 80), /год/);
+assert.throws(() => C.countryReference('DEU', 2023), /загрузите/);
+assert.throws(() => C.countryReference('DEU', 2023, NaN), /недопустимые/);
+assert.throws(() => C.countryReference('DEU', 2023, 0), /недопустимые/);
+assert.throws(() => C.groupReference('us-asian', 2022), /нет проверенных/i);
+
+const country = C.calculate(
+  { birth: '2000-01-01', mode: 'country', country: 'DEU', countryYear: 2024 },
+  new Date(2026, 10, 6)
+);
+assert.equal(country.referenceYears, 81);
+assert.equal(country.dataYear, 2024);
+assert.match(country.sourceUrl, /data\.worldbank\.org/);
+assert.equal(country.elapsedPercent + country.remainingPercent, 100);
+
+const historicalCountry = C.calculate(
+  { birth: '2000-01-01', mode: 'country', country: 'DEU', countryYear: 2023,
+    countryYears: 81.0414634146342 },
+  new Date(2026, 10, 6)
+);
+assert.equal(historicalCountry.dataYear, 2023);
+assert.equal(historicalCountry.referenceYears, 81.0414634146342);
+
+const oldSavedGroup = C.calculate(
+  { birth: '2000-01-01', mode: 'group', group: 'us-asian' },
+  new Date(2026, 10, 6)
+);
+assert.equal(oldSavedGroup.referenceYears, 85.8);
