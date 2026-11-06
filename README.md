@@ -200,3 +200,11 @@ localStorage необязательно и управляется общим п�
 [src/life-milestones-ui.js](./src/life-milestones-ui.js),
 [tests/life-milestones.test.cjs](./tests/life-milestones.test.cjs).
 Документация: [docs/LIFE_CLOCK.md](./docs/LIFE_CLOCK.md).
+
+
+Сохранённые по согласию контрольные даты также отображаются
+непосредственно на [главной странице Атласа](./index.html):
+этапы выбранного дня, пять ближайших невыполненных задач и
+сводка прогресса. Этот блок только читает локальные данные;
+редактирование находится в «Часах жизни». Для проверки
+добавлен [тест главного Атласа](./tests/life-milestones-home.test.cjs).
