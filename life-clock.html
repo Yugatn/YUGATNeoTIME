@@ -223,6 +223,29 @@ button.milestone-mini-button{min-height:37px;padding:7px 11px;background:transpa
 <p class="small muted">Выбор даты в календаре открывает её этапы; ссылка «В календарь» передаёт только дату в основной Атлас YUGATNeoTIME. Названия проектов и дата рождения не включаются в ссылку. Локальное сохранение этапов включается общим переключателем выше; общая кнопка очистки удаляет и их.</p>
 </section>
 
+<section class="panel" aria-labelledby="transfer-title">
+<h2 id="transfer-title">Перенос проектов между устройствами</h2>
+<p class="small muted">Скачайте резервную копию проектов или экспортируйте даты в календарь. Файлы создаются локально — приложение не загружает их на сервер. В JSON включаются только названия проектов, этапы, даты и отметки выполнения, без даты рождения или статистических показателей.</p>
+<h3 style="font-size:1rem">Экспорт</h3>
+<div class="controls">
+ <div class="field"><label for="transfer-ics-scope">Даты для календаря ICS</label><select id="transfer-ics-scope"><option value="all">Все проекты</option><option value="selected">Только активный проект</option></select></div>
+</div>
+<div class="milestone-action-row">
+ <button id="transfer-export-json" type="button">Скачать резервную копию JSON</button>
+ <button id="transfer-export-ics" class="secondary" type="button">Скачать календарь ICS</button>
+</div>
+<h3 style="font-size:1rem">Импорт JSON</h3>
+<p class="small muted">Поддерживается резервная копия YUGATNeoTIME. Сначала файл проверяется и показывается результат, затем вы отдельно применяете изменения. При «Добавлении» текущие проекты сохраняются, совпадающие идентификаторы переименовываются; повторный импорт создаёт новые копии. При «Замене» все текущие проекты будут удалены после подтверждения.</p>
+<div class="controls">
+ <div class="field"><label for="transfer-import-file">Резервная копия JSON (не более 1 МБ)</label><input id="transfer-import-file" type="file" accept=".json,application/json"></div>
+ <div class="field"><label for="transfer-import-mode">Способ импорта</label><select id="transfer-import-mode"><option value="append">Добавить к существующим</option><option value="replace">Заменить существующие</option></select></div>
+</div>
+<p id="transfer-preview" class="small muted" aria-live="polite">Файл пока не выбран.</p>
+<div class="milestone-action-row"><button id="transfer-import-apply" type="button" disabled>Применить импорт</button></div>
+<p id="transfer-status" class="small muted" role="status">Все операции выполняются локально на вашем устройстве.</p>
+<p class="small muted">Внимание: импорт ICS в Google, Apple или другой внешний календарь может синхронизировать экспортированные названия и даты с этим сервисом. ICS не содержит дату рождения и не изменяет проекты внутри YUGATNeoTIME. При переносе JSON на другое устройство сохраните копию в безопасном месте.</p>
+</section>
+
 <section class="panel"><h2>Что измеряют эти часы</h2>
 <p>Счётчик обновляется каждые 250 миллисекунд и показывает долю прошедшего <em>условного</em> интервала относительно выбранной продолжительности жизни. Время рождения неизвестно, поэтому началом считается 00:00 местного времени в указанную дату. Даже очень длинное десятичное число не означает столь же точного прогноза.</p>
 <p>Средняя ожидаемая продолжительность жизни <em>при рождении</em> — статистическая оценка для популяции в определённый год; это не средняя оставшаяся жизнь человека его сегодняшнего возраста. Достижение 100 % по выбранной шкале не означает конец жизни: индикатор останется на 100 %, а дополнительный показатель покажет превышение ориентира.</p>
@@ -236,5 +259,7 @@ button.milestone-mini-button{min-height:37px;padding:7px 11px;background:transpa
 <script src="./src/life-insights-ui.js"></script>
 <script src="./src/life-milestones.js"></script>
 <script src="./src/life-milestones-ui.js"></script>
+<script src="./src/life-transfer.js"></script>
+<script src="./src/life-transfer-ui.js"></script>
 </body>
 </html>
