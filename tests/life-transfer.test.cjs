@@ -61,7 +61,7 @@ assert.ok(!filtered.includes('UID:p1.m1'));
 
 // No TEXT property may create an injected VEVENT or separate property.
 const malicious=M.addMilestone(base,{id:'evil',projectId:'p1',date:'2026-11-22',
-  title:'Проверка\r\nBEGIN:VALARM\nACTION:DISPLAY,;\\'};
+  title:'Проверка\r\nBEGIN:VALARM\nACTION:DISPLAY,;\\'});
 const safe=T.exportIcs(malicious,fixed);
 assert.equal((safe.match(/BEGIN:VEVENT/g)||[]).length,3);
 assert.ok(!safe.includes('\r\nBEGIN:VALARM'));
