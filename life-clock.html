@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090909">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/yugatneotime-192.png">
+<link rel="apple-touch-icon" href="./icons/yugatneotime-192.png">
 <meta name="description" content="YUGATNeoTIME — Часы жизни: два встречных счётчика времени относительно выбранного ориентира.">
 <title>Часы жизни — YUGATNeoTIME</title>
 <style>
@@ -93,6 +96,14 @@ button.milestone-mini-button{min-height:37px;padding:7px 11px;background:transpa
 <h1>Часы жизни</h1>
 <p class="muted">Не обратный отсчёт до смерти, а изменяемая шкала прожитого времени и открытых возможностей. Один счётчик растёт от 0 к 100 %, второй движется от 100 к 0 %.</p>
 </header>
+<section class="panel" aria-labelledby="pwa-title">
+<h2 id="pwa-title">Установка и офлайн-доступ</h2>
+<p class="small muted">Этот календарь можно установить как приложение. После первой успешной загрузки основные страницы, локальные проекты, часы и инструменты резервного копирования работают без сети. Данные Всемирного банка за 2020–2023 годы требуют подключения.</p>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<button id="pwa-install" type="button" hidden>Установить приложение</button>
+<p id="pwa-status" class="small muted" role="status">Проверяется поддержка установки…</p>
+</div>
+</section>
 <section class="panel" aria-labelledby="settings-title">
 <h2 id="settings-title">Параметры времени</h2>
 <div class="controls">
@@ -234,6 +245,22 @@ button.milestone-mini-button{min-height:37px;padding:7px 11px;background:transpa
  <button id="transfer-export-json" type="button">Скачать резервную копию JSON</button>
  <button id="transfer-export-ics" class="secondary" type="button">Скачать календарь ICS</button>
 </div>
+<h3 style="font-size:1rem">Зашифрованная резервная копия</h3>
+<p class="small muted">AES-256-GCM и PBKDF2-SHA-256 (600 000 итераций). Используйте уникальную длинную парольную фразу. Пароль нельзя восстановить, и он не сохраняется ни в браузере, ни в файле.</p>
+<div class="controls">
+<div class="field"><label for="crypto-export-password">Пароль для шифрования (не менее 12 символов)</label><input id="crypto-export-password" type="password" autocomplete="new-password" minlength="12" maxlength="512"></div>
+<div class="field"><label for="crypto-export-confirm">Повторите пароль</label><input id="crypto-export-confirm" type="password" autocomplete="new-password" minlength="12" maxlength="512"></div>
+</div>
+<div class="milestone-action-row"><button type="button" id="crypto-export">Скачать зашифрованный JSON</button></div>
+<h3 style="font-size:1rem">Восстановление из зашифрованной копии</h3>
+<div class="controls">
+<div class="field"><label for="crypto-file">Зашифрованный файл JSON</label><input id="crypto-file" type="file" accept=".json,application/json"></div>
+<div class="field"><label for="crypto-import-password">Пароль расшифрования</label><input id="crypto-import-password" type="password" autocomplete="off" minlength="12" maxlength="512"></div>
+<div class="field"><label for="crypto-import-mode">Способ восстановления</label><select id="crypto-import-mode"><option value="append">Добавить к существующим</option><option value="replace">Заменить существующие</option></select></div>
+</div>
+<div class="milestone-action-row"><button type="button" class="secondary" id="crypto-unlock">Расшифровать и проверить</button><button type="button" id="crypto-apply" disabled>Применить расшифрованные данные</button></div>
+<p id="crypto-preview" class="small muted" aria-live="polite">Выберите зашифрованную резервную копию.</p>
+<p id="crypto-status" class="small muted" role="status">Пароль и ключ шифрования не записываются на устройство.</p>
 <h3 style="font-size:1rem">Импорт JSON</h3>
 <p class="small muted">Поддерживается резервная копия YUGATNeoTIME. Сначала файл проверяется и показывается результат, затем вы отдельно применяете изменения. При «Добавлении» текущие проекты сохраняются, совпадающие идентификаторы переименовываются; повторный импорт создаёт новые копии. При «Замене» все текущие проекты будут удалены после подтверждения.</p>
 <div class="controls">
@@ -261,5 +288,8 @@ button.milestone-mini-button{min-height:37px;padding:7px 11px;background:transpa
 <script src="./src/life-milestones-ui.js"></script>
 <script src="./src/life-transfer.js"></script>
 <script src="./src/life-transfer-ui.js"></script>
+<script src="./src/life-crypto.js"></script>
+<script src="./src/life-crypto-ui.js"></script>
+<script src="./src/pwa.js"></script>
 </body>
 </html>
