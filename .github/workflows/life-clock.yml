@@ -5,6 +5,7 @@ on:
       - 'life-clock.html'
       - 'tests/pwa.test.cjs'
       - 'tests/life-crypto.test.cjs'
+      - 'tests/life-crypto-ui.test.cjs'
       - 'src/pwa.js'
       - 'src/life-crypto-ui.js'
       - 'src/life-crypto.js'
@@ -33,6 +34,7 @@ on:
       - 'life-clock.html'
       - 'tests/pwa.test.cjs'
       - 'tests/life-crypto.test.cjs'
+      - 'tests/life-crypto-ui.test.cjs'
       - 'src/pwa.js'
       - 'src/life-crypto-ui.js'
       - 'src/life-crypto.js'
@@ -78,6 +80,8 @@ jobs:
         run: node tests/life-transfer.test.cjs
       - name: Verify AES-256-GCM encrypted project backups
         run: node tests/life-crypto.test.cjs
+      - name: Verify encrypted backup form and safe restore confirmation
+        run: node tests/life-crypto-ui.test.cjs
       - name: Verify PWA manifest, icons and offline shell
         run: node tests/pwa.test.cjs
       - name: Verify JavaScript syntax
