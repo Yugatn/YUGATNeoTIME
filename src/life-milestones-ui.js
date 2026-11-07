@@ -27,8 +27,10 @@
     try {
       if ($('remember').checked) localStorage.setItem(key,JSON.stringify(state));
       else localStorage.removeItem(key);
+      return true;
     } catch(e) {
       notice('Локальное сохранение недоступно. Проекты продолжают работать до закрытия страницы.');
+      return false;
     }
   }
   function restore() {
@@ -299,4 +301,25 @@
   });
 
   restore();render();
+  // A minimal bridge for backup UI: all writes validated and atomic in memory.
+  // Persistence is still governed exclusively by the existing opt-in toggle.
+  globalThis.LifePlannerBridge = Object.freeze({
+    snapshot: function() { return M.normalize(state); },
+    applyImport: function(next) {
+      const prepared=M.normalize(next);
+      state=prepared;editingId=null;serial=0;
+      const project=active();
+      selectedDate=project?project.start:localToday();
+      viewYear=Number(selectedDate.slice(0,4));
+      viewMonth=Number(selectedDate.slice(5,7));
+      cancelEdit();
+      const persisted=memory();
+      render();
+      notice(persisted?
+        'Импорт завершён. Записей проектов: '+state.projects.length+
+        ', этапов: '+state.milestones.length+'.':
+        'Импорт завершён только в памяти вкладки: браузер не смог сохранить записи.');
+      return {projects:state.projects.length,milestones:state.milestones.length,persisted};
+    }
+  });
 })();
