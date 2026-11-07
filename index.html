@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090909">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/yugatneotime-192.png">
+<link rel="apple-touch-icon" href="./icons/yugatneotime-192.png">
 <meta name="description" content="YUGATNeoTIME — исследовательский синтез календарных систем на основе календаря Майя.">
 <title>YUGATNeoTIME — Синтез времени</title>
 <style>
@@ -25,6 +28,7 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font
 <p class="muted">Календарь как система координат. Несколько способов описать один день — без предположения, что один из них исчерпывает реальность.</p>
 <p style="margin:14px 0 6px"><a href="./life-clock.html" style="display:inline-block;border:1px solid #777;border-radius:10px;padding:10px 16px;text-decoration:none;font-weight:650">◷ Часы жизни · двойной процентный счётчик</a></p>
 <span class="tag">MVP 0.2</span><span class="tag">Майя · Long Count · Tzolk'in · Haab'</span></header>
+<section class="panel" aria-labelledby="pwa-title"><h2 id="pwa-title">Установка календаря</h2><p class="small muted">Атлас и «Часы жизни» доступны для установки на смартфон и компьютер. После первой успешной загрузки статические данные и расчёты работают офлайн; сетевые библиотеки и данные Всемирного банка остаются сетевыми.</p><button id="pwa-install" type="button" hidden>Установить приложение</button><p class="small muted" id="pwa-status" role="status">Проверяется поддержка установки…</p></section>
 <section class="panel" aria-labelledby="input-title"><h2 id="input-title">Выбрать день</h2><div class="controls">
 <div class="field"><label for="gregorian">Григорианская дата</label><input id="gregorian" type="date"></div>
 <div class="field"><label for="correlation">Корреляция GMT (JDN эпохи)</label><input id="correlation" type="number" step="1" value="584283"></div><div class="field"><label for="egyptian-epoch">Египетская расчётная эпоха (1 Thoth, год 1)</label><input id="egyptian-epoch" type="date" value="2026-01-01"></div>
@@ -552,4 +556,4 @@ bindCosmicAtlas();loadCosmicAtlas();bindCulturalTraces();loadCulturalTraces();bi
 $('history-query').addEventListener('input',renderHistory);$('history-year').addEventListener('input',()=>{ $('history-date').value='';renderHistory();});$('history-date').addEventListener('change',()=>{if($('history-date').value)$('history-year').value='';renderHistory();});$('history-use-date').addEventListener('click',()=>{$('history-date').value=$('gregorian').value;$('history-year').value='';renderHistory();});$('history-reset').addEventListener('click',()=>{$('history-query').value='';$('history-year').value='';$('history-date').value='';renderHistory();});loadHistory();
 $('convert').addEventListener('click',run);$('gregorian').addEventListener('change',run);$('correlation').addEventListener('change',run);$('egyptian-epoch').addEventListener('change',run);
 $('reverse').addEventListener('click',()=>{try{const corr=Number($('correlation').value);const jdn=MayaTime.parseLongCount($('longcount').value)+corr;$('reverse-result').textContent='Григорианская дата: '+MayaTime.gregorianFromJdn(jdn)+' (при корреляции '+corr+').';}catch(e){$('reverse-result').textContent=e.message;}});run();})();
-</script><script src="./src/life-milestones.js"></script><script src="./src/life-milestones-home.js"></script></body></html>
+</script><script src="./src/life-milestones.js"></script><script src="./src/life-milestones-home.js"></script><script src="./src/pwa.js"></script></body></html>
