@@ -9,6 +9,9 @@ on:
       - 'src/life-insights-ui.js'
       - 'tests/life-milestones.test.cjs'
       - 'src/life-milestones-ui.js'
+      - 'tests/life-transfer.test.cjs'
+      - 'src/life-transfer-ui.js'
+      - 'src/life-transfer.js'
       - 'tests/life-milestones-home.test.cjs'
       - 'src/life-milestones-home.js'
       - 'src/life-milestones.js'
@@ -25,6 +28,9 @@ on:
       - 'src/life-insights-ui.js'
       - 'tests/life-milestones.test.cjs'
       - 'src/life-milestones-ui.js'
+      - 'tests/life-transfer.test.cjs'
+      - 'src/life-transfer-ui.js'
+      - 'src/life-transfer.js'
       - 'tests/life-milestones-home.test.cjs'
       - 'src/life-milestones-home.js'
       - 'src/life-milestones.js'
@@ -50,6 +56,8 @@ jobs:
         run: node tests/life-milestones.test.cjs
       - name: Verify saved milestones in Atlas calendar
         run: node tests/life-milestones-home.test.cjs
+      - name: Verify portable JSON and iCalendar transfers
+        run: node tests/life-transfer.test.cjs
       - name: Verify JavaScript syntax
         run: |
           node --check src/life-clock.js
@@ -59,3 +67,5 @@ jobs:
           node --check src/life-milestones.js
           node --check src/life-milestones-ui.js
           node --check src/life-milestones-home.js
+          node --check src/life-transfer.js
+          node --check src/life-transfer-ui.js
