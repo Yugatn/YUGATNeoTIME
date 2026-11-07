@@ -3,6 +3,15 @@ on:
   push:
     paths:
       - 'life-clock.html'
+      - 'tests/pwa.test.cjs'
+      - 'tests/life-crypto.test.cjs'
+      - 'src/pwa.js'
+      - 'src/life-crypto-ui.js'
+      - 'src/life-crypto.js'
+      - 'icons/**'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'index.html'
       - 'src/life-clock.js'
       - 'src/life-clock-ui.js'
       - 'tests/life-insights.test.cjs'
@@ -22,6 +31,15 @@ on:
   pull_request:
     paths:
       - 'life-clock.html'
+      - 'tests/pwa.test.cjs'
+      - 'tests/life-crypto.test.cjs'
+      - 'src/pwa.js'
+      - 'src/life-crypto-ui.js'
+      - 'src/life-crypto.js'
+      - 'icons/**'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'index.html'
       - 'src/life-clock.js'
       - 'src/life-clock-ui.js'
       - 'tests/life-insights.test.cjs'
@@ -58,6 +76,10 @@ jobs:
         run: node tests/life-milestones-home.test.cjs
       - name: Verify portable JSON and iCalendar transfers
         run: node tests/life-transfer.test.cjs
+      - name: Verify AES-256-GCM encrypted project backups
+        run: node tests/life-crypto.test.cjs
+      - name: Verify PWA manifest, icons and offline shell
+        run: node tests/pwa.test.cjs
       - name: Verify JavaScript syntax
         run: |
           node --check src/life-clock.js
@@ -69,3 +91,7 @@ jobs:
           node --check src/life-milestones-home.js
           node --check src/life-transfer.js
           node --check src/life-transfer-ui.js
+          node --check src/life-crypto.js
+          node --check src/life-crypto-ui.js
+          node --check src/pwa.js
+          node --check sw.js
