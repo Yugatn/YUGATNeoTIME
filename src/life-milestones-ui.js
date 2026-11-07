@@ -25,9 +25,12 @@
   function notice(message) { text('milestone-status',message); }
   function memory() {
     try {
-      if ($('remember').checked) localStorage.setItem(key,JSON.stringify(state));
-      else localStorage.removeItem(key);
-      return true;
+      if ($('remember').checked) {
+        localStorage.setItem(key,JSON.stringify(state));
+        return true;
+      }
+      localStorage.removeItem(key);
+      return false;
     } catch(e) {
       notice('Локальное сохранение недоступно. Проекты продолжают работать до закрытия страницы.');
       return false;
