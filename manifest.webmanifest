@@ -1,0 +1,47 @@
+{
+  "id": "./",
+  "name": "YUGATNeoTIME — Календарь развития",
+  "short_name": "YUGATNeoTIME",
+  "description": "Календарный атлас, часы жизни и личные горизонты развития. Локальные проекты и зашифрованные резервные копии.",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090c0a",
+  "theme_color": "#090909",
+  "categories": [
+    "productivity",
+    "education",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "./icons/yugatneotime-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/yugatneotime-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Часы жизни и развитие",
+      "short_name": "Часы жизни",
+      "url": "./life-clock.html",
+      "description": "Открыть жизненные часы и календарь проектов",
+      "icons": [
+        {
+          "src": "./icons/yugatneotime-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
