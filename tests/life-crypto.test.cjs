@@ -1,6 +1,5 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {webcrypto}=require('node:crypto');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
@@ -8,8 +7,8 @@ const M=require('../src/life-milestones.js');
 const T=require('../src/life-transfer.js');
 const Crypto=require('../src/life-crypto.js');
 
-// Node exposes the same standardized WebCrypto primitives as modern browsers.
-globalThis.crypto=webcrypto;
+// Node 22+ exposes standardized WebCrypto globally; do not overwrite its read-only getter.
+assert.ok(globalThis.crypto && globalThis.crypto.subtle, 'Node WebCrypto is required');
 async function run() {
   let state=M.addProject(M.empty(),{
     id:'project1',name:'Амбивалентный Солипсизм',start:'2026-11-08'
