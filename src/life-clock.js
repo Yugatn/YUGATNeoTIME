@@ -57,6 +57,20 @@
     });
   }));
 
+  function finiteInputNumber(value, min, max, errorMessage) {
+    // Browser form inputs are strings; reject objects, arrays and booleans
+    // rather than silently coercing them into numbers.
+    if ((typeof value !== 'number' && typeof value !== 'string') ||
+        (typeof value === 'string' && !value.trim())) {
+      throw new Error(errorMessage);
+    }
+    const number = Number(value);
+    if (!Number.isFinite(number) || number < min || number > max) {
+      throw new Error(errorMessage);
+    }
+    return number;
+  }
+
   function birthDate(value) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));
     if (!match) throw new Error('Укажите дату рождения в формате ГГГГ-ММ-ДД.');
@@ -100,10 +114,9 @@
       if (historicalValue === undefined || historicalValue === null || historicalValue === '') {
         throw new Error('Для выбранного года загрузите данные Всемирного банка.');
       }
-      years = Number(historicalValue);
-      if (!Number.isFinite(years) || years < 10 || years > 125) {
-        throw new Error('Получены недопустимые статистические данные.');
-      }
+      years = finiteInputNumber(
+        historicalValue, 10, 125, 'Получены недопустимые статистические данные.'
+      );
       rounding = 'значение API';
     }
     return Object.freeze({
@@ -160,10 +173,9 @@
       sourceName = selected.sourceName;
       sourceUrl = selected.sourceUrl;
     } else if (mode === 'custom') {
-      years = Number(customYears);
-      if (!Number.isFinite(years) || years < 1 || years > 250) {
-        throw new Error('Задайте собственный ориентир от 1 до 250 лет.');
-      }
+      years = finiteInputNumber(
+        customYears, 1, 250, 'Задайте собственный ориентир от 1 до 250 лет.'
+      );
       label = 'Собственный ориентир: ' + years + ' лет';
     } else {
       throw new Error('Выберите режим расчёта.');
@@ -180,6 +192,9 @@
   }
 
   function calculate(config, at) {
+    if (!config || typeof config !== 'object' || Array.isArray(config)) {
+      throw new Error('Укажите настройки часов жизни.');
+    }
     const now = at === undefined ? new Date() : new Date(at);
     if (!Number.isFinite(now.getTime())) throw new Error('Некорректное текущее время.');
     const birth = birthDate(config.birth);
