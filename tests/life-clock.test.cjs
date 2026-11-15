@@ -130,3 +130,25 @@ const oldSavedGroup = C.calculate(
   new Date(2026, 10, 6)
 );
 assert.equal(oldSavedGroup.referenceYears, 85.8);
+
+
+// Defensive API validation: browser fields may be strings, but not objects.
+for (const value of [true, {}, [81], ' ', NaN, Infinity]) {
+  assert.throws(
+    () => C.countryReference('DEU', 2023, value),
+    /недопустимые статистические/,
+    'Historical value must not be implicitly coerced: ' + String(value)
+  );
+}
+assert.equal(C.countryReference('DEU', 2023, '81.5').years, 81.5);
+for (const value of [true, {}, [80], ' ', NaN, Infinity]) {
+  assert.throws(
+    () => C.calculate({ birth: '2000-01-01', mode: 'custom', customYears: value },
+      new Date(2026, 10, 6)),
+    /ориентир/,
+    'Custom reference must not be implicitly coerced'
+  );
+}
+for (const settings of [null, undefined, [], false, '']) {
+  assert.throws(() => C.calculate(settings, new Date(2026, 10, 6)), /настройки/);
+}
