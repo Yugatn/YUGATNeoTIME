@@ -69,6 +69,9 @@ async function test(){
  assert.ok(requested.length>=20,'Shell should precache all needed files');
  assert.ok(requested.includes(scope+'index.html'));
  assert.ok(requested.includes(scope+'life-clock.html'));
+ assert.ok(requested.includes(scope+'time-mini.html'));
+ assert.ok(requested.includes(scope+'src/time-mini.js'));
+ assert.ok(manifest.shortcuts.some(s=>s.url==='./time-mini.html'));
  assert.ok(requested.includes(scope+'src/life-crypto.js'));
  assert.ok(requested.includes(scope+'src/life-crypto-ui.js'));
  assert.ok(requested.includes(scope+'icons/yugatneotime-512.png'));
@@ -88,6 +91,8 @@ async function test(){
  online=false;
  const offline=await start('fetch',{method:'GET',mode:'navigate',url:scope+'index.html?date=2026-11-08'});
  assert.equal(offline.url,scope+'index.html','Offline date deep-link should resolve from cached static page');
+ const mini=await start('fetch',{method:'GET',mode:'navigate',url:scope+'time-mini.html'});
+ assert.equal(mini.url,scope+'time-mini.html');
  const clock=await start('fetch',{method:'GET',mode:'navigate',url:scope+'life-clock.html'});
  assert.equal(clock.url,scope+'life-clock.html');
  const js=await start('fetch',{method:'GET',mode:'cors',url:scope+'src/life-crypto.js'});

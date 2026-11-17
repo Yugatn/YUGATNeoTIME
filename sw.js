@@ -5,10 +5,10 @@ const CACHE_NAME=CACHE_PREFIX+'2026-11-08-v1';
 const BASE=new URL(self.registration.scope);
 // Public, static resources only. Do not add localStorage, JSON exports or remote APIs.
 const ASSETS=[
- './','./index.html','./life-clock.html','./cultural-graph.html',
+ './','./index.html','./life-clock.html','./time-mini.html','./cultural-graph.html',
  './manifest.webmanifest',
  './icons/yugatneotime-192.png','./icons/yugatneotime-512.png',
- './src/calendar-engine.js','./src/life-clock.js','./src/life-clock-ui.js',
+ './src/calendar-engine.js','./src/life-clock.js','./src/time-mini.js','./src/life-clock-ui.js',
  './src/life-insights.js','./src/life-insights-ui.js',
  './src/life-milestones.js','./src/life-milestones-ui.js',
  './src/life-milestones-home.js','./src/life-transfer.js',
