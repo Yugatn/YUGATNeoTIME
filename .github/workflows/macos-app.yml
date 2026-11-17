@@ -1,0 +1,34 @@
+name: macOS native app
+on:
+  push:
+    paths:
+      - 'macos/**'
+      - '.github/workflows/macos-app.yml'
+  pull_request:
+    paths:
+      - 'macos/**'
+      - '.github/workflows/macos-app.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-macos:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift core tests and native app build
+        run: bash macos/scripts/build-app.sh
+      - name: Validate bundle and executable
+        run: |
+          test -x macos/dist/YUGATNeoTIME.app/Contents/MacOS/YUGATNeoTIME
+          /usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' macos/dist/YUGATNeoTIME.app/Contents/Info.plist
+          codesign --verify --verbose macos/dist/YUGATNeoTIME.app
+      - name: Upload app zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: YUGATNeoTIME-macOS
+          path: macos/dist/YUGATNeoTIME-macOS.zip
+          retention-days: 30
