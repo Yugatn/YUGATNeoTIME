@@ -67,6 +67,47 @@ final class TimeCoreTests: XCTestCase {
         ))
     }
 
+    func testCivilBirthDateSurvivesTimeZoneChanges() throws {
+        for zone in ["Europe/Stockholm", "Asia/Ho_Chi_Minh",
+                     "America/Los_Angeles", "Etc/UTC"] {
+            let tz = TimeZone(identifier: zone)!
+            for birth in ["2000-02-29", "2024-03-31", "1990-12-31"] {
+                let date = try BirthDateCodec.decode(birth, timeZone: tz)
+                XCTAssertEqual(BirthDateCodec.encode(date, timeZone: tz), birth)
+            }
+        }
+        // The same stored string reconstructs the same *calendar day*
+        // in another time zone, even though the underlying instant differs.
+        let west = TimeZone(identifier: "America/Los_Angeles")!
+        let east = TimeZone(identifier: "Asia/Ho_Chi_Minh")!
+        let stored = "2000-02-29"
+        XCTAssertEqual(BirthDateCodec.encode(
+            try BirthDateCodec.decode(stored, timeZone: west), timeZone: west
+        ), stored)
+        XCTAssertEqual(BirthDateCodec.encode(
+            try BirthDateCodec.decode(stored, timeZone: east), timeZone: east
+        ), stored)
+    }
+
+    func testInvalidCivilBirthDatesAreRejected() {
+        for value in ["", "2026-02-29", "1900-02-29", "2000-13-01",
+                      "0000-01-01", "2026-1-02", "2026-01-1", "next monday"] {
+            XCTAssertThrowsError(try BirthDateCodec.decode(value))
+        }
+    }
+
+    func testGregorianBirthArithmeticIgnoresDisplayCalendarRules() throws {
+        var buddhist = Calendar(identifier: .buddhist)
+        buddhist.timeZone = utcCalendar.timeZone
+        let progress = try LifeClock.calculate(
+            birthDate: date(2000, 2, 29),
+            at: date(2021, 3, 1),
+            referenceYears: 100,
+            calendar: buddhist
+        )
+        XCTAssertEqual(progress.ageYears, 21)
+    }
+
     func testJulianAndGregorianDateComparison() {
         let gregorian = CivilDate(year: 2026, month: 11, day: 17)
         XCTAssertEqual(
