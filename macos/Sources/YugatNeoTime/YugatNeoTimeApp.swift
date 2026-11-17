@@ -115,7 +115,7 @@ private struct ClocksView: View {
 
 private struct LifeClockView: View {
     @AppStorage("life.birthIsSaved") private var birthIsSaved = false
-    @AppStorage("life.birthTimestamp") private var birthTimestamp = 0.0
+    @AppStorage("life.birthISO") private var birthISO = ""
     @AppStorage("life.referenceYears") private var referenceYears = 100.0
     @State private var draftBirth = Date(timeIntervalSince1970: 946684800)
 
@@ -130,14 +130,14 @@ private struct LifeClockView: View {
                                in: ...Date(), displayedComponents: .date)
                     HStack(spacing: 12) {
                         Button("Сохранить дату только на этом Mac") {
-                            birthTimestamp = Calendar.current.startOfDay(for: draftBirth)
-                                .timeIntervalSince1970
+                            birthISO = BirthDateCodec.encode(draftBirth)
                             birthIsSaved = true
                         }
                         if birthIsSaved {
                             Button("Удалить дату", role: .destructive) {
                                 birthIsSaved = false
-                                birthTimestamp = 0
+                                birthISO = ""
+                                UserDefaults.standard.removeObject(forKey: "life.birthISO")
                                 UserDefaults.standard.removeObject(forKey: "life.birthTimestamp")
                                 UserDefaults.standard.removeObject(forKey: "life.birthIsSaved")
                             }
@@ -146,7 +146,7 @@ private struct LifeClockView: View {
                     HStack {
                         Text("Условный ориентир")
                         Spacer()
-                        Stepper("\(Int(referenceYears)) лет", value: $referenceYears,
+                        Stepper("\(Int(referenceYears.isFinite && (1...250).contains(referenceYears) ? referenceYears : 100)) лет", value: $referenceYears,
                                 in: 1...250, step: 1)
                             .frame(width: 170)
                     }
@@ -159,11 +159,12 @@ private struct LifeClockView: View {
 
                 if birthIsSaved {
                     TimelineView(.periodic(from: .now, by: 1)) { timeline in
-                        if let progress = try? LifeClock.calculate(
-                            birthDate: Date(timeIntervalSince1970: birthTimestamp),
+                        if let storedBirth = try? BirthDateCodec.decode(birthISO),
+                           let progress = try? LifeClock.calculate(
+                            birthDate: storedBirth,
                             at: timeline.date,
                             referenceYears: referenceYears,
-                            calendar: Calendar.current
+                            calendar: Calendar(identifier: .gregorian)
                         ) {
                             VStack(alignment: .leading, spacing: 20) {
                                 HStack(alignment: .top) {
@@ -205,7 +206,27 @@ private struct LifeClockView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .onAppear {
-                if birthIsSaved { draftBirth = Date(timeIntervalSince1970: birthTimestamp) }
+                // Migrate v0.1 timestamp-based storage only once. A civil date
+                // survives later changes of time zone without shifting its day.
+                if birthIsSaved && birthISO.isEmpty {
+                    let defaults = UserDefaults.standard
+                    if defaults.object(forKey: "life.birthTimestamp") != nil {
+                        let old = defaults.double(forKey: "life.birthTimestamp")
+                        if old.isFinite {
+                            birthISO = BirthDateCodec.encode(Date(timeIntervalSince1970: old))
+                        }
+                        defaults.removeObject(forKey: "life.birthTimestamp")
+                    }
+                }
+                if !referenceYears.isFinite ||
+                    !(1...250).contains(referenceYears) {
+                    referenceYears = 100
+                }
+                if birthIsSaved, let savedDate = try? BirthDateCodec.decode(birthISO) {
+                    draftBirth = savedDate
+                } else if birthIsSaved {
+                    birthIsSaved = false
+                }
             }
         }
     }
