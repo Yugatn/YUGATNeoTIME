@@ -72,8 +72,11 @@ public enum LifeClock {
         guard referenceYears.isFinite && (1...250).contains(referenceYears) else {
             throw LifeClockError.invalidReference
         }
-        var calendar = requestedCalendar
-        calendar.locale = Locale(identifier: "ru_RU")
+        // Birth-date arithmetic is Gregorian even when the user's preferred
+        // display calendar is Buddhist or another calendar. Preserve the
+        // requested time zone, not a different set of leap-year rules.
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = requestedCalendar.timeZone
         let start = calendar.startOfDay(for: birthDate)
         guard currentDate >= start else { throw LifeClockError.birthInFuture }
 
