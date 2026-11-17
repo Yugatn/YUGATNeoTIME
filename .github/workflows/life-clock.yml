@@ -4,6 +4,7 @@ on:
     paths:
       - 'life-clock.html'
       - 'time-mini.html'
+      - 'mini.webmanifest'
       - 'src/time-mini.js'
       - 'tests/time-mini.test.cjs'
       - 'tests/time-mini-ui.test.cjs'
@@ -37,6 +38,7 @@ on:
     paths:
       - 'life-clock.html'
       - 'time-mini.html'
+      - 'mini.webmanifest'
       - 'src/time-mini.js'
       - 'tests/time-mini.test.cjs'
       - 'tests/time-mini-ui.test.cjs'
