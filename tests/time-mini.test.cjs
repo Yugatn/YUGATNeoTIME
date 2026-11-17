@@ -39,7 +39,7 @@ storage.setItem(Mini.SETTINGS_KEY, '{"birth":"1900-01-01","years":999}');
 assert.equal(Mini.loadSettings(storage, C), null);
 storage.setItem(Mini.SETTINGS_KEY, '{corrupted');
 assert.equal(Mini.loadSettings(storage, C), null);
-storage.delete(Mini.SETTINGS_KEY);
+storage.removeItem(Mini.SETTINGS_KEY);
 
 assert.throws(() => Mini.normalizeSettings({ birth: '2099-01-01', years: 100 }, C), /будущем/);
 assert.throws(() => Mini.normalizeSettings({ birth: 'invalid', years: 100 }, C), /дату/);
