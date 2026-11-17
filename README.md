@@ -19,7 +19,25 @@ YUGATNeoTIME с местным временем, шестью мировыми �
   на сервер проекта.
 - Проценты рассчитываются относительно субъективно заданного ориентира;
   **не являются индивидуальным прогнозом смерти**.
-- Тестирование: `node tests/time-mini.test.cjs` и `node tests/pwa.test.cjs`.
+- Тестирование: `node tests/time-mini.test.cjs`, `node tests/time-mini-ui.test.cjs` и `node tests/pwa.test.cjs`.
+
+## Публичная версия
+
+**Адрес мини-приложения после успешной публикации GitHub Pages:**
+https://yugatn.github.io/YUGATNeoTIME/time-mini.html
+
+Файлы публикуются через [GitHub Actions — Publish YUGATNeoTIME web apps](.github/workflows/publish-pages.yml).
+Если страница недоступна, проверьте `Actions` и настройку
+`Settings → Pages → Build and deployment → Source: GitHub Actions`.
+Присутствие HTML-файла в репозитории само по себе не подтверждает
+работу публичного сайта.
+
+Обновления: исправлена инвалидация устаревших данных при изменении
+параметров, показ дат в мировых часах, управление вкладками с клавиатуры,
+сбой приватного режима браузера и версия офлайн-кеша.
+
+**Часы показывают системное время устройства**, без отдельного обращения
+к серверу точного времени; часовые пояса учитываются браузером.
 
 ## Что реализовано
 
@@ -49,7 +67,7 @@ YUGATNeoTIME с местным временем, шестью мировыми �
 
 ## Запуск
 
-Откройте index.html в браузере или включите GitHub Pages: Settings → Pages → Deploy from a branch → main → / (root).
+Откройте `index.html` в браузере; для публичной версии используйте GitHub Pages. Рекомендованный источник публикации: **GitHub Actions**, workflow `Publish YUGATNeoTIME web apps`.
 
 ## Египетский слой: ограничения
 

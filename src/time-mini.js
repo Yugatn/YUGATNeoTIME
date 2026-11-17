@@ -109,22 +109,44 @@
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
     const zoneFormatters = new Map(CLOCK_ZONES.map((zone) => [
-      zone, new Intl.DateTimeFormat('ru-RU', {
-        timeZone: zone, hour: '2-digit', minute: '2-digit',
-        second: '2-digit', hourCycle: 'h23'
-      })
+      zone, {
+        time: new Intl.DateTimeFormat('ru-RU', {
+          timeZone: zone, hour: '2-digit', minute: '2-digit',
+          second: '2-digit', hourCycle: 'h23'
+        }),
+        date: new Intl.DateTimeFormat('ru-RU', {
+          timeZone: zone, day: 'numeric', month: 'short'
+        })
+      }
     ]));
 
-    function setTab(name) {
-      for (const button of doc.querySelectorAll('[data-tab]')) {
-        const active = button.dataset.tab === name;
+    const tabs = Array.from(doc.querySelectorAll('[data-tab]'));
+    function setTab(name, focus = false) {
+      const selected = tabs.find((button) => button.dataset.tab === name);
+      if (!selected) return;
+      for (const button of tabs) {
+        const active = button === selected;
         button.setAttribute('aria-selected', String(active));
+        button.tabIndex = active ? 0 : -1;
         get('panel-' + button.dataset.tab).hidden = !active;
       }
+      if (focus && typeof selected.focus === 'function') selected.focus();
     }
-    for (const button of doc.querySelectorAll('[data-tab]')) {
+    tabs.forEach((button, index) => {
       button.addEventListener('click', () => setTab(button.dataset.tab));
-    }
+      button.addEventListener('keydown', (event) => {
+        let next = null;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        else if (event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        if (next !== null) {
+          event.preventDefault();
+          setTab(tabs[next].dataset.tab, true);
+        }
+      });
+    });
+    setTab('now');
 
     let applied = null;
     function drawLife(now) {
@@ -155,7 +177,20 @@
       get('date-local').textContent = localDateFormatter.format(now);
       for (const node of doc.querySelectorAll('[data-zone]')) {
         const formatter = zoneFormatters.get(node.dataset.zone);
-        if (formatter) node.textContent = formatter.format(now);
+        if (formatter) node.textContent = formatter.time.format(now);
+      }
+      for (const node of doc.querySelectorAll('[data-date-zone]')) {
+        const formatter = zoneFormatters.get(node.dataset.dateZone);
+        if (formatter) node.textContent = formatter.date.format(now);
+      }
+      const currentDay = localDateISO(now);
+      if (currentDay !== lastLocalDay) {
+        birthInput.max = currentDay;
+        if (calendarInput.value === lastLocalDay) {
+          calendarInput.value = currentDay;
+          drawCalendar();
+        }
+        lastLocalDay = currentDay;
       }
       drawLife(now);
     }
@@ -194,21 +229,24 @@
         if (lifeClock.birthDate(safe.birth).getTime() > now.getTime()) {
           throw new Error('Дата рождения не может быть в будущем.');
         }
+        applied = safe;
         if (rememberInput.checked) {
-          storeSettings(storage, safe, true, lifeClock);
-          status.textContent = 'Результат рассчитан. Настройки сохранены на устройстве.';
+          try {
+            storeSettings(storage, safe, true, lifeClock);
+            status.textContent = 'Результат рассчитан. Настройки сохранены на устройстве.';
+          } catch (_) {
+            rememberInput.checked = false;
+            status.textContent = 'Результат рассчитан, но браузер запретил сохранение.';
+          }
         } else {
           clearSaved();
           status.textContent = 'Результат рассчитан без сохранения.';
         }
-        applied = safe;
         drawLife(now);
       } catch (error) {
         applied = null;
         results.hidden = true;
-        status.textContent = error.message === 'QuotaExceededError'
-          ? 'Браузер отказал в сохранении настроек.'
-          : error.message;
+        status.textContent = error.message;
       }
     });
 
@@ -231,9 +269,19 @@
     });
 
     const today = localDateISO(new Date());
+    let lastLocalDay = today;
     birthInput.max = today;
     calendarInput.value = today;
     calendarInput.addEventListener('change', drawCalendar);
+    for (const input of [birthInput, yearsInput]) {
+      input.addEventListener('input', () => {
+        if (applied) {
+          applied = null;
+          results.hidden = true;
+          status.textContent = 'Параметры изменены. Нажми «Рассчитать».';
+        }
+      });
+    }
     const saved = loadSettings(storage, lifeClock);
     if (saved) {
       applied = saved;
@@ -260,7 +308,19 @@
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (typeof document !== 'undefined') {
     try {
-      const storage = root.localStorage;
+      // Private-browsing modes can throw merely by accessing localStorage.
+      // Preserve the nonpersistent calculator when storage is unavailable.
+      let storage;
+      try {
+        storage = root.localStorage;
+        if (!storage) throw new Error('Storage unavailable');
+      } catch (_) {
+        storage = {
+          getItem: () => null,
+          setItem: () => { throw new Error('Local storage unavailable'); },
+          removeItem: () => { throw new Error('Local storage unavailable'); }
+        };
+      }
       const instance = mount(document, storage, {
         lifeClock: root.LifeClock, calendarEngine: root.MayaTime
       });
