@@ -6,6 +6,7 @@ on:
       - 'time-mini.html'
       - 'src/time-mini.js'
       - 'tests/time-mini.test.cjs'
+      - 'tests/time-mini-ui.test.cjs'
       - 'tests/pwa.test.cjs'
       - 'tests/life-crypto.test.cjs'
       - 'tests/life-crypto-ui.test.cjs'
@@ -38,6 +39,7 @@ on:
       - 'time-mini.html'
       - 'src/time-mini.js'
       - 'tests/time-mini.test.cjs'
+      - 'tests/time-mini-ui.test.cjs'
       - 'tests/pwa.test.cjs'
       - 'tests/life-crypto.test.cjs'
       - 'tests/life-crypto-ui.test.cjs'
@@ -74,6 +76,8 @@ jobs:
           node-version: '22'
       - name: Verify mini-app state, privacy and calendar models
         run: node tests/time-mini.test.cjs
+      - name: Verify mini-app UI keyboard and private-mode behavior
+        run: node tests/time-mini-ui.test.cjs
       - name: Verify life-clock arithmetic
         run: node tests/life-clock.test.cjs
       - name: Verify life-clock UI with mocked World Bank API
