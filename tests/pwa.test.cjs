@@ -27,6 +27,11 @@ for(const page of ['index.html','life-clock.html']){
  assert.match(html,/id="pwa-status"/);
 }
 
+const miniManifest=JSON.parse(fs.readFileSync(path.join(root,'mini.webmanifest'),'utf8'));
+assert.equal(miniManifest.start_url,'./time-mini.html');
+assert.equal(miniManifest.display,'standalone');
+assert.notEqual(miniManifest.id,manifest.id);
+assert.ok(miniManifest.icons.some(i=>i.sizes==='192x192'));
 const handlers={},cached=new Map(),requested=[];
 const scope='https://example.test/YUGATNeoTIME/';
 const cache={
@@ -70,6 +75,7 @@ async function test(){
  assert.ok(requested.includes(scope+'index.html'));
  assert.ok(requested.includes(scope+'life-clock.html'));
  assert.ok(requested.includes(scope+'time-mini.html'));
+ assert.ok(requested.includes(scope+'mini.webmanifest'));
  assert.ok(requested.includes(scope+'src/time-mini.js'));
  assert.ok(manifest.shortcuts.some(s=>s.url==='./time-mini.html'));
  assert.ok(requested.includes(scope+'src/life-crypto.js'));

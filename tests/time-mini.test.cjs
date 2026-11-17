@@ -64,6 +64,8 @@ assert.match(calendar.maya, /^\d+(\.\d+){4}$/);
 
 const html = fs.readFileSync(path.join(__dirname, '../time-mini.html'), 'utf8');
 assert.match(html, /name="viewport"/);
+assert.match(html, /href="\.\/mini\.webmanifest"/);
+assert.match(html, /role="tablist"/);
 assert.match(html, /src="\.\/src\/life-clock\.js"/);
 assert.match(html, /src="\.\/src\/calendar-engine\.js"/);
 assert.match(html, /src="\.\/src\/time-mini\.js"/);

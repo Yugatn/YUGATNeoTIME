@@ -7,7 +7,7 @@
 <meta name="description" content="Мини-приложение YUGATNeoTIME: текущее время, мировые часы, персональные временные ориентиры и календарные системы.">
 <link rel="icon" type="image/png" href="./icons/yugatneotime-192.png">
 <link rel="apple-touch-icon" href="./icons/yugatneotime-192.png">
-<link rel="manifest" href="./manifest.webmanifest">
+<link rel="manifest" href="./mini.webmanifest">
 <title>YUGATNeoTIME · мини-приложение</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1112;--card:#172122;--border:#354b49;--text:#f1f8f7;--muted:#b1c0bc;--accent:#a5f0cc}
@@ -69,12 +69,12 @@ footer{margin:25px 0;color:var(--muted);font-size:.81rem;border-top:1px solid va
 </header>
 <h1>Время всегда с тобой.</h1>
 <p class="subtitle">Компактное мини-приложение: мировое время, субъективные временные ориентиры и несколько календарных координат одного дня.</p>
-<nav class="tabs" aria-label="Режим мини-приложения">
-<button class="tab" type="button" id="tab-now" data-tab="now" aria-controls="panel-now" aria-selected="true">Сейчас</button>
-<button class="tab" type="button" id="tab-life" data-tab="life" aria-controls="panel-life" aria-selected="false">Часы жизни</button>
-<button class="tab" type="button" id="tab-calendar" data-tab="calendar" aria-controls="panel-calendar" aria-selected="false">Календари</button>
+<nav class="tabs" role="tablist" aria-label="Режим мини-приложения">
+<button class="tab" role="tab" type="button" id="tab-now" data-tab="now" aria-controls="panel-now" aria-selected="true">Сейчас</button>
+<button class="tab" role="tab" type="button" id="tab-life" data-tab="life" aria-controls="panel-life" aria-selected="false">Часы жизни</button>
+<button class="tab" role="tab" type="button" id="tab-calendar" data-tab="calendar" aria-controls="panel-calendar" aria-selected="false">Календари</button>
 </nav>
-<section id="panel-now" class="panel" aria-labelledby="tab-now">
+<section id="panel-now" class="panel" role="tabpanel" aria-labelledby="tab-now">
 <div class="card">
 <div class="caption">Местное время</div>
 <div class="bigtime" id="time-local" aria-label="Текущее местное время">--:--:--</div>
@@ -90,7 +90,7 @@ footer{margin:25px 0;color:var(--muted);font-size:.81rem;border-top:1px solid va
 <div class="card"><div class="city">Нью-Йорк</div><div class="world-time" data-zone="America/New_York">--:--:--</div></div>
 </div>
 </section>
-<section id="panel-life" class="panel" aria-labelledby="tab-life" hidden>
+<section id="panel-life" class="panel" role="tabpanel" aria-labelledby="tab-life" hidden>
 <div class="card">
 <h2>Моя временная спираль</h2>
 <p class="muted">Проценты — относительно выбранного тобой ориентира. Это не прогноз продолжительности жизни.</p>
@@ -119,7 +119,7 @@ footer{margin:25px 0;color:var(--muted);font-size:.81rem;border-top:1px solid va
 <p class="muted" id="life-note"></p>
 </div>
 </section>
-<section id="panel-calendar" class="panel" aria-labelledby="tab-calendar" hidden>
+<section id="panel-calendar" class="panel" role="tabpanel" aria-labelledby="tab-calendar" hidden>
 <div class="card">
 <h2>Один день — разные координаты</h2>
 <div class="field"><label for="calendar-date">Выбранный день</label><input id="calendar-date" type="date"></div>
