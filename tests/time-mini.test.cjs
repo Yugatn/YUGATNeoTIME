@@ -66,6 +66,10 @@ const html = fs.readFileSync(path.join(__dirname, '../time-mini.html'), 'utf8');
 assert.match(html, /name="viewport"/);
 assert.match(html, /href="\.\/mini\.webmanifest"/);
 assert.match(html, /role="tablist"/);
+assert.match(html, /data-date-zone="Europe\/Stockholm"/);
+const cacheCode = fs.readFileSync(path.join(__dirname, '../sw.js'), 'utf8');
+assert.match(cacheCode, /CACHE_NAME=CACHE_PREFIX\+'2026-11-17-v4'/,
+  'offline cache should version changes to the mini-app scripts');
 assert.match(html, /src="\.\/src\/life-clock\.js"/);
 assert.match(html, /src="\.\/src\/calendar-engine\.js"/);
 assert.match(html, /src="\.\/src\/time-mini\.js"/);
