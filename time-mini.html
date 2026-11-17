@@ -34,9 +34,12 @@ h3{font-size:.97rem;margin:0 0 6px}
 .bigtime{font-variant-numeric:tabular-nums;font-size:clamp(2.6rem,11vw,5.6rem);letter-spacing:-.06em;line-height:1.2;font-weight:520}
 .world{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .world .card{margin:0;padding:15px}
+.world-date{font-size:.77rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .world-time{font:650 1.35rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;margin:4px 0}
 .city{font-size:.86rem;color:var(--muted)}
 .field{display:grid;gap:5px;margin:12px 0}
+.panel:focus{outline:none}
+.tabs .tab[aria-selected="true"]{box-shadow:inset 0 0 0 1px #d2ffe8}
 .field label{font-size:.87rem;color:var(--muted)}
 input[type=date],input[type=number]{width:100%;min-height:45px;border:1px solid #637971;border-radius:9px;background:#0a1615;color:var(--text);padding:9px 11px}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -69,10 +72,11 @@ footer{margin:25px 0;color:var(--muted);font-size:.81rem;border-top:1px solid va
 </header>
 <h1>Время всегда с тобой.</h1>
 <p class="subtitle">Компактное мини-приложение: мировое время, субъективные временные ориентиры и несколько календарных координат одного дня.</p>
+<p class="muted" style="font-size:.85rem">На iPhone открой меню Safari «Поделиться» и выбери «На экран Домой»; на Mac можно использовать веб-приложение Safari.</p>
 <nav class="tabs" role="tablist" aria-label="Режим мини-приложения">
 <button class="tab" role="tab" type="button" id="tab-now" data-tab="now" aria-controls="panel-now" aria-selected="true">Сейчас</button>
-<button class="tab" role="tab" type="button" id="tab-life" data-tab="life" aria-controls="panel-life" aria-selected="false">Часы жизни</button>
-<button class="tab" role="tab" type="button" id="tab-calendar" data-tab="calendar" aria-controls="panel-calendar" aria-selected="false">Календари</button>
+<button class="tab" role="tab" type="button" id="tab-life" data-tab="life" aria-controls="panel-life" aria-selected="false" tabindex="-1">Часы жизни</button>
+<button class="tab" role="tab" type="button" id="tab-calendar" data-tab="calendar" aria-controls="panel-calendar" aria-selected="false" tabindex="-1">Календари</button>
 </nav>
 <section id="panel-now" class="panel" role="tabpanel" aria-labelledby="tab-now">
 <div class="card">
@@ -82,12 +86,12 @@ footer{margin:25px 0;color:var(--muted);font-size:.81rem;border-top:1px solid va
 </div>
 <h2>Мировые часы</h2>
 <div class="world" id="world-times">
-<div class="card"><div class="city">Стокгольм</div><div class="world-time" data-zone="Europe/Stockholm">--:--:--</div></div>
-<div class="card"><div class="city">Москва</div><div class="world-time" data-zone="Europe/Moscow">--:--:--</div></div>
-<div class="card"><div class="city">Дананг</div><div class="world-time" data-zone="Asia/Ho_Chi_Minh">--:--:--</div></div>
-<div class="card"><div class="city">Бангкок</div><div class="world-time" data-zone="Asia/Bangkok">--:--:--</div></div>
-<div class="card"><div class="city">Токио</div><div class="world-time" data-zone="Asia/Tokyo">--:--:--</div></div>
-<div class="card"><div class="city">Нью-Йорк</div><div class="world-time" data-zone="America/New_York">--:--:--</div></div>
+<div class="card"><div class="city">Стокгольм</div><div class="world-time" data-zone="Europe/Stockholm">--:--:--</div><div class="world-date" data-date-zone="Europe/Stockholm">—</div></div>
+<div class="card"><div class="city">Москва</div><div class="world-time" data-zone="Europe/Moscow">--:--:--</div><div class="world-date" data-date-zone="Europe/Moscow">—</div></div>
+<div class="card"><div class="city">Дананг</div><div class="world-time" data-zone="Asia/Ho_Chi_Minh">--:--:--</div><div class="world-date" data-date-zone="Asia/Ho_Chi_Minh">—</div></div>
+<div class="card"><div class="city">Бангкок</div><div class="world-time" data-zone="Asia/Bangkok">--:--:--</div><div class="world-date" data-date-zone="Asia/Bangkok">—</div></div>
+<div class="card"><div class="city">Токио</div><div class="world-time" data-zone="Asia/Tokyo">--:--:--</div><div class="world-date" data-date-zone="Asia/Tokyo">—</div></div>
+<div class="card"><div class="city">Нью-Йорк</div><div class="world-time" data-zone="America/New_York">--:--:--</div><div class="world-date" data-date-zone="America/New_York">—</div></div>
 </div>
 </section>
 <section id="panel-life" class="panel" role="tabpanel" aria-labelledby="tab-life" hidden>
