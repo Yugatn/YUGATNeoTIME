@@ -22,7 +22,18 @@ const ASSETS=[
 const urls=ASSETS.map(path=>new URL(path,BASE).href);
 const allow=new Set(urls);
 self.addEventListener('install',event=>{
- event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urls)).then(()=>self.skipWaiting()));
+ // Essential pages must be available. Optional older atlas assets must not
+ // make the whole PWA installation fail when one resource is unavailable.
+ event.waitUntil((async()=>{
+   const cache=await caches.open(CACHE_NAME);
+   const essential=['./index.html','./maya-mini.html','./maya.webmanifest'].map(path=>new URL(path,BASE).href);
+   await cache.addAll(essential);
+   const essentialSet=new Set(essential);
+   await Promise.all(urls.filter(url=>!essentialSet.has(url)).map(async url=>{
+     try{await cache.add(url);}catch(error){/* Optional cache entry; network access remains available. */}
+   }));
+   await self.skipWaiting();
+ })());
 });
 self.addEventListener('activate',event=>{
  event.waitUntil(Promise.all([
