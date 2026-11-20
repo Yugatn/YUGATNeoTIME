@@ -18,5 +18,12 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "id": "./maya-mini.html",
+  "lang": "ru",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "utilities"
   ]
 }
