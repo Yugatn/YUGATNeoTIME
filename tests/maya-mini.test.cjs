@@ -17,10 +17,12 @@ assert.match(scripts[0][0], /id="embedded-maya-engine"/);
 assert.equal(scripts[0][1].trim(), engine.trim(), 'embedded engine must stay identical to shared engine');
 scripts.forEach(([_, source], index) => new vm.Script(source, { filename: 'maya-mini.script' + index + '.js' }));
 assert.equal(manifest.start_url, './maya-mini.html');
+assert.equal(manifest.id, './maya-mini.html');
 assert.equal(manifest.display, 'standalone');
 assert.match(sw, /'\.\/maya-mini\.html'/);
 assert.match(sw, /'\.\/maya\.webmanifest'/);
 assert.match(sw, /self\.skipWaiting\(\)/);
+assert.match(sw, /Optional cache entry/);
 
 // Mathematical reference anchors and alternative correlation shifts.
 const anchor = C.fromGregorian('2012-12-21', 584283);
