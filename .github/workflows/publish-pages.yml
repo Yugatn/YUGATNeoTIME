@@ -78,6 +78,20 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Check live Maya calendar URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="${{ steps.deployment.outputs.page_url }}maya/"
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if curl --fail --location --silent --show-error --max-time 12 -o /tmp/maya-live.html "$url" && grep -q 'id="tzolkin"' /tmp/maya-live.html; then
+              echo "Live mini app confirmed: $url"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::The published Maya mini app did not respond correctly at $url"
+          exit 1
       - name: Verify public Maya calendar response
         shell: bash
         env:
