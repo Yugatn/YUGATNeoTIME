@@ -182,7 +182,7 @@ function update(value,writeUrl=true){
   const cyclePos=((result.absoluteDay%18980)+18980)%18980;
   $('calendar-round').textContent=(cyclePos+1).toLocaleString('ru-RU')+' / 18 980';
   drawWheel(result);drawMonth(iso,c);
-  if(writeUrl&&window.history&&history.replaceState){const url=new URL(location.href);url.searchParams.set('date',iso);url.searchParams.set('correlation',String(c));history.replaceState(null,'',url);}
+  if(writeUrl&&window.history&&history.replaceState){try{const url=new URL(location.href);url.searchParams.set('date',iso);url.searchParams.set('correlation',String(c));history.replaceState(null,'',url);}catch(e){/* Local files and embedded browsers can forbid modifying the URL; calendar still works. */}}
   status('');
  }catch(e){status(e.message,true);}
 }
