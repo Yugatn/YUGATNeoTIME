@@ -23,6 +23,8 @@ assert.match(sw, /'\.\/maya-mini\.html'/);
 assert.match(sw, /'\.\/maya\.webmanifest'/);
 assert.match(sw, /self\.skipWaiting\(\)/);
 assert.match(sw, /Optional cache entry/);
+assert.match(sw, /maya-v6/, 'service worker must use the refreshed cache version');
+assert.match(sw, /Online first/, 'cache should not hide fresh app updates');
 
 // Mathematical reference anchors and alternative correlation shifts.
 const anchor = C.fromGregorian('2012-12-21', 584283);
@@ -107,6 +109,7 @@ assert.equal(dom.get('gregorian').value,'2024-03-29');
 dom.get('gregorian').value='1900-02-29';
 dom.get('gregorian').dispatch('change');
 assert.match(dom.get('status').textContent,/Некорректная/,'invalid date should produce clear error');
+assert.equal(dom.get('gregorian').value,'2024-03-29','invalid input must revert to last valid selected date');
 
 Promise.resolve(dom.get('share').dispatch('click')).then(()=>{
   assert.ok(copied.at(-1).includes('correlation=584285'));
