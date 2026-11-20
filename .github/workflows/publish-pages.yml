@@ -6,6 +6,11 @@ on:
     paths:
       - 'index.html'
       - 'time-mini.html'
+      - 'maya-mini.html'
+      - 'maya.webmanifest'
+      - 'maya/**'
+      - 'tests/maya-mini.test.cjs'
+      - 'tests/maya-standalone.test.cjs'
       - 'life-clock.html'
       - 'cultural-graph.html'
       - 'mini.webmanifest'
@@ -37,23 +42,35 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run Maya calendar checks
+        run: |
+          node tests/calendar-engine.test.cjs
+          node tests/maya-mini.test.cjs
+          node tests/maya-standalone.test.cjs
       - name: Prepare public static site
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p site
-          cp index.html time-mini.html life-clock.html cultural-graph.html site/
+          cp index.html time-mini.html maya-mini.html maya.webmanifest life-clock.html cultural-graph.html site/
+          mkdir -p site/maya
+          cp maya/index.html site/maya/index.html
           cp manifest.webmanifest mini.webmanifest sw.js LICENSE README.md site/
           cp -R icons src data docs site/
           touch site/.nojekyll
+          test -s site/maya-mini.html
+          test -s site/maya.webmanifest
+          test -s site/maya/index.html
           test -s site/time-mini.html
           test -s site/src/time-mini.js
           test -s site/src/life-clock.js
           test -s site/src/calendar-engine.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Upload static pages
         uses: actions/upload-pages-artifact@v3
         with:
