@@ -23,7 +23,7 @@ assert.match(sw, /'\.\/maya-mini\.html'/);
 assert.match(sw, /'\.\/maya\.webmanifest'/);
 assert.match(sw, /self\.skipWaiting\(\)/);
 assert.match(sw, /Optional cache entry/);
-assert.match(sw, /maya-v6/, 'service worker must use the refreshed cache version');
+assert.match(sw, /maya-v7/, 'service worker must use the refreshed cache version');
 assert.match(sw, /Online first/, 'cache should not hide fresh app updates');
 
 // Mathematical reference anchors and alternative correlation shifts.
