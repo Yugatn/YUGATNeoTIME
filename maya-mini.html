@@ -16,6 +16,7 @@
 </style>
 </head>
 <body>
+<noscript><p style="margin:12px;padding:16px;border:1px solid #d9ba7d;background:#241b15;color:#fff">Для интерактивного календаря требуется JavaScript. Включите его в браузере и обновите страницу.</p></noscript>
 <main class="shell">
 <noscript><div class="panel error"><strong>Для календаря нужен JavaScript.</strong> Разрешите выполнение JavaScript в настройках браузера и обновите страницу.</div></noscript>
 <header class="top">
@@ -23,6 +24,7 @@
 <nav class="links" aria-label="Другие разделы"><a href="./time-mini.html">Мировое время</a><a href="./index.html">Полный атлас</a></nav>
 </header>
 <h1>Календарь майя</h1>
+<p class="note" style="margin:0 0 10px">Версия мини‑аппа 1.1 · автономные вычисления без внешних JavaScript-библиотек.</p>
 <p class="subtitle">Один день в трёх системах времени: ритуальный цикл <strong>Цолькин</strong>, солнечный гражданский цикл <strong>Хааб</strong> и последовательный <strong>Длинный счёт</strong>. Календарь майя — система исторического знания, а не универсальный инструмент предсказания событий.</p>
 <section class="panel" aria-labelledby="controls-heading">
 <h2 id="controls-heading">Выбрать день</h2>
@@ -184,7 +186,11 @@ function update(value,writeUrl=true){
   drawWheel(result);drawMonth(iso,c);
   if(writeUrl&&window.history&&history.replaceState){try{const url=new URL(location.href);url.searchParams.set('date',iso);url.searchParams.set('correlation',String(c));history.replaceState(null,'',url);}catch(e){/* Local files and embedded browsers can forbid modifying the URL; calendar still works. */}}
   status('');
- }catch(e){status(e.message,true);}
+ }catch(e){
+  // Keep the last valid date visible and do not leave stale results beside an invalid input.
+  if(iso)$('gregorian').value=iso;
+  status(e.message,true);
+ }
 }
 function moveDay(delta){if(!iso)return;try{update(C.gregorianFromJdn(C.gregorianToJdn(iso)+delta));}catch(e){status(e.message,true);}}
 function moveMonth(delta){
