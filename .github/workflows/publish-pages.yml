@@ -78,3 +78,27 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify public Maya calendar response
+        shell: bash
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          BASE="${SITE_URL%/}"
+          TARGET="${BASE}/maya/index.html"
+          echo "Checking public page: ${TARGET}"
+          ok=0
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if curl --location --fail --silent --show-error --connect-timeout 10 --max-time 20 "${TARGET}" -o /tmp/maya-public.html; then
+              if grep -q 'embedded-maya-engine' /tmp/maya-public.html; then
+                ok=1
+                break
+              fi
+            fi
+            sleep 5
+          done
+          if [ "${ok}" -ne 1 ]; then
+            echo "::error::Public Maya calendar URL did not serve the expected HTML."
+            exit 1
+          fi
+          echo "Public Maya entry point served expected HTML."
