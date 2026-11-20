@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1017">
+<meta name="description" content="Календарь майя: Цолькин, Хааб, Длинный счёт и календарный круг. Бесплатное мини-приложение YUGATNeoTIME.">
+<link rel="icon" type="image/png" href="./icons/yugatneotime-192.png">
+<title>Календарь майя · YUGATNeoTIME</title>
+<style>
+:root{color-scheme:dark;--bg:#090d14;--panel:#121a24;--panel2:#172231;--line:#2e4054;--text:#f0f5fb;--muted:#b0c1d2;--gold:#d9ba7d;--turquoise:#8de2d6;--pink:#e9b6cb}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse 85% 42% at 50% -10%,#20364a 0%,#090d14 80%);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button,input,select{min-height:44px}a{color:var(--turquoise)}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2.1rem,5vw,3.35rem);line-height:1.08;letter-spacing:-.045em;margin:14px 0 10px}h2{font-size:1.22rem;letter-spacing:-.02em}h3{font-size:1rem}.muted,.note{color:var(--muted)}.note{font-size:.83rem}.shell{max-width:1120px;margin:auto;padding:24px 18px 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brand{letter-spacing:.15em;font-size:.74rem;font-weight:800;color:var(--gold)}.links{display:flex;gap:15px;flex-wrap:wrap;font-size:.84rem}.subtitle{max-width:650px;color:var(--muted);margin-bottom:25px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:16px}.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.field{display:grid;gap:6px;flex:1;min-width:175px}.field label{font-size:.84rem;color:var(--muted)}input,select{color:var(--text);background:#0b131c;border:1px solid #43586c;border-radius:10px;padding:9px 12px;width:100%}.button{border-radius:10px;border:1px solid #53687d;background:#192838;color:var(--text);padding:10px 14px;font-weight:650}.button.primary{background:var(--gold);color:#142130;border-color:var(--gold)}.button:disabled{opacity:.45;cursor:not-allowed}.button:hover:not(:disabled){filter:brightness(1.14)}.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.status{min-height:1.35em;font-size:.87rem;color:var(--gold);margin:10px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stat{border:1px solid var(--line);border-radius:13px;padding:16px;background:var(--panel2)}.stat .kicker{color:var(--muted);font-size:.82rem}.stat .value{font-size:clamp(1.4rem,3vw,2.3rem);letter-spacing:-.035em;font-weight:730;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;margin:7px 0}.stat:nth-child(1) .value{color:var(--gold)}.stat:nth-child(2) .value{color:var(--turquoise)}.stat:nth-child(3) .value{color:var(--pink)}.mini{font-size:.83rem;color:var(--muted);margin-bottom:0}.hero{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.hero .date{font-weight:720;font-size:1.1rem}.phase{color:var(--muted);font-size:.83rem}.wheel{width:100%;max-width:390px;display:block;margin:0 auto;aspect-ratio:1;touch-action:manipulation}.legend{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.82rem}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.dot.gold{background:var(--gold)}.dot.teal{background:var(--turquoise)}.dot.pink{background:var(--pink)}.month-head{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:14px}.month-head h2{margin:0}.month-head button{min-width:45px}.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.weekday{text-align:center;color:var(--muted);font-size:.78rem;font-weight:600;padding:4px 0}.day{min-width:0;min-height:68px;display:flex;flex-direction:column;justify-content:start;align-items:flex-start;padding:8px 5px;border:1px solid var(--line);border-radius:10px;background:#0d1823;color:var(--text);text-align:left}.day:hover{background:#24394a}.day.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset;background:#2c302e}.day.other{opacity:.34}.day .n{font-size:.95rem;font-weight:700;font-variant-numeric:tabular-nums}.day .tz{font-size:.67rem;line-height:1.25;color:var(--turquoise);overflow-wrap:anywhere}.day .haab{font-size:.62rem;line-height:1.25;color:var(--muted)}.small-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.small-item{border-radius:10px;border:1px solid var(--line);padding:12px;font-size:.86rem}.small-item strong{display:block;font-size:1.1rem;color:var(--gold)}.footer{color:var(--muted);font-size:.83rem;line-height:1.65}.error{color:#ffb5b5}.sr-only{position:absolute;clip-path:inset(50%);height:1px;width:1px;overflow:hidden;white-space:nowrap}
+@media(max-width:780px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.stat{padding:13px}.stat .value{font-size:1.7rem}}@media(max-width:560px){.shell{padding:16px 10px 42px}.panel{padding:15px;border-radius:14px}.day{min-height:61px;padding:6px 3px}.day .tz{font-size:.59rem}.day .haab{font-size:.58rem}.month{gap:3px}.actions{width:100%}.actions .button{flex:1}.small-grid{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="top">
+<div class="brand">YUGATNEOTIME · МИНИ-АПП</div>
+<nav class="links" aria-label="Другие разделы"><a href="./time-mini.html">Мировое время</a><a href="./index.html">Полный атлас</a></nav>
+</header>
+<h1>Календарь майя</h1>
+<p class="subtitle">Один день в трёх системах времени: ритуальный цикл <strong>Цолькин</strong>, солнечный гражданский цикл <strong>Хааб</strong> и последовательный <strong>Длинный счёт</strong>. Календарь майя — система исторического знания, а не универсальный инструмент предсказания событий.</p>
+<section class="panel" aria-labelledby="controls-heading">
+<h2 id="controls-heading">Выбрать день</h2>
+<div class="bar">
+<div class="field"><label for="gregorian">Григорианская дата</label><input type="date" id="gregorian" min="0001-01-01" max="9999-12-31" required></div>
+<div class="field"><label for="correlation">Соответствие календарей (JDN)</label><select id="correlation"><option value="584283">GMT 584283 · основной</option><option value="584285">GMT 584285 · альтернативный</option><option value="584286">584286 · исследовательский</option></select></div>
+<div class="actions"><button class="button" id="prev-day" type="button" aria-label="Предыдущий день">−1 день</button><button class="button primary" type="button" id="today">Сегодня</button><button class="button" type="button" id="next-day" aria-label="Следующий день">+1 день</button></div>
+</div>
+<p class="status" id="status" aria-live="polite"></p>
+</section>
+<section class="panel" aria-labelledby="selected-heading">
+<div class="hero"><h2 id="selected-heading">Календарная дата</h2><span class="date" id="date-label">—</span></div>
+<div class="stats">
+<article class="stat"><div class="kicker">Цолькин · цикл 260 дней</div><div class="value" id="tzolkin">—</div><p class="mini">13 чисел и 20 названий дней</p></article>
+<article class="stat"><div class="kicker">Хааб · цикл 365 дней</div><div class="value" id="haab">—</div><p class="mini">18 месяцев по 20 дней и 5 дней Wayeb’</p></article>
+<article class="stat"><div class="kicker">Длинный счёт</div><div class="value" id="long-count">—</div><p class="mini">бактун · катун · тун · виналь · кин</p></article>
+</div>
+<div class="small-grid" style="margin-top:13px">
+<div class="small-item">Календарный круг: <strong id="calendar-round">—</strong><span class="note">Комбинация Цолькина и Хааба повторяется через 18 980 дней.</span></div>
+<div class="small-item">Порядковый номер дня JDN: <strong id="jdn">—</strong><span class="note">Для сопоставления календарей используется математическая шкала дней.</span></div>
+</div>
+<div class="actions" style="margin-top:16px"><button id="copy" type="button" class="button">Скопировать дату</button><button id="share" type="button" class="button">Скопировать ссылку</button></div>
+</section>
+<div class="grid">
+<section class="panel" aria-labelledby="wheel-heading"><h2 id="wheel-heading">Колесо циклов</h2><canvas class="wheel" id="wheel" width="640" height="640" role="img" aria-label="Схематические кольца 260 и 365 дней с положениями выбранного дня"></canvas><div class="legend"><span><span class="dot gold"></span>Цолькин · 260</span><span><span class="dot teal"></span>Хааб · 365</span><span><span class="dot pink"></span>Календарный круг · 18 980</span></div><p class="note" style="margin-top:10px">Кольца показывают фазы, а не физическое движение небесных тел.</p></section>
+<section class="panel" aria-labelledby="reverse-heading"><h2 id="reverse-heading">Длинный счёт → дата</h2><div class="field"><label for="long-input">Введите пять чисел через точку</label><input id="long-input" type="text" inputmode="decimal" value="13.0.0.0.0" autocomplete="off" spellcheck="false" placeholder="13.0.0.0.0"></div><button type="button" id="convert-long" class="button primary" style="width:100%;margin:12px 0">Перевести в григорианскую дату</button><p id="reverse-result" class="status" aria-live="polite"></p><div class="small-item"><strong>Пример</strong><span>13.0.0.0.0 соответствует 21.12.2012 при GMT 584283.</span></div><h3 style="margin-top:20px">Как читать дату?</h3><p class="note">Цолькин состоит из чисел от 1 до 13 и двадцати названий дней. В Хаабе число дня начинается с нуля. Длинный счёт суммирует интервалы: 144 000, 7 200, 360, 20 и 1 день.</p></section>
+</div>
+<section class="panel" aria-labelledby="month-title"><div class="month-head"><button class="button" id="prev-month" aria-label="Предыдущий месяц" type="button">‹</button><h2 id="month-title">Месяц</h2><button class="button" id="next-month" aria-label="Следующий месяц" type="button">›</button></div><div class="month" id="month" aria-label="Месячная сетка календаря"></div><p class="note" style="margin:14px 0 0">В ячейках показаны гражданский день, номер и имя дня Цолькина и дата Хааба. Нажмите на дату, чтобы увидеть полный расчёт.</p></section>
+<footer class="footer"><p><strong>Историческая оговорка.</strong> Результат определяется выбранной корреляцией Длинного счёта с JDN; альтернативные корреляции могут сдвигать гражданскую дату. Названия дней представлены в одной из распространённых транслитераций. Используется пролептический григорианский календарь, который не всегда совпадает с историческим гражданским календарём эпохи.</p><p>Расчёты выполняются на устройстве, без отправки выбранных дат на сервер. По умолчанию данные не сохраняются. <a href="https://old.maa.org/press/periodicals/convergence/maya-calendar-conversions-the-maya-and-their-calendars" target="_blank" rel="noopener noreferrer">Математика календаря</a> · <a href="https://www.mesoweb.com/pari/publications/journal/1302/Correlation.pdf" target="_blank" rel="noopener noreferrer">Исследование корреляций</a>.</p><p>© YUGATNeoTIME · <a href="./README.md">Проект</a></p></footer>
+</main>
+<script src="./src/calendar-engine.js"></script>
+<script>
+(function(){
+"use strict";
+const C=window.MayaTime;
+const $=id=>document.getElementById(id);
+const MS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const WEEK=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const fmt=n=>String(n).padStart(2,'0');
+let iso='',result=null;
+const status=(message,isError=false)=>{const p=$('status');p.textContent=message;p.classList.toggle('error',isError);};
+function todayISO(){const d=new Date();return String(d.getFullYear()).padStart(4,'0')+'-'+fmt(d.getMonth()+1)+'-'+fmt(d.getDate());}
+function dateText(value){
+ const m=/^(-?\d+)-(\d{2})-(\d{2})$/.exec(value);
+ if(!m)return value;
+ const y=Number(m[1]),month=Number(m[2]),day=Number(m[3]);
+ const era=y<=0?(1-y)+' до н. э.':y+' г.';
+ return day+' '+MS[month-1]+' '+era;
+}
+function canonical(value){const jdn=C.gregorianToJdn(value);const normalized=C.gregorianFromJdn(jdn);if(!/^\d{4}-\d{2}-\d{2}$/.test(normalized))throw new Error('Для выбора доступны годы с 0001 по 9999.');return normalized;}
+function currentCorrelation(){return Number($('correlation').value);}
+function update(value,writeUrl=true){
+ try{
+  iso=canonical(value);
+  const c=currentCorrelation();
+  result=C.fromGregorian(iso,c,'2026-01-01');
+  $('gregorian').value=iso;
+  $('date-label').textContent=dateText(iso);
+  $('tzolkin').textContent=result.tzolkin;
+  $('haab').textContent=result.haab;
+  $('long-count').textContent=result.longCount;
+  $('jdn').textContent=result.jdn.toLocaleString('ru-RU');
+  const cyclePos=((result.absoluteDay%18980)+18980)%18980;
+  $('calendar-round').textContent=(cyclePos+1).toLocaleString('ru-RU')+' / 18 980';
+  drawWheel(result);drawMonth(iso,c);
+  if(writeUrl&&window.history&&history.replaceState){const url=new URL(location.href);url.searchParams.set('date',iso);url.searchParams.set('correlation',String(c));history.replaceState(null,'',url);}
+  status('');
+ }catch(e){status(e.message,true);}
+}
+function moveDay(delta){if(!iso)return;try{update(C.gregorianFromJdn(C.gregorianToJdn(iso)+delta));}catch(e){status(e.message,true);}}
+function moveMonth(delta){
+ if(!iso)return;const [year,month]=iso.split('-').map(Number);
+ const t=(year-1)*12+(month-1)+delta;if(t<0||t>=9999*12){status('Достигнута граница допустимых лет.',true);return;}
+ const y=Math.floor(t/12)+1,m=t%12+1;
+ const d=Math.min(Number(iso.slice(8)),C.gregorianFromJdn(C.gregorianToJdn(String(y).padStart(4,'0')+'-'+fmt(m===12?12:m)+'-01')+(m===12?31:32)).length?31:31);
+ // Clamp to actual last day of target month via the next month's first JDN.
+ const first=C.gregorianToJdn(String(y).padStart(4,'0')+'-'+fmt(m)+'-01');
+ const nextYear=m===12?y+1:y,nextMonth=m===12?1:m+1;
+ const length=nextYear>9999?31:C.gregorianToJdn(String(nextYear).padStart(4,'0')+'-'+fmt(nextMonth)+'-01')-first;
+ update(String(y).padStart(4,'0')+'-'+fmt(m)+'-'+fmt(Math.min(Number(iso.slice(8)),length)));
+}
+function drawMonth(selected,c){
+ const [y,m]=selected.split('-').map(Number),host=$('month');host.replaceChildren();
+ $('month-title').textContent=MS[m-1].charAt(0).toUpperCase()+MS[m-1].slice(1)+' '+y;
+ WEEK.forEach(w=>{const e=document.createElement('div');e.className='weekday';e.textContent=w;host.appendChild(e);});
+ const first=C.gregorianToJdn(String(y).padStart(4,'0')+'-'+fmt(m)+'-01');
+ const offset=((first%7)+7)%7; const cells=Math.ceil((offset+31)/7)*7;
+ for(let i=0;i<Math.max(35,cells);i++){
+  const jdn=first-offset+i,date=C.gregorianFromJdn(jdn);
+  const button=document.createElement('button');button.type='button';button.className='day';
+  if(date.slice(0,7)!==selected.slice(0,7))button.classList.add('other');
+  if(date===selected){button.classList.add('selected');button.setAttribute('aria-current','date');}
+  const within=/^\d{4}-\d{2}-\d{2}$/.test(date)&&Number(date.slice(0,4))>=1;
+  if(!within){button.disabled=true;host.appendChild(button);continue;}
+  const value=C.fromGregorian(date,c,'2026-01-01');
+  const a=document.createElement('span');a.className='n';a.textContent=Number(date.slice(8));
+  const b=document.createElement('span');b.className='tz';b.textContent=value.tzolkin;
+  const d=document.createElement('span');d.className='haab';d.textContent=value.haab;
+  button.append(a,b,d);button.setAttribute('aria-label',dateText(date)+': '+value.tzolkin+', '+value.haab);
+  button.addEventListener('click',()=>update(date));
+  host.appendChild(button);
+ }
+}
+function drawWheel(r){
+ const canvas=$('wheel'),ctx=canvas.getContext('2d');if(!ctx)return;
+ const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2;
+ ctx.clearRect(0,0,w,h);
+ const rings=[
+ {radius:260,period:260,angle:((r.absoluteDay%260)+260)%260,color:'#d9ba7d',label:'260'},
+ {radius:195,period:365,angle:((r.absoluteDay%365)+365)%365,color:'#8de2d6',label:'365'},
+ {radius:130,period:18980,angle:((r.absoluteDay%18980)+18980)%18980,color:'#e9b6cb',label:'18 980'}
+ ];
+ rings.forEach(ring=>{
+  ctx.beginPath();ctx.arc(cx,cy,ring.radius,0,Math.PI*2);ctx.strokeStyle='#2e4054';ctx.lineWidth=19;ctx.stroke();
+  const fraction=ring.angle/ring.period,angle=-Math.PI/2+fraction*Math.PI*2;
+  ctx.beginPath();ctx.arc(cx,cy,ring.radius,-Math.PI/2,angle,false);ctx.strokeStyle=ring.color;ctx.lineWidth=16;ctx.lineCap='round';ctx.stroke();
+  ctx.beginPath();ctx.arc(cx+Math.cos(angle)*ring.radius,cy+Math.sin(angle)*ring.radius,10,0,Math.PI*2);ctx.fillStyle=ring.color;ctx.fill();
+  ctx.fillStyle=ring.color;ctx.textAlign='center';ctx.font='bold 17px system-ui';ctx.fillText(ring.label,cx,cy-ring.radius+29);
+ });
+ ctx.fillStyle='#f0f5fb';ctx.textAlign='center';ctx.font='bold 30px system-ui';ctx.fillText('МАЙЯ',cx,cy-2);
+ ctx.font='16px system-ui';ctx.fillStyle='#b0c1d2';ctx.fillText('ЦИКЛЫ ВРЕМЕНИ',cx,cy+27);
+}
+function convertLong(){
+ try{
+  const days=C.parseLongCount($('long-input').value),jdn=days+currentCorrelation();
+  if(!Number.isSafeInteger(jdn))throw new Error('Число дней слишком велико.');
+  const value=C.gregorianFromJdn(jdn);
+  $('reverse-result').textContent=dateText(value)+' · JDN '+jdn.toLocaleString('ru-RU');
+  $('reverse-result').classList.remove('error');
+  if(/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number(value.slice(0,4))>=1)update(value);
+ }catch(e){$('reverse-result').textContent=e.message;$('reverse-result').classList.add('error');}
+}
+async function copyText(content){
+ if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(content);
+ else{const area=document.createElement('textarea');area.value=content;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();const ok=document.execCommand('copy');area.remove();if(!ok)throw new Error('Скопируйте значение вручную.');}
+}
+$('gregorian').addEventListener('change',e=>update(e.target.value));
+$('correlation').addEventListener('change',()=>{if(iso)update(iso);});
+$('prev-day').addEventListener('click',()=>moveDay(-1));
+$('next-day').addEventListener('click',()=>moveDay(1));
+$('prev-month').addEventListener('click',()=>moveMonth(-1));
+$('next-month').addEventListener('click',()=>moveMonth(1));
+$('today').addEventListener('click',()=>update(todayISO()));
+$('convert-long').addEventListener('click',convertLong);
+$('long-input').addEventListener('keydown',e=>{if(e.key==='Enter')convertLong();});
+$('copy').addEventListener('click',async()=>{
+ if(!result)return;
+ try{await copyText(dateText(iso)+' · '+result.tzolkin+' · '+result.haab+' · '+result.longCount+' · GMT '+result.correlation);status('Дата скопирована.');}catch(e){status(e.message,true);}
+});
+$('share').addEventListener('click',async()=>{try{await copyText(location.href);status('Ссылка скопирована.');}catch(e){status(e.message,true);}});
+try{
+ if(!C)throw new Error('Не загружен календарный движок.');
+ const url=new URL(location.href),c=url.searchParams.get('correlation');
+ if(['584283','584285','584286'].includes(c))$('correlation').value=c;
+ const d=url.searchParams.get('date');
+ update(d&&/^\d{4}-\d{2}-\d{2}$/.test(d)?d:todayISO(),false);
+ if(!iso)update(todayISO(),false);
+}catch(e){status('Мини-приложение не запущено: '+e.message,true);}
+})();
+</script>
+</body>
+</html>
