@@ -1,7 +1,7 @@
 /* YUGATNeoTIME PWA: same-origin offline app shell; no user data is cached. */
 'use strict';
 const CACHE_PREFIX='yugatneotime-shell-';
-const CACHE_NAME=CACHE_PREFIX+'2026-11-20-maya-v6';
+const CACHE_NAME=CACHE_PREFIX+'2026-11-20-maya-v7';
 const BASE=new URL(self.registration.scope);
 // Public, static resources only. Do not add localStorage, JSON exports or remote APIs.
 const ASSETS=[
@@ -27,7 +27,9 @@ self.addEventListener('install',event=>{
  event.waitUntil((async()=>{
    const cache=await caches.open(CACHE_NAME);
    const essential=['./index.html','./maya-mini.html','./maya.webmanifest'].map(path=>new URL(path,BASE).href);
-   await cache.addAll(essential);
+   await Promise.all(essential.map(async url=>{
+     try{await cache.add(url);}catch(error){/* A single unavailable page must not block the entire service worker update. */}
+   }));
    const essentialSet=new Set(essential);
    await Promise.all(urls.filter(url=>!essentialSet.has(url)).map(async url=>{
      try{await cache.add(url);}catch(error){/* Optional cache entry; network access remains available. */}
@@ -57,7 +59,7 @@ self.addEventListener('fetch',event=>{
      const cache=await caches.open(CACHE_NAME);
      try{
        const response=await fetch(request);
-       if(response.ok)await cache.put(normalized,response.clone());
+       if(response.ok){try{await cache.put(normalized,response.clone());}catch(error){/* Cache quota must not break online navigation. */}}
        return response;
      }catch(error){
        const fallback=await cache.match(normalized);
