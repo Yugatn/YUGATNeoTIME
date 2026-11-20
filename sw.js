@@ -1,7 +1,7 @@
 /* YUGATNeoTIME PWA: same-origin offline app shell; no user data is cached. */
 'use strict';
 const CACHE_PREFIX='yugatneotime-shell-';
-const CACHE_NAME=CACHE_PREFIX+'2026-11-20-maya-v5';
+const CACHE_NAME=CACHE_PREFIX+'2026-11-20-maya-v6';
 const BASE=new URL(self.registration.scope);
 // Public, static resources only. Do not add localStorage, JSON exports or remote APIs.
 const ASSETS=[
@@ -69,10 +69,15 @@ self.addEventListener('fetch',event=>{
  }
  event.respondWith((async()=>{
    const cache=await caches.open(CACHE_NAME);
-   const hit=await cache.match(normalized);
-   if(hit)return hit;
-   const response=await fetch(request);
-   if(response.ok)await cache.put(normalized,response.clone());
-   return response;
+   // Online first: avoid serving stale scripts, manifests and HTML after an update.
+   try{
+     const response=await fetch(request);
+     if(response.ok)await cache.put(normalized,response.clone());
+     return response;
+   }catch(error){
+     const fallback=await cache.match(normalized);
+     if(fallback)return fallback;
+     throw error;
+   }
  })());
 });
