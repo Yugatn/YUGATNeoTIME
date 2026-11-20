@@ -74,7 +74,7 @@ self.addEventListener('fetch',event=>{
    // Online first: avoid serving stale scripts, manifests and HTML after an update.
    try{
      const response=await fetch(request);
-     if(response.ok)await cache.put(normalized,response.clone());
+     if(response.ok){try{await cache.put(normalized,response.clone());}catch(error){/* Cache quota must not break online requests. */}}
      return response;
    }catch(error){
      const fallback=await cache.match(normalized);
