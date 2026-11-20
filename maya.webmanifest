@@ -1,0 +1,22 @@
+{
+  "name": "YUGATNeoTIME · Календарь майя",
+  "short_name": "Майя · Время",
+  "description": "Цолькин, Хааб, Длинный счёт и календарный круг",
+  "start_url": "./maya-mini.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090d14",
+  "theme_color": "#090d14",
+  "icons": [
+    {
+      "src": "./icons/yugatneotime-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/yugatneotime-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
