@@ -18,6 +18,9 @@ on:
       - 'data/intellectual-transmission-graph-example.json'
       - 'scripts/validate_intellectual_transmission.py'
       - 'scripts/validate_historical_timeline.py'
+      - 'maya-mini.html'
+      - 'maya.webmanifest'
+      - 'tests/maya-mini.test.cjs'
       - 'tests/calendar-engine.test.cjs'
       - 'src/calendar-engine.js'
       - '.github/workflows/validate-cultural-transmission.yml'
@@ -38,6 +41,9 @@ on:
       - 'data/intellectual-transmission-graph-example.json'
       - 'scripts/validate_intellectual_transmission.py'
       - 'scripts/validate_historical_timeline.py'
+      - 'maya-mini.html'
+      - 'maya.webmanifest'
+      - 'tests/maya-mini.test.cjs'
       - 'tests/calendar-engine.test.cjs'
       - 'src/calendar-engine.js'
       - '.github/workflows/validate-cultural-transmission.yml'
@@ -59,6 +65,8 @@ jobs:
           node-version: '20'
       - name: Run calendar engine tests
         run: node tests/calendar-engine.test.cjs
+      - name: Run Maya mini app tests
+        run: node tests/maya-mini.test.cjs
       - name: Validate cultural transmission graph
         run: python scripts/validate_cultural_transmission.py
       - name: Validate scenario forecast template
