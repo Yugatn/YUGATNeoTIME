@@ -25,6 +25,7 @@
 </header>
 <h1>Календарь майя</h1>
 <p class="note">Устойчивая версия без Service Worker, внешних скриптов и обязательного подключения к сети после загрузки страницы.</p>
+<p class="status" id="launch-state" aria-live="polite">Загрузка календаря… Если текст не исчезает, сделайте снимок экрана.</p>
 <p class="note" style="margin:0 0 10px">Версия 2.1 · автономные вычисления · без сторонних скриптов и сервис-воркера.</p>
 <p class="subtitle">Один день в трёх системах времени: ритуальный цикл <strong>Цолькин</strong>, солнечный гражданский цикл <strong>Хааб</strong> и последовательный <strong>Длинный счёт</strong>. Календарь майя — система исторического знания, а не универсальный инструмент предсказания событий.</p>
 <section class="panel" aria-labelledby="controls-heading">
@@ -283,7 +284,8 @@ try{
  const d=url.searchParams.get('date');
  update(d&&/^\d{4}-\d{2}-\d{2}$/.test(d)?d:todayISO(),false);
  if(!iso)update(todayISO(),false);
-}catch(e){status('Мини-приложение не запущено: '+e.message,true);}
+ $('launch-state').textContent=iso?'Календарь запущен. Расчёты выполняются на устройстве.':'Не удалось выбрать дату. Проверьте настройки браузера.';
+}catch(e){status('Мини-приложение не запущено: '+e.message,true);$('launch-state').textContent='Ошибка запуска: '+e.message;}
 })();
 </script>
 
