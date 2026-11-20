@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0a1017">
 <meta name="description" content="Календарь майя: Цолькин, Хааб, Длинный счёт и календарный круг. Бесплатное мини-приложение YUGATNeoTIME.">
 <link rel="icon" type="image/png" href="./icons/yugatneotime-192.png">
+<link rel="apple-touch-icon" href="./icons/yugatneotime-192.png">
+<link rel="manifest" href="./maya.webmanifest">
 <title>Календарь майя · YUGATNeoTIME</title>
 <style>
 :root{color-scheme:dark;--bg:#090d14;--panel:#121a24;--panel2:#172231;--line:#2e4054;--text:#f0f5fb;--muted:#b0c1d2;--gold:#d9ba7d;--turquoise:#8de2d6;--pink:#e9b6cb}
@@ -94,8 +96,7 @@ function moveMonth(delta){
  if(!iso)return;const [year,month]=iso.split('-').map(Number);
  const t=(year-1)*12+(month-1)+delta;if(t<0||t>=9999*12){status('Достигнута граница допустимых лет.',true);return;}
  const y=Math.floor(t/12)+1,m=t%12+1;
- const d=Math.min(Number(iso.slice(8)),C.gregorianFromJdn(C.gregorianToJdn(String(y).padStart(4,'0')+'-'+fmt(m===12?12:m)+'-01')+(m===12?31:32)).length?31:31);
- // Clamp to actual last day of target month via the next month's first JDN.
+ // Clamp to the target month's last day using JDN arithmetic.
  const first=C.gregorianToJdn(String(y).padStart(4,'0')+'-'+fmt(m)+'-01');
  const nextYear=m===12?y+1:y,nextMonth=m===12?1:m+1;
  const length=nextYear>9999?31:C.gregorianToJdn(String(nextYear).padStart(4,'0')+'-'+fmt(nextMonth)+'-01')-first;
@@ -169,7 +170,7 @@ $('copy').addEventListener('click',async()=>{
  if(!result)return;
  try{await copyText(dateText(iso)+' · '+result.tzolkin+' · '+result.haab+' · '+result.longCount+' · GMT '+result.correlation);status('Дата скопирована.');}catch(e){status(e.message,true);}
 });
-$('share').addEventListener('click',async()=>{try{await copyText(location.href);status('Ссылка скопирована.');}catch(e){status(e.message,true);}});
+$('share').addEventListener('click',async()=>{try{const url=new URL(location.href);url.searchParams.set('date',iso);url.searchParams.set('correlation',String(currentCorrelation()));await copyText(url.toString());status('Ссылка на выбранную дату скопирована.');}catch(e){status(e.message,true);}});
 try{
  if(!C)throw new Error('Не загружен календарный движок.');
  const url=new URL(location.href),c=url.searchParams.get('correlation');
