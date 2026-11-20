@@ -1,12 +1,12 @@
 /* YUGATNeoTIME PWA: same-origin offline app shell; no user data is cached. */
 'use strict';
 const CACHE_PREFIX='yugatneotime-shell-';
-const CACHE_NAME=CACHE_PREFIX+'2026-11-17-v4';
+const CACHE_NAME=CACHE_PREFIX+'2026-11-20-maya-v5';
 const BASE=new URL(self.registration.scope);
 // Public, static resources only. Do not add localStorage, JSON exports or remote APIs.
 const ASSETS=[
- './','./index.html','./life-clock.html','./time-mini.html','./cultural-graph.html',
- './manifest.webmanifest','./mini.webmanifest',
+ './','./index.html','./life-clock.html','./time-mini.html','./maya-mini.html','./cultural-graph.html',
+ './manifest.webmanifest','./mini.webmanifest','./maya.webmanifest',
  './icons/yugatneotime-192.png','./icons/yugatneotime-512.png',
  './src/calendar-engine.js','./src/life-clock.js','./src/time-mini.js','./src/life-clock-ui.js',
  './src/life-insights.js','./src/life-insights-ui.js',
@@ -22,7 +22,7 @@ const ASSETS=[
 const urls=ASSETS.map(path=>new URL(path,BASE).href);
 const allow=new Set(urls);
 self.addEventListener('install',event=>{
- event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urls)));
+ event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urls)).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
  event.waitUntil(Promise.all([
