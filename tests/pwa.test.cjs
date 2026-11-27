@@ -35,7 +35,8 @@ assert.ok(miniManifest.icons.some(i=>i.sizes==='192x192'));
 const handlers={},cached=new Map(),requested=[];
 const scope='https://example.test/YUGATNeoTIME/';
 const cache={
- async addAll(urls){requested.push(...urls);for(const url of urls)cached.set(url,{ok:true,url,clone(){return this;}});},
+ async add(url){requested.push(url);cached.set(url,{ok:true,url,clone(){return this;}});},
+ async addAll(urls){for(const url of urls)await this.add(url);},
  async match(url){return cached.get(url)||undefined;},
  async put(url,response){cached.set(url,response);}
 };
@@ -48,6 +49,7 @@ const self={
  registration:{scope},
  location:{origin:'https://example.test'},
  clients:{async claim(){return true;}},
+ async skipWaiting(){return true;},
  addEventListener(name,fn){handlers[name]=fn;}
 };
 let online=true,networkRequests=[];
@@ -75,6 +77,8 @@ async function test(){
  assert.ok(requested.includes(scope+'index.html'));
  assert.ok(requested.includes(scope+'life-clock.html'));
  assert.ok(requested.includes(scope+'time-mini.html'));
+ assert.ok(requested.includes(scope+'shift-planner/index.html'));
+ assert.ok(requested.includes(scope+'shift-planner/load.html'));
  assert.ok(requested.includes(scope+'mini.webmanifest'));
  assert.ok(requested.includes(scope+'src/time-mini.js'));
  assert.ok(manifest.shortcuts.some(s=>s.url==='./time-mini.html'));
@@ -101,6 +105,8 @@ async function test(){
  assert.equal(mini.url,scope+'time-mini.html');
  const clock=await start('fetch',{method:'GET',mode:'navigate',url:scope+'life-clock.html'});
  assert.equal(clock.url,scope+'life-clock.html');
+ const shifts=await start('fetch',{method:'GET',mode:'navigate',url:scope+'shift-planner/index.html?view=load&month=2026-11'});
+ assert.equal(shifts.url,scope+'shift-planner/index.html');
  const js=await start('fetch',{method:'GET',mode:'cors',url:scope+'src/life-crypto.js'});
  assert.equal(js.url,scope+'src/life-crypto.js');
  console.log('PWA manifest, raster icons, complete offline shell, scope and external API exclusion passed');
