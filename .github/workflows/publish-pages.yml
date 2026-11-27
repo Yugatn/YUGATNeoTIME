@@ -9,6 +9,8 @@ on:
       - 'maya-mini.html'
       - 'maya.webmanifest'
       - 'maya/**'
+      - 'shift-planner/**'
+      - 'tests/shift-planner.test.cjs'
       - 'tests/maya-mini.test.cjs'
       - 'tests/maya-standalone.test.cjs'
       - 'life-clock.html'
@@ -51,6 +53,8 @@ jobs:
           node tests/calendar-engine.test.cjs
           node tests/maya-mini.test.cjs
           node tests/maya-standalone.test.cjs
+      - name: Run shift planner checks
+        run: node tests/shift-planner.test.cjs
       - name: Prepare public static site
         shell: bash
         run: |
@@ -59,6 +63,7 @@ jobs:
           cp index.html time-mini.html maya-mini.html maya.webmanifest life-clock.html cultural-graph.html site/
           mkdir -p site/maya
           cp maya/index.html site/maya/index.html
+          cp -R shift-planner site/
           cp manifest.webmanifest mini.webmanifest sw.js LICENSE README.md site/
           cp -R icons src data docs site/
           touch site/.nojekyll
@@ -66,6 +71,9 @@ jobs:
           test -s site/maya.webmanifest
           test -s site/maya/index.html
           test -s site/time-mini.html
+          test -s site/shift-planner/index.html
+          test -s site/shift-planner/load.html
+          test -s site/shift-planner/shift-core.js
           test -s site/src/time-mini.js
           test -s site/src/life-clock.js
           test -s site/src/calendar-engine.js
@@ -116,3 +124,26 @@ jobs:
             exit 1
           fi
           echo "Public Maya entry point served expected HTML."
+
+      - name: Verify public shift planner URLs
+        shell: bash
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          BASE="${SITE_URL%/}"
+          for entry in 'shift-planner/' 'shift-planner/index.html?view=load' 'shift-planner/load.html'; do
+            ok=0
+            for attempt in 1 2 3 4 5 6 7 8; do
+              if curl --fail --location --silent --show-error --max-time 20 "${BASE}/${entry}" -o /tmp/shifts-live.html && grep -q 'const ShiftCore=' /tmp/shifts-live.html && grep -q 'const PLAN_STYLE=' /tmp/shifts-live.html; then
+                ok=1
+                break
+              fi
+              sleep 5
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "::error::Shift planner page unavailable or stale: ${BASE}/${entry}"
+              exit 1
+            fi
+            echo "Live shift planner confirmed: ${BASE}/${entry}"
+          done
