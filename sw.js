@@ -1,11 +1,11 @@
 /* YUGATNeoTIME PWA: same-origin offline app shell; no user data is cached. */
 'use strict';
 const CACHE_PREFIX='yugatneotime-shell-';
-const CACHE_NAME=CACHE_PREFIX+'2026-11-20-maya-v7';
+const CACHE_NAME=CACHE_PREFIX+'2026-11-27-shifts-v1';
 const BASE=new URL(self.registration.scope);
 // Public, static resources only. Do not add localStorage, JSON exports or remote APIs.
 const ASSETS=[
- './','./index.html','./life-clock.html','./time-mini.html','./maya-mini.html','./cultural-graph.html',
+ './','./shift-planner/','./shift-planner/index.html','./index.html','./life-clock.html','./time-mini.html','./maya-mini.html','./cultural-graph.html',
  './manifest.webmanifest','./mini.webmanifest','./maya.webmanifest',
  './icons/yugatneotime-192.png','./icons/yugatneotime-512.png',
  './src/calendar-engine.js','./src/life-clock.js','./src/time-mini.js','./src/life-clock-ui.js',
