@@ -32,6 +32,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -92,12 +93,32 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static pages
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./site
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Wait for the unique Pages artifact to become visible
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 15); do
+            count=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" 2>/dev/null | jq --arg name "$ARTIFACT_NAME" '[.artifacts[] | select(.name == $name and .expired == false)] | length') || count=0
+            if [ "$count" -eq 1 ]; then
+              echo "Unique Pages artifact is ready: $ARTIFACT_NAME"
+              exit 0
+            fi
+            sleep 4
+          done
+          echo "::error::Unique Pages artifact not visible in Actions API"
+          exit 1
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Check live Maya calendar URL
         shell: bash
         run: |
