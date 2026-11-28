@@ -82,6 +82,7 @@ jobs:
           test -s site/weather-sky/index.html
           grep -q 'id="tempChart"' site/weather-sky.html
           grep -q 'id="pressureChart"' site/weather-sky.html
+          grep -q 'id="fxPanel"' site/weather-sky.html
           test -s site/shift-planner/index.html
           test -s site/shift-planner/load.html
           test -s site/shift-planner/shift-core.js
@@ -171,7 +172,7 @@ jobs:
             for attempt in 1 2 3 4 5 6 7 8; do
               if curl --fail --location --silent --show-error --max-time 20 "${BASE}/${entry}?deploy=${GITHUB_SHA}" -o /tmp/weather-live.html; then
                 if [ "$entry" = 'weather-sky.html' ]; then
-                  if grep -q 'id="tempChart"' /tmp/weather-live.html && grep -q 'id="pressureChart"' /tmp/weather-live.html; then ok=1; break; fi
+                  if grep -q 'id="tempChart"' /tmp/weather-live.html && grep -q 'id="pressureChart"' /tmp/weather-live.html && grep -q 'id="fxPanel"' /tmp/weather-live.html; then ok=1; break; fi
                 else
                   if grep -q '../weather-sky.html' /tmp/weather-live.html; then ok=1; break; fi
                 fi

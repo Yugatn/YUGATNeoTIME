@@ -66,3 +66,15 @@ const legacy=fs.readFileSync(path.join(root,'weather-sky/index.html'),'utf8');
 assert.ok(legacy.includes('../weather-sky.html'));
 for(const p of ['index.html','time-mini.html'])assert.ok(fs.readFileSync(path.join(root,p),'utf8').includes('./weather-sky.html'));
 console.log('Weather checks passed:',Object.keys(test).length+Object.keys(extra).length+Object.keys(run).length+Object.keys(trends).length+Object.keys(display).length+Object.keys(humidity).length+Object.keys(midnight).length+Object.keys(chronology).length+Object.keys(reality).length,'plus markup, syntax and navigation');
+
+const fxSource=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][1][1];
+new Function(fxSource);
+for(const [,id] of fxSource.matchAll(/\$fx\("([^"]+)"\)/g))assert.ok(ids.includes(id),'Missing FX ID '+id);
+const fxCore=fxSource.slice(fxSource.indexOf("const FX_DEFAULT"),fxSource.indexOf("function fxRead"));
+const fxChecks=new Function(fxCore+`
+const f={rates:{RUB:100,EUR:.8}},c={TON:{price:2}};
+return {defaults:FX_DEFAULT.join(",")==="RUB/USD,RUB/EUR,RUB/TON,USD/TON",rub:fxQuote("RUB/USD",f,c)===100,eur:fxQuote("RUB/EUR",f,c)===125,tonRub:fxQuote("RUB/TON",f,c)===200,tonUsd:fxQuote("USD/TON",f,c)===2,reverse:fxQuote("USD/RUB",f,c)===.01,missing:Number.isNaN(fxQuote("RUB/TON",f,{})),empty:fxPairs([]).length===0,invalid:fxPairs(["USD/USD","XXX/RUB","RUB/USD","RUB/USD"]).length===1,needed:fxNeeded(FX_DEFAULT).join(",")==="TON",format:fxFormat(NaN)==="—"};
+`)();
+for(const [k,v] of Object.entries(fxChecks))assert.ok(v,'FX '+k);
+assert.ok(html.includes('id="fxPanel"'));
+console.log('FX checks passed:',Object.keys(fxChecks).length,'plus syntax and DOM IDs');

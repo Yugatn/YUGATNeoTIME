@@ -1,7 +1,7 @@
 /* YUGATNeoTIME PWA: same-origin offline app shell; no user data is cached. */
 'use strict';
 const CACHE_PREFIX='yugatneotime-shell-';
-const CACHE_NAME=CACHE_PREFIX+'2026-11-28-weather-sky-v112';
+const CACHE_NAME=CACHE_PREFIX+'2026-11-28-weather-sky-v113';
 const BASE=new URL(self.registration.scope);
 // Public, static resources only. Do not add localStorage, JSON exports or remote APIs.
 const ASSETS=[
