@@ -1,0 +1,23 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'weather-sky.html'),'utf8');
+const source=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+new Function(source);
+const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+assert.equal(new Set(ids).size,ids.length,'duplicate IDs');
+for(const [,id] of source.matchAll(/\$\("([^"]+)"\)/g))assert.ok(ids.includes(id),'Missing DOM ID '+id);
+const core=source.slice(0,source.indexOf('let chartHours='));
+const test=new Function(core+`
+const now=Date.parse("2026-11-28T12:00:00Z");
+const p=seriesWindow({time:["2026-11-28T12:00","2026-11-28T13:00","2026-11-28T14:00"],temperature_2m:[2,3,4]},now,3600,24);
+const a=chartPaths(p,"temp",now,x=>x/3600000,y=>y);
+return {pressure:Math.abs(pressureValue(1013.25,"mm")-760)<.01,missing:pressureValue(null,"mm")===null,offset:p[1].at===now,past:!!a.past,future:!!a.future,gap:chartPaths([{at:0,temp:2},{at:1,temp:null},{at:2,temp:4}],"temp",4,x=>x,y=>y).past==="M0 2M2 4",range:seriesWindow({time:[now/1000-86400*5,now/1000],temperature_2m:[1,2]},now,0,24).length===1,phase:phaseIndex(180)===4,day:duration(36000)==="10 ч 00 мин",query:forecastUrl({latitude:1,longitude:2}).includes("surface_pressure")};
+`)();
+for(const [k,v] of Object.entries(test))assert.ok(v,k);
+const legacy=fs.readFileSync(path.join(root,'weather-sky/index.html'),'utf8');
+assert.ok(legacy.includes('../weather-sky.html'));
+for(const p of ['index.html','time-mini.html'])assert.ok(fs.readFileSync(path.join(root,p),'utf8').includes('./weather-sky.html'));
+console.log('Weather checks passed:',Object.keys(test).length,'plus markup, syntax and navigation');
