@@ -92,3 +92,10 @@ assert.ok(centeredStyle.includes('#moonPercent')&&centeredStyle.includes('#night
 assert.ok(centeredStyle.includes('#weather>.panel:last-child>.row.between'));
 assert.ok(centeredStyle.includes('.moonLayout>div{flex:1;min-width:0;text-align:center}'));
 console.log('Centered metric styling checks passed');
+
+const heroStyle=html.match(/<style id="clockHeroStyle">([\s\S]*?)<\/style>/)[1];
+assert.ok(heroStyle.includes('.clockPanel .clockPair{display:grid;grid-template-columns:minmax(0,1fr)'));
+assert.ok(heroStyle.includes('#cityClock{display:block;width:100%;text-align:center'));
+assert.ok(html.includes('id="gamesLink" href="https://yugatn.github.io/YUGATNEO_GAME/games/"'));
+assert.ok(html.includes('id="midnightClock"'));
+console.log('Centered hero clock and games navigation checks passed');
