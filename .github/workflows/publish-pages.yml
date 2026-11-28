@@ -10,6 +10,9 @@ on:
       - 'maya.webmanifest'
       - 'maya/**'
       - 'shift-planner/**'
+      - 'weather-sky.html'
+      - 'weather-sky/**'
+      - 'tests/weather-sky.test.cjs'
       - 'tests/shift-planner.test.cjs'
       - 'tests/maya-mini.test.cjs'
       - 'tests/maya-standalone.test.cjs'
@@ -55,6 +58,8 @@ jobs:
           node tests/maya-standalone.test.cjs
       - name: Run shift planner checks
         run: node tests/shift-planner.test.cjs
+      - name: Run weather and sky checks
+        run: node tests/weather-sky.test.cjs
       - name: Prepare public static site
         shell: bash
         run: |
@@ -64,6 +69,8 @@ jobs:
           mkdir -p site/maya
           cp maya/index.html site/maya/index.html
           cp -R shift-planner site/
+          cp weather-sky.html site/
+          cp -R weather-sky site/
           cp manifest.webmanifest mini.webmanifest sw.js LICENSE README.md site/
           cp -R icons src data docs site/
           touch site/.nojekyll
@@ -71,6 +78,10 @@ jobs:
           test -s site/maya.webmanifest
           test -s site/maya/index.html
           test -s site/time-mini.html
+          test -s site/weather-sky.html
+          test -s site/weather-sky/index.html
+          grep -q 'id="tempChart"' site/weather-sky.html
+          grep -q 'id="pressureChart"' site/weather-sky.html
           test -s site/shift-planner/index.html
           test -s site/shift-planner/load.html
           test -s site/shift-planner/shift-core.js
@@ -146,4 +157,30 @@ jobs:
               exit 1
             fi
             echo "Live shift planner confirmed: ${BASE}/${entry}"
+          done
+
+      - name: Verify public weather mini app
+        shell: bash
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          BASE="${SITE_URL%/}"
+          for entry in 'weather-sky.html' 'weather-sky/index.html'; do
+            ok=0
+            for attempt in 1 2 3 4 5 6 7 8; do
+              if curl --fail --location --silent --show-error --max-time 20 "${BASE}/${entry}?deploy=${GITHUB_SHA}" -o /tmp/weather-live.html; then
+                if [ "$entry" = 'weather-sky.html' ]; then
+                  if grep -q 'id="tempChart"' /tmp/weather-live.html && grep -q 'id="pressureChart"' /tmp/weather-live.html; then ok=1; break; fi
+                else
+                  if grep -q '../weather-sky.html' /tmp/weather-live.html; then ok=1; break; fi
+                fi
+              fi
+              sleep 5
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "::error::Weather page unavailable or stale: ${BASE}/${entry}"
+              exit 1
+            fi
+            echo "Live weather entry confirmed: ${BASE}/${entry}"
           done
