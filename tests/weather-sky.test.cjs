@@ -83,3 +83,12 @@ const editorChecks=new Function(fxCore+`return {replace:fxReplace(FX_DEFAULT,"RU
 for(const [k,v] of Object.entries(editorChecks))assert.ok(v,'FX editor '+k);
 assert.ok(html.includes('.fxCard{text-align:center')&&html.includes('id="fxEditor"')&&html.includes('id="fxCancel"'));
 console.log('FX editor checks passed:',Object.keys(editorChecks).length);
+
+const centeredStyle=html.match(/<style id="centeredMetrics">([\s\S]*?)<\/style>/)[1];
+for(const selector of ['.clockCell','.eraCell','.tile','.trendGrid>div','.pickGrid>div','.dayFacts>div','.dayInfo','.day','.hour','.value','.temp','.fxCard']){
+assert.ok(centeredStyle.split('text-align:center')[0].includes(selector),'centered metric '+selector);
+}
+assert.ok(centeredStyle.includes('#moonPercent')&&centeredStyle.includes('#night')&&centeredStyle.includes('#rise')===false);
+assert.ok(centeredStyle.includes('#weather>.panel:last-child>.row.between'));
+assert.ok(centeredStyle.includes('.moonLayout>div{flex:1;min-width:0;text-align:center}'));
+console.log('Centered metric styling checks passed');
