@@ -78,3 +78,8 @@ return {defaults:FX_DEFAULT.join(",")==="RUB/USD,RUB/EUR,RUB/TON,USD/TON",rub:fx
 for(const [k,v] of Object.entries(fxChecks))assert.ok(v,'FX '+k);
 assert.ok(html.includes('id="fxPanel"'));
 console.log('FX checks passed:',Object.keys(fxChecks).length,'plus syntax and DOM IDs');
+
+const editorChecks=new Function(fxCore+`return {replace:fxReplace(FX_DEFAULT,"RUB/USD","RUB/BTC")[0]==="RUB/BTC",duplicate:fxReplace(FX_DEFAULT,"RUB/USD","RUB/EUR")===null,add:fxReplace(FX_DEFAULT,null,"EUR/ETH").length===5,invalid:fxReplace(FX_DEFAULT,null,"RUB/RUB")===null,unchanged:fxReplace(FX_DEFAULT,"RUB/USD","RUB/USD").length===4,missing:fxReplace(FX_DEFAULT,"BTC/USD","RUB/BTC")===null,limit:fxReplace(FX_CODES.slice(1,13).map(c=>"RUB/"+c),null,"EUR/ETH")===null}`)();
+for(const [k,v] of Object.entries(editorChecks))assert.ok(v,'FX editor '+k);
+assert.ok(html.includes('.fxCard{text-align:center')&&html.includes('id="fxEditor"')&&html.includes('id="fxCancel"'));
+console.log('FX editor checks passed:',Object.keys(editorChecks).length);
