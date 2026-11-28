@@ -29,8 +29,12 @@ const display=new Function(core+`
 return {positive:signedTemp(4.2)==="+4°",negative:signedTemp(-3.2)==="−3°",missing:tempRangeText(null,5)==="— / +5°",zero:signedTemp(0)==="0°",clamp:cursorIndex(-2,5)===0&&cursorIndex(20,5)===4&&cursorIndex(2,0)===0,labels:pointType({at:5},4,false)==="Прогноз"&&pointType({at:5},4,true)==="Старый прогноз"&&pointType({at:3},4,true)==="До сохранения"};
 `)();
 for(const [k,v] of Object.entries(display))assert.ok(v,k);
+const humidity=new Function(core+`
+const n=Date.parse("2026-11-28T12:00:00Z");const p=seriesWindow({time:[n/1000-3600,n/1000,n/1000+3600],relative_humidity_2m:[0,72,101]},n,0,24);return {humidity:p[0].humidity===0&&p[1].humidity===72&&p[2].humidity===null,limits:validHumidity(100)===100&&validHumidity(-1)===null&&validHumidity(null)===null,range:JSON.stringify(humidityRange([null,0,78,100,101]))==="[0,100]",empty:humidityRange([null,NaN])===null,relative:timeRelative(n+5400000,n)==="+1 ч 30 мин"&&timeRelative(n-3600000,n)==="−1 ч 00 мин",clock:cityTime(new Date(n),"Europe/Berlin")==="13:00:00"&&cityTime(new Date(n),"Asia/Tokyo")==="21:00:00",query:forecastUrl({latitude:1,longitude:2}).includes("surface_pressure%2Crelative_humidity_2m")};
+`)();
+for(const [k,v] of Object.entries(humidity))assert.ok(v,k);
 assert.ok(!html.includes('id="chartHeight"')&&!html.includes('id="chartScale"'),'height/scale controls removed');
-assert.ok([...html.matchAll(/id="(?:tempChart|pressureChart)"[^>]*viewBox="([^"]+)"/g)].every(m=>m[1]==="0 0 680 205"),'original chart proportions');
+assert.ok([...html.matchAll(/id="(?:tempChart|pressureChart|humidityChart)"[^>]*viewBox="([^"]+)"/g)].every(m=>m[1]==="0 0 680 205"),'original chart proportions');
 assert.ok(source.includes('left=46,right=width-12,top=14,bottom=169'),'original plot dimensions');
 const mock=`
 class N{constructor(){this.children=[];this.style={};this.dataset={};this.value="";this.clientWidth=360}append(...a){this.children.push(...a)}replaceChildren(){this.children=[]}setAttribute(){}remove(){}}
@@ -41,12 +45,12 @@ const window={addEventListener:(k,v)=>listeners[k]=v};const localStorage={getIte
 const run=new Function(mock+source+`
 listeners.DOMContentLoaded();const boot=nodes.startup.hidden&&nodes.quickCities.children.length===4;selected={name:"Тест",latitude:0,longitude:0};
 const now=Date.now(),epoch=Math.floor(now/3600000)*3600,k=dateKey(new Date(),"UTC");
-data=normalizeForecast({timezone:"UTC",utc_offset_seconds:0,current:{time:epoch,temperature_2m:12,pressure_msl:1013},daily:{time:[Date.parse(k+"T00:00:00Z")/1000],temperature_2m_max:[15],temperature_2m_min:[5],daylight_duration:[36000]},hourly:{time:[epoch-3600,epoch,epoch+3600],temperature_2m:[11,12,13],pressure_msl:[1012,1013,1014]}});renderForecast();
-return {boot,weather:!nodes.weather.hidden&&nodes.currentTemp.textContent==="12°C",chart:nodes.tempChart.children.length>5&&nodes.pressureChart.children.length>5,dayRange:nodes.todayRange.textContent.includes("Мин. +5°")&&nodes.todayRange.textContent.includes("Макс. +15°"),readout:nodes.pickTemp.textContent.includes("12.0")||nodes.pickTemp.textContent.includes("13.0"),dayInfo:nodes.dayTemp.textContent==="+5° / +15°",day:nodes.daylight.textContent==="10 ч 00 мин",fallback:nodes.moonName.textContent.includes("прибл.")};
+data=normalizeForecast({timezone:"UTC",utc_offset_seconds:0,current:{time:epoch,temperature_2m:12,pressure_msl:1013,relative_humidity_2m:72},daily:{time:[Date.parse(k+"T00:00:00Z")/1000],temperature_2m_max:[15],temperature_2m_min:[5],daylight_duration:[36000]},hourly:{time:[epoch-3600,epoch,epoch+3600],temperature_2m:[11,12,13],pressure_msl:[1012,1013,1014],relative_humidity_2m:[70,72,74]}});renderForecast();
+return {boot,weather:!nodes.weather.hidden&&nodes.currentTemp.textContent==="12°C",chart:nodes.tempChart.children.length>5&&nodes.pressureChart.children.length>5,humidityChart:nodes.humidityChart.children.length>5,humidityCurrent:nodes.humidity.textContent==="72%"&&nodes.humidityFill.style.width==="72%",humidityPick:["72%","74%"].includes(nodes.pickHumidity.textContent),cityClock:/^\\d{2}:\\d{2}:\\d{2}$/.test(nodes.cityClock.textContent),dayRange:nodes.todayRange.textContent.includes("Мин. +5°")&&nodes.todayRange.textContent.includes("Макс. +15°"),readout:nodes.pickTemp.textContent.includes("12.0")||nodes.pickTemp.textContent.includes("13.0"),dayInfo:nodes.dayTemp.textContent==="+5° / +15°",day:nodes.daylight.textContent==="10 ч 00 мин",fallback:nodes.moonName.textContent.includes("прибл.")};
 `)();
 for(const [k,v] of Object.entries(run))assert.ok(v,k);
 
 const legacy=fs.readFileSync(path.join(root,'weather-sky/index.html'),'utf8');
 assert.ok(legacy.includes('../weather-sky.html'));
 for(const p of ['index.html','time-mini.html'])assert.ok(fs.readFileSync(path.join(root,p),'utf8').includes('./weather-sky.html'));
-console.log('Weather checks passed:',Object.keys(test).length+Object.keys(extra).length+Object.keys(run).length+Object.keys(trends).length+Object.keys(display).length,'plus markup, syntax and navigation');
+console.log('Weather checks passed:',Object.keys(test).length+Object.keys(extra).length+Object.keys(run).length+Object.keys(trends).length+Object.keys(display).length+Object.keys(humidity).length,'plus markup, syntax and navigation');
